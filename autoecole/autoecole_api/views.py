@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.shortcuts import render
-from autoecole_api.models import School,Student
-from autoecole_api.serializers import School_serializer,Student_serializer
+from autoecole_api.models import School,Student,Card
+from autoecole_api.serializers import School_serializer,Student_serializer,Card_serializer
 from rest_framework.decorators import  api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -46,7 +46,7 @@ def school_edit(request,id):
         serializer=School_serializer(school)
         return Response(status=status.HTTP_201_CREATED)
 
-#School CRUD
+#Student CRUD
 @api_view(['GET','POST'])
 def student(request):
     if request.method=='GET':
@@ -82,4 +82,42 @@ def student_edit(request,id):
         student.deleted_at=datetime.now()
         student.save()
         serializer=Student_serializer(student)
+        return Response(status=status.HTTP_201_CREATED)
+
+#Card CRUD
+@api_view(['GET','POST'])
+def card(request):
+    if request.method=='GET':
+        if not (cards := Card.objects.all()):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer=Card_serializer(cards,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    if request.method=='POST':
+        serializer=Card_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
+
+@api_view(['GET','PUT','DELETE'])
+def card_edit(request,id):
+    try:
+        card=Card.objects.get(id=id)
+    except Exception:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method=='GET':
+        serializer=Card_serializer(card)
+        return Response (serializer.data,status=status.HTTP_200_OK)
+    if request.method=='PUT':
+        serializer=Card_serializer(card,data=request.data)
+        if not (serializer.is_valid()):
+            return Response (serializer.data,status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response (serializer.data,status=status.HTTP_201_CREATED)
+    if request.method=='DELETE':
+        card.is_deleted=True
+        card.deleted_at=datetime.now()
+        card.save()
+        serializer=Card_serializer(card)
         return Response(status=status.HTTP_201_CREATED)

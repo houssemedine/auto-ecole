@@ -51,7 +51,7 @@ class School(BaseModel,SoftDeleteModel):
     governorate=models.CharField(max_length=50)
     country=models.CharField(max_length=50)
     speciality=models.CharField(max_length=50)
-    mail=models.EmailField(blank=True,null=True)
+    email=models.EmailField(blank=True,null=True)
     tel=models.IntegerField(blank=True,null=True)
     logo=models.ImageField(blank=True,null=True)
 
@@ -70,11 +70,26 @@ class Student(BaseModel,SoftDeleteModel):
     birthday=models.DateField()
     schools=models.ManyToManyField(School)
 
-    
+
     class Meta:
         ordering = ['name']
 
     def __str__(self) :
         return self.name
+
+class Card(BaseModel,SoftDeleteModel):
+    licence_type=models.CharField(max_length=50)
+    start_at=models.DateField()
+    end_at=models.DateField()
+    result=models.CharField(max_length=50,default='In progress')
+    price=models.DecimalField( max_digits = 5, decimal_places = 2)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['licence_type']
+
+    def __str__(self) :
+        return self.licence_type
+
 
 

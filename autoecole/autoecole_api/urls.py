@@ -13,4 +13,10 @@ urlpatterns = [
             # edit and delete
     path('student/<int:id>/edit',views.student_edit,name='student_edit'),
 
+    # Card URL
+            # index and save
+    path('card/',views.card,name='card'),
+            # edit and delete
+    path('card/<int:id>/edit',views.card_edit,name='card_edit'),
+
 ]
