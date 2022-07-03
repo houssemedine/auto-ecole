@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.shortcuts import render
-from autoecole_api.models import School,Student,Card
-from autoecole_api.serializers import School_serializer,Student_serializer,Card_serializer
+from autoecole_api.models import School,Student,Card,Activity
+from autoecole_api.serializers import School_serializer,Student_serializer,Card_serializer,Activity_serializer
 from rest_framework.decorators import  api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -120,4 +120,42 @@ def card_edit(request,id):
         card.deleted_at=datetime.now()
         card.save()
         serializer=Card_serializer(card)
+        return Response(status=status.HTTP_201_CREATED)
+
+#Acitivity CRUD
+@api_view(['GET','POST'])
+def activity(request):
+    if request.method=='GET':
+        if not (activities := Activity.objects.all()):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer=Activity_serializer(activities,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    if request.method=='POST':
+        serializer=Activity_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
+
+@api_view(['GET','PUT','DELETE'])
+def activity_edit(request,id):
+    try:
+        activity=Activity.objects.get(id=id)
+    except Exception:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method=='GET':
+        serializer=Activity_serializer(activity)
+        return Response (serializer.data,status=status.HTTP_200_OK)
+    if request.method=='PUT':
+        serializer=Activity_serializer(card,data=request.data)
+        if not (serializer.is_valid()):
+            return Response (serializer.data,status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response (serializer.data,status=status.HTTP_201_CREATED)
+    if request.method=='DELETE':
+        activity.is_deleted=True
+        activity.deleted_at=datetime.now()
+        activity.save()
+        serializer=Activity_serializer(activity)
         return Response(status=status.HTTP_201_CREATED)

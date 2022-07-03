@@ -19,4 +19,10 @@ urlpatterns = [
             # edit and delete
     path('card/<int:id>/edit',views.card_edit,name='card_edit'),
 
+    # Activity URL
+            # index and save
+    path('activity/',views.activity,name='activity'),
+            # edit and delete
+    path('activity/<int:id>/edit',views.activity_edit,name='activity_edit'),
+
 ]

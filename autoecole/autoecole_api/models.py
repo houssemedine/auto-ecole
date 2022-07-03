@@ -91,5 +91,17 @@ class Card(BaseModel,SoftDeleteModel):
     def __str__(self) :
         return self.licence_type
 
+class Activity(BaseModel,SoftDeleteModel):
+    name=models.CharField(max_length=50,unique=True)
+    duration=models.FloatField(null=True,blank=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self) :
+        return self.name
+
+
+
 
 
