@@ -46,8 +46,8 @@ class SoftDeleteModel(models.Model):
 # School model
 class School(BaseModel,SoftDeleteModel):
     name=models.CharField(max_length=100)
-    adress=models.TextField(max_length=100)
-    city=models.CharField(max_length=150)
+    adress=models.TextField(max_length=150)
+    city=models.CharField(max_length=50)
     governorate=models.CharField(max_length=50)
     country=models.CharField(max_length=50)
     speciality=models.CharField(max_length=50)
@@ -55,5 +55,26 @@ class School(BaseModel,SoftDeleteModel):
     tel=models.IntegerField(blank=True,null=True)
     logo=models.ImageField(blank=True,null=True)
 
+
+    class Meta:
+        ordering = ['name']
     def __str__(self) :
         return self.name
+
+class Student(BaseModel,SoftDeleteModel):
+    name=models.CharField(max_length=100)
+    city=models.CharField(max_length=50)
+    governorate=models.CharField(max_length=50)
+    country=models.CharField(max_length=50)
+    tel=models.IntegerField(blank=True,null=True)
+    birthday=models.DateField()
+    schools=models.ManyToManyField(School)
+
+    
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self) :
+        return self.name
+
+
