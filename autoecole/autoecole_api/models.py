@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 from django.db import models
 
 #BasedModel
@@ -118,7 +118,10 @@ class Session(BaseModel,SoftDeleteModel):
     #Session duration calcul
     @property
     def duration(self):
-        return self.end_at - self.start_at
+        date = datetime.date(1, 1, 1)
+        datetime1 = datetime.datetime.combine(date, self.end_at)
+        datetime2 = datetime.datetime.combine(date, self.start_at)
+        return (datetime1 - datetime2)/3600
 
 
 

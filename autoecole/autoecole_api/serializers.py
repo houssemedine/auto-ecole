@@ -26,5 +26,6 @@ class Activity_serializer(serializers.ModelSerializer):
 class Session_serializer(serializers.ModelSerializer):
     class Meta:
         model= Session
-        fields = '__all__'
+        # fields = '__all__'
+        fields = (    'day',    'start_at',    'end_at',    'activity',    'price','duration')
 
