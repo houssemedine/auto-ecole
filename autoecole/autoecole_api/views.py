@@ -1,12 +1,11 @@
 from datetime import datetime
 from django.shortcuts import render
-from autoecole_api.models import School,Student,Card,Activity
-from autoecole_api.serializers import School_serializer,Student_serializer,Card_serializer,Activity_serializer
+from autoecole_api.models import School,Student,Card,Activity,Session
+from autoecole_api.serializers import School_serializer,Student_serializer,Card_serializer,Activity_serializer,Session_serializer
 from rest_framework.decorators import  api_view
 from rest_framework.response import Response
 from rest_framework import status
 # Create your views here.
-
 
 #School CRUD
 @api_view(['GET','POST'])
@@ -148,7 +147,7 @@ def activity_edit(request,id):
         serializer=Activity_serializer(activity)
         return Response (serializer.data,status=status.HTTP_200_OK)
     if request.method=='PUT':
-        serializer=Activity_serializer(card,data=request.data)
+        serializer=Activity_serializer(session,data=request.data)
         if not (serializer.is_valid()):
             return Response (serializer.data,status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
@@ -158,4 +157,43 @@ def activity_edit(request,id):
         activity.deleted_at=datetime.now()
         activity.save()
         serializer=Activity_serializer(activity)
+        return Response(status=status.HTTP_201_CREATED)
+
+
+#Acitivity CRUD
+@api_view(['GET','POST'])
+def session(request):
+    if request.method=='GET':
+        if not (sessions := Session.objects.all()):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer=Session_serializer(sessions,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    if request.method=='POST':
+        serializer=Session_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
+
+@api_view(['GET','PUT','DELETE'])
+def session_edit(request,id):
+    try:
+        session=Session.objects.get(id=id)
+    except Exception:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method=='GET':
+        serializer=Session_serializer(session)
+        return Response (serializer.data,status=status.HTTP_200_OK)
+    if request.method=='PUT':
+        serializer=Session_serializer(session,data=request.data)
+        if not (serializer.is_valid()):
+            return Response (serializer.data,status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response (serializer.data,status=status.HTTP_201_CREATED)
+    if request.method=='DELETE':
+        session.is_deleted=True
+        session.deleted_at=datetime.now()
+        session.save()
+        serializer=Session_serializer(session)
         return Response(status=status.HTTP_201_CREATED)

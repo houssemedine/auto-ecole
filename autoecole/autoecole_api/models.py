@@ -102,6 +102,27 @@ class Activity(BaseModel,SoftDeleteModel):
         return self.name
 
 
+class Session(BaseModel,SoftDeleteModel):
+    day=models.DateField()
+    start_at=models.TimeField()
+    end_at=models.TimeField()
+    activity=models.ForeignKey(Activity,on_delete=models.CASCADE,null=True,blank=True)
+    price=models.DecimalField(max_digits = 5, decimal_places = 2,null=True,blank=True)
+
+    class Meta:
+        ordering = ['day']
+
+    def __str__(self) :
+        return self.day.strftime("%d %b, %Y")
+
+    #Session duration calcul
+    @property
+    def duration(self):
+        return self.end_at - self.start_at
+
+
+
+
 
 
 
