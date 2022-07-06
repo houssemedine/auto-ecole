@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.shortcuts import render
-from autoecole_api.models import School,Student,Card,Activity,Session
-from autoecole_api.serializers import School_serializer,Student_serializer,Card_serializer,Activity_serializer,Session_serializer
+from autoecole_api.models import School,Student,Card,Activity,Session,Employee
+from autoecole_api.serializers import School_serializer,Student_serializer,Card_serializer,Activity_serializer,Session_serializer,Employee_serializer
 from rest_framework.decorators import  api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -160,7 +160,7 @@ def activity_edit(request,id):
         return Response(status=status.HTTP_201_CREATED)
 
 
-#Acitivity CRUD
+#Session CRUD
 @api_view(['GET','POST'])
 def session(request):
     if request.method=='GET':
@@ -196,4 +196,42 @@ def session_edit(request,id):
         session.deleted_at=datetime.now()
         session.save()
         serializer=Session_serializer(session)
+        return Response(status=status.HTTP_201_CREATED)
+
+# Employee CRUD
+@api_view(['GET','POST'])
+def employee(request):
+    if request.method=='GET':
+        if not (employees := Employee.objects.all()):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer=Employee_serializer(employees,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    if request.method=='POST':
+        serializer=Employee_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
+
+@api_view(['GET','PUT','DELETE'])
+def employee_edit(request,id):
+    try:
+        employee=Employee.objects.get(id=id)
+    except Exception:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method=='GET':
+        serializer=Employee_serializer(employee)
+        return Response (serializer.data,status=status.HTTP_200_OK)
+    if request.method=='PUT':
+        serializer=Employee_serializer(employee,data=request.data)
+        if not (serializer.is_valid()):
+            return Response (serializer.data,status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response (serializer.data,status=status.HTTP_201_CREATED)
+    if request.method=='DELETE':
+        employee.is_deleted=True
+        employee.deleted_at=datetime.now()
+        employee.save()
+        serializer=Employee_serializer(employee)
         return Response(status=status.HTTP_201_CREATED)

@@ -85,7 +85,7 @@ class Card(BaseModel,SoftDeleteModel):
     end_at=models.DateField()
     result=models.CharField(max_length=50,default='In progress')
     price=models.DecimalField( max_digits = 5, decimal_places = 2)
-    student = models.ForeignKey(Student, on_delete=models.CASCADE,unique=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['licence_type']
@@ -126,7 +126,27 @@ class Session(BaseModel,SoftDeleteModel):
         return (datetime1 - datetime2)/3600
 
 
+class Employee(BaseModel,SoftDeleteModel):
+    roles = [
+        ('Manager', 'Manager'),
+        ('Trainer', 'Trainer'),
+    ]
 
+    role=models.CharField(max_length=100,choices=roles,default='Manager')
+    city=models.CharField(max_length=50)
+    governorate=models.CharField(max_length=50)
+    country=models.CharField(max_length=50)
+    tel=models.IntegerField(blank=True,null=True)
+    birthday=models.DateField()
+    schools=models.ManyToManyField(School)
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+
+
+    class Meta:
+        ordering = ['user']
+
+    def __str__(self) :
+        return self.user.username
 
 
 

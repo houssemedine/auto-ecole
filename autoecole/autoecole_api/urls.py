@@ -32,4 +32,10 @@ urlpatterns = [
                 # edit and delete
         path('session/<int:id>/edit',views.session_edit,name='session_edit'),
 
+        # Session URL
+                # index and save
+        path('employee/',views.employee,name='employee'),
+                # edit and delete
+        path('employee/<int:id>/edit',views.employee_edit,name='employee_edit'),
+
 ]
