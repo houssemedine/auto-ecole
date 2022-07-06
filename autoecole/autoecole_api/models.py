@@ -1,5 +1,3 @@
-import datetime
-from tkinter import CASCADE
 from django.db import models
 from django.contrib.auth.models import User
 #BasedModel
@@ -147,6 +145,28 @@ class Employee(BaseModel,SoftDeleteModel):
 
     def __str__(self) :
         return self.user.username
+
+
+class Car(BaseModel,SoftDeleteModel):
+    fuel=[
+        ('Petrol','Petrol'),
+        ('Diesel','Diesel'),
+        ('Gaz','Gaz'),
+        ('Electric','Electric'),
+    ]
+    serial_number=models.CharField(max_length=50,unique=True)
+    marque=models.CharField(max_length=50,null=True,blank=True)
+    model=models.CharField(max_length=50,null=True,blank=True)
+    purchase_date=models.DateField(null=True,blank=True)
+    fuel_type=models.CharField(max_length=50,choices=fuel,blank=True)
+    school=models.ForeignKey(School,on_delete=models.CASCADE)
+
+
+    class Meta:
+        ordering = ['marque']
+
+    def __str__(self) :
+        return f'{self.serial_number} | {self.marque} | {self.model}'
 
 
 

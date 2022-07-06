@@ -1,7 +1,6 @@
 from datetime import datetime
-from django.shortcuts import render
-from autoecole_api.models import School,Student,Card,Activity,Session,Employee
-from autoecole_api.serializers import School_serializer,Student_serializer,Card_serializer,Activity_serializer,Session_serializer,Employee_serializer
+from autoecole_api.models import *
+from autoecole_api.serializers import *
 from rest_framework.decorators import  api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -234,4 +233,43 @@ def employee_edit(request,id):
         employee.deleted_at=datetime.now()
         employee.save()
         serializer=Employee_serializer(employee)
+        return Response(status=status.HTTP_201_CREATED)
+
+
+# Employee CRUD
+@api_view(['GET','POST'])
+def car(request):
+    if request.method=='GET':
+        if not (cars := Car.objects.all()):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer=Car_serializer(cars,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    if request.method=='POST':
+        serializer=Car_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
+
+@api_view(['GET','PUT','DELETE'])
+def car_edit(request,id):
+    try:
+        car=Car.objects.get(id=id)
+    except Exception:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method=='GET':
+        serializer=Car_serializer(car)
+        return Response (serializer.data,status=status.HTTP_200_OK)
+    if request.method=='PUT':
+        serializer=Car_serializer(car,data=request.data)
+        if not (serializer.is_valid()):
+            return Response (serializer.data,status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response (serializer.data,status=status.HTTP_201_CREATED)
+    if request.method=='DELETE':
+        car.is_deleted=True
+        car.deleted_at=datetime.now()
+        car.save()
+        serializer=Car_serializer(car)
         return Response(status=status.HTTP_201_CREATED)

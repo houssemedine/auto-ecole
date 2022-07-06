@@ -38,4 +38,10 @@ urlpatterns = [
                 # edit and delete
         path('employee/<int:id>/edit',views.employee_edit,name='employee_edit'),
 
+        # Car URL
+                # index and save
+        path('car/',views.car,name='car'),
+                # edit and delete
+        path('car/<int:id>/edit',views.car_edit,name='car_edit'),
+
 ]
