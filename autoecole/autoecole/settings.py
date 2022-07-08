@@ -41,7 +41,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'autoecole_api',
 ]
+REST_FRAMEWORK = {
+    'COERCE_DECIMAL_TO_STRING': False,
+    # Your other settings
 
+}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

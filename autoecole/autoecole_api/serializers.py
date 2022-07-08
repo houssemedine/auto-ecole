@@ -17,6 +17,7 @@ class Card_serializer(serializers.ModelSerializer):
     class Meta:
         model=Card
         fields = '__all__'
+        # fields =('licence_type','start_at','end_at','result','student','manual_price','price','hour_price','hours_number','discount','total_price')
 
 class Activity_serializer(serializers.ModelSerializer):
     class Meta:
@@ -27,7 +28,7 @@ class Session_serializer(serializers.ModelSerializer):
     class Meta:
         model= Session
         # fields = '__all__'
-        fields = (    'day',    'start_at',    'end_at',    'activity',    'price','duration')
+        fields = ('day','start_at','end_at','activity','price','duration')
 
 class Employee_serializer(serializers.ModelSerializer):
     class Meta:

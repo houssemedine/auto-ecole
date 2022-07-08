@@ -82,14 +82,23 @@ class Card(BaseModel,SoftDeleteModel):
     start_at=models.DateField()
     end_at=models.DateField()
     result=models.CharField(max_length=50,default='In progress')
-    price=models.DecimalField( max_digits = 5, decimal_places = 2)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    manual_price=models.BooleanField(null=True, blank=True)  #if True price will be an input, if false price will be calucle in proprety
+    price=models.DecimalField( max_digits = 5, decimal_places = 2, null=True, blank=True)
+    hour_price=models.DecimalField(max_digits = 5, decimal_places = 2, null=True, blank=True)
+    hours_number=models.IntegerField(null=True,blank=True)
+    discount=models.DecimalField(max_digits = 5, decimal_places = 2, null=True, blank=True)
 
     class Meta:
         ordering = ['licence_type']
 
     def __str__(self) :
         return self.licence_type
+
+    # @property
+    # def total_price(self):
+    #     total_price=((self.hours_number*self.hour_price)*self.discount)/100
+    #     return total_price
 
 class Activity(BaseModel,SoftDeleteModel):
     name=models.CharField(max_length=50,unique=True)

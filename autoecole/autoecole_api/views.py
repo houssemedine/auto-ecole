@@ -94,6 +94,11 @@ def card(request):
         serializer=Card_serializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
+        if serializer.validated_data['manual_price']:
+            if not serializer.validated_data['price']:
+                return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
+        else:
+            serializer.validated_data['price']= (serializer.validated_data['hours_number']*serializer.validated_data['hour_price']) * (1 - (serializer.validated_data['discount']/100))
         serializer.save()
         return Response(serializer.data,status=status.HTTP_201_CREATED)
 
