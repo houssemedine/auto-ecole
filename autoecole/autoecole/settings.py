@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+    'django_extensions',   #Generate UML digram from Django Model, to delete in prod
     'rest_framework',
     'autoecole_api',
 ]
