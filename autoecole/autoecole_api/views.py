@@ -1,10 +1,28 @@
 from datetime import datetime
 from autoecole_api.models import *
 from autoecole_api.serializers import *
-from rest_framework.decorators import  api_view
+from rest_framework.decorators import  api_view , permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-# Create your views here.
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+#Custom JWT to obtain more information
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['username'] = user.username
+        token['email'] = user.email
+
+
+        return token
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
 #School CRUD
 @api_view(['GET','POST'])
@@ -46,6 +64,7 @@ def school_edit(request,id):
 
 #Student CRUD
 @api_view(['GET','POST'])
+@permission_classes([IsAuthenticated])
 def student(request):
     if request.method=='GET':
         if not (students := Student.objects.all()):
@@ -60,6 +79,7 @@ def student(request):
         return Response(serializer.data,status=status.HTTP_201_CREATED)
 
 @api_view(['GET','PUT','DELETE'])
+@permission_classes([IsAuthenticated])
 def student_edit(request,id):
     try:
         student=Student.objects.get(id=id)
@@ -84,7 +104,10 @@ def student_edit(request,id):
 
 #Card CRUD
 @api_view(['GET','POST'])
+@permission_classes([IsAuthenticated])
 def card(request):
+    user=request.user
+    print(user)
     if request.method=='GET':
         if not (cards := Card.objects.all()):
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -103,6 +126,7 @@ def card(request):
         return Response(serializer.data,status=status.HTTP_201_CREATED)
 
 @api_view(['GET','PUT','DELETE'])
+@permission_classes([IsAuthenticated])
 def card_edit(request,id):
     try:
         card=Card.objects.get(id=id)

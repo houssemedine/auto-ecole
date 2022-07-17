@@ -1,6 +1,23 @@
 from django.urls import path
 from autoecole_api import views
+from rest_framework_simplejwt.views import (
+    TokenRefreshView,
+)
+
+# from autoecole_api.views import MyTokenObtainPairView
+
+
+
+
 urlpatterns = [
+        #JWT URL
+                #Acces Token
+        path('token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+                #Refresh Token
+        path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+
+
         # School URL
                 # index and save
         path('school/',views.school,name='school'),
