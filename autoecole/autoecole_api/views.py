@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from autoecole_api.permissions import IsManager
 
 #Custom JWT to obtain more information
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -18,7 +19,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['username'] = user.username
         token['email'] = user.email
 
-
         return token
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -26,9 +26,12 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 #School CRUD
 @api_view(['GET','POST'])
+@permission_classes([IsAuthenticated,IsManager])
 def school(request):
+    #Get connected user
+    user=request.user
     if request.method=='GET':
-        if not (schools := School.objects.all()):
+        if not (schools := user.school_set.all()):
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer=School_serializer(schools,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
@@ -64,7 +67,7 @@ def school_edit(request,id):
 
 #Student CRUD
 @api_view(['GET','POST'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def student(request):
     if request.method=='GET':
         if not (students := Student.objects.all()):
@@ -79,7 +82,7 @@ def student(request):
         return Response(serializer.data,status=status.HTTP_201_CREATED)
 
 @api_view(['GET','PUT','DELETE'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def student_edit(request,id):
     try:
         student=Student.objects.get(id=id)

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+
 #BasedModel
 class BaseModel(models.Model) :
     #created_at = models.DateTimeField(auto_now=True)
@@ -27,7 +28,7 @@ class SoftDeleteModel(models.Model):
     restored_at = models.DateTimeField(null=True,blank=True)
     restored_by = models.CharField(max_length= 30,null=True,blank=True)
     
-    objects = models.Manager()
+    # objects = models.Manager()
     undeleted_objects = SoftDeleteManager()
 
     def soft_delete(self):
@@ -53,6 +54,7 @@ class School(BaseModel,SoftDeleteModel):
     email=models.EmailField(blank=True,null=True)
     tel=models.IntegerField(blank=True,null=True)
     logo=models.ImageField(blank=True,null=True)
+    # users=models.ManyToManyField(User)
 
 
     class Meta:
@@ -60,22 +62,23 @@ class School(BaseModel,SoftDeleteModel):
     def __str__(self) :
         return self.name
 
-class Student(BaseModel,SoftDeleteModel):
+class Student(BaseModel,SoftDeleteModel,User):
     # name=models.CharField(max_length=100)
     city=models.CharField(max_length=50)
     governorate=models.CharField(max_length=50)
     country=models.CharField(max_length=50)
     tel=models.IntegerField(blank=True,null=True)
     birthday=models.DateField()
-    schools=models.ManyToManyField(School)
-    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    # schools=models.ManyToManyField(School)
+    school=models.ForeignKey(School,on_delete=models.CASCADE)
+    # user=models.ForeignKey(User,on_delete=models.CASCADE)
 
 
     class Meta:
-        ordering = ['user']
+        ordering = ['username']
 
     def __str__(self) :
-        return self.user.username
+        return self.username
 
 class Card(BaseModel,SoftDeleteModel):
     licence_type=models.CharField(max_length=50)
@@ -133,7 +136,7 @@ class Session(BaseModel,SoftDeleteModel):
         return (datetime1 - datetime2)/3600
 
 
-class Employee(BaseModel,SoftDeleteModel):
+class Employee(BaseModel,SoftDeleteModel,User):
     roles = [
         ('Manager', 'Manager'),
         ('Trainer', 'Trainer'),
@@ -145,12 +148,13 @@ class Employee(BaseModel,SoftDeleteModel):
     country=models.CharField(max_length=50)
     tel=models.IntegerField(blank=True,null=True)
     birthday=models.DateField()
-    schools=models.ManyToManyField(School)
-    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    school=models.ForeignKey(School,on_delete=models.CASCADE)
+    # schools=models.ManyToManyField(School)
+    # user=models.ForeignKey(User,on_delete=models.CASCADE)
 
 
     class Meta:
-        ordering = ['user']
+        ordering = ['username']
 
     def __str__(self) :
         return self.user.username
