@@ -8,9 +8,9 @@ class IsManager(permissions.BasePermission):
 
     def has_permission(self, request, view):
         #Get User Role
-        user_role=Employee.objects.filter(user=request.user.id).values()
-        if (request.user.is_authenticated) and (user_role[0]['role'] == 'Manager'):
-            return True
+        if user_role:=Employee.objects.filter(id=request.user.id).values():
+            if (request.user.is_authenticated) and (user_role[0]['role'] == 'Manager'):
+                return True
 
     def has_object_permission(self, request, view, obj):
         # if request.user.is_superuser:

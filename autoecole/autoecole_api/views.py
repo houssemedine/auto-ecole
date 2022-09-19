@@ -1,4 +1,5 @@
 from datetime import datetime
+from multiprocessing.dummy import Manager
 from autoecole_api.models import *
 from autoecole_api.serializers import *
 from rest_framework.decorators import  api_view , permission_classes
@@ -29,9 +30,13 @@ class MyTokenObtainPairView(TokenObtainPairView):
 @permission_classes([IsAuthenticated,IsManager])
 def school(request):
     #Get connected user
-    user=request.user
+
     if request.method=='GET':
-        if not (schools := user.school_set.all()):
+        #Get connected User
+        user=request.user
+        #Get list of school for connected user
+        school_id=Employee.objects.filter(id=user.id).values('school_id')
+        if not (schools := Employee.objects.filter(id=user.id).values('school_id')):
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer=School_serializer(schools,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
