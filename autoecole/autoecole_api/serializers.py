@@ -13,11 +13,18 @@ class Student_serializer(serializers.ModelSerializer):
         model=Student
         fields = '__all__'
 
+class Card_serializer_read(serializers.ModelSerializer):
+    student = Student_serializer()
+    class Meta:
+        model=Card
+        fields = '__all__'
+        # fields =('student', 'licence_type')
+
 class Card_serializer(serializers.ModelSerializer):
     class Meta:
         model=Card
         fields = '__all__'
-        # fields =('licence_type','start_at','end_at','result','student','manual_price','price','hour_price','hours_number','discount','total_price')
+        # fields =('student', 'licence_type')
 
 class Activity_serializer(serializers.ModelSerializer):
     class Meta:

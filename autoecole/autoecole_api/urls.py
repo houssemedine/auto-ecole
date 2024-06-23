@@ -32,9 +32,9 @@ urlpatterns = [
 
         # Card URL
                 # index and save
-        path('card/',views.card,name='card'),
+        path('cards/',views.card,name='card'),
                 # edit and delete
-        path('card/<int:id>/edit',views.card_edit,name='card_edit'),
+        path('cards/<int:id>/edit',views.card_edit,name='card_edit'),
 
         # Activity URL
                 # index and save

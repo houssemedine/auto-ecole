@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-se&@g_d#-0+83j771-0dxy1-3v_o&t1qv51#yna($+1@38$^qy
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_extensions',   #Generate UML digram from Django Model, to delete in prod
+    'corsheaders',
+    'django_extensions',  # Generate UML digram from Django Model, to delete in prod
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
@@ -47,17 +48,17 @@ INSTALLED_APPS = [
     'autoecole_api',
 ]
 REST_FRAMEWORK = {
-    #JWT Authentification
+    # JWT Authentification
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    #By default DRF convert decimal to string, so we need this to keep it decimal
+    # By default DRF convert decimal to string, so we need this to keep it decimal
     'COERCE_DECIMAL_TO_STRING': False,
 
 
 }
 
-#JWT Configuration
+# JWT Configuration
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=90),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=90),
@@ -99,6 +100,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'autoecole.urls'
@@ -173,3 +176,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+CORS_ALLOWED_ORIGINS = [
+    'http://192.168.1.121:8081',
+    # 'https://*',
+]

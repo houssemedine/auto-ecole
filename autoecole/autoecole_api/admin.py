@@ -1,6 +1,7 @@
 from django.contrib import admin
-from autoecole_api.models import School,Student,Card,Activity,Session,Employee,Car
+from autoecole_api.models import Owner, School, Student, Card, Activity, Session, Employee, Car
 # Register your models here.
+admin.site.register(Owner)
 admin.site.register(School)
 admin.site.register(Student)
 admin.site.register(Card)
