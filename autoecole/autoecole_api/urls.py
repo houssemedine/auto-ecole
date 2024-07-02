@@ -61,4 +61,8 @@ urlpatterns = [
                 # edit and delete
         path('car/<int:id>/edit',views.car_edit,name='car_edit'),
 
+        # Licence URL
+                # index
+        path('licences/',views.licence,name='licences'),
+
 ]

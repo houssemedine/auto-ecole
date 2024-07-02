@@ -147,7 +147,7 @@ def card(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def card_edit(request, id):
     try:
         card = Card.undeleted_objects.get(id=id)
@@ -170,6 +170,7 @@ def card_edit(request, id):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     if request.method == 'DELETE':
+        print('delete',id)
         card.is_deleted = True
         card.deleted_at = datetime.now()
         card.save()
@@ -337,3 +338,12 @@ def car_edit(request, id):
         car.save()
         serializer = Car_serializer(car)
         return Response(status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET', 'POST'])
+def licence(request):
+    if request.method == 'GET':
+        if not (licences := LicenceType.undeleted_objects.all()):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = Licence_serializer(licences, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

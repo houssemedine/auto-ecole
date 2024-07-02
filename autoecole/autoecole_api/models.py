@@ -103,28 +103,32 @@ class Student(BaseModel, SoftDeleteModel, User):
     def __str__(self):
         return self.username
 
+class LicenceType(BaseModel, SoftDeleteModel):
+    name=models.CharField(max_length=50)
+    comment= models.DateField(null=True, blank=True)
+
 
 class Card(BaseModel, SoftDeleteModel):
-    licence_type = models.CharField(max_length=50)
+    licence_type = models.ForeignKey(LicenceType,related_name='licence_type' ,on_delete=models.CASCADE)
     start_at = models.DateField()
-    end_at = models.DateField()
+    end_at = models.DateField(null=True, blank=True)
     result = models.CharField(max_length=50, default='In progress')
     student = models.ForeignKey(Student,related_name='student' ,on_delete=models.CASCADE)
     # if True price will be an input, if false price will be calucle in proprety
     manual_price = models.BooleanField(null=True, blank=True)
     price = models.DecimalField(
-        max_digits=5, decimal_places=2, null=True, blank=True)
+        max_digits=99999999, decimal_places=2, null=True, blank=True)
     hour_price = models.DecimalField(
-        max_digits=5, decimal_places=2, null=True, blank=True)
+        max_digits=99999999, decimal_places=2, null=True, blank=True)
     hours_number = models.IntegerField(null=True, blank=True)
     discount = models.DecimalField(
-        max_digits=5, decimal_places=2, null=True, blank=True)
+        max_digits=99999999, decimal_places=2, null=True, blank=True)
 
     class Meta:
         ordering = ['licence_type']
 
     def __str__(self):
-        return self.licence_type
+        return f'ID: {self.id} _ Type: {self.licence_type}'
 
     # @property
     # def total_price(self):
@@ -144,11 +148,21 @@ class Activity(BaseModel, SoftDeleteModel):
 
 
 class Session(BaseModel, SoftDeleteModel):
+    activities = [
+        ('Acitvity 1', 'Acitvity 1'),
+        ('Acitvity 2', 'Acitvity 2'),
+        ('Acitvity 3', 'Acitvity 3'),
+        ('Acitvity 4', 'Acitvity 4'),
+        ('Acitvity 5', 'Acitvity 5'),
+        ('Acitvity 6', 'Acitvity 6'),
+        ('Acitvity 7', 'Acitvity 7'),
+    ]
     day = models.DateField()
     start_at = models.TimeField()
     end_at = models.TimeField()
-    activity = models.ForeignKey(
-        Activity, on_delete=models.CASCADE, null=True, blank=True)
+    activities = models.CharField(max_length=100, choices=activities,default='Acitvity 1')
+    # activity = models.ForeignKey(
+    #     Activity, on_delete=models.CASCADE, null=True, blank=True)
     price = models.DecimalField(
         max_digits=5, decimal_places=2, null=True, blank=True)
 
