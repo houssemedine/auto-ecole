@@ -9,7 +9,7 @@ from rest_framework import status
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from autoecole_api.permissions import IsManager
-
+from .tools import generete_username
 # Custom JWT to obtain more information
 
 
@@ -88,9 +88,14 @@ def student(request):
         serializer = Student_serializer(students, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
-        serializer = Student_serializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+        username_list=User.objects.values_list('username',flat=True)
+        data=request.data.copy()
+        data['school']=2
+        data['username']=generete_username(data['first_name'], data['last_name'], username_list)
+        data['password']='test'
+        serializer = Student_serializer(data=data)
+        if not serializer.is_valid(raise_exception=True):
+            return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -126,7 +131,7 @@ def student_edit(request, id):
 # @permission_classes([IsAuthenticated])
 def card(request):
     user = request.user
-    user.id=2
+    user.id=9
     if request.method == 'GET':
         if not (cards := Card.undeleted_objects.filter(student__school__owner=user.id)):
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -229,7 +234,7 @@ def session(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
         serializer = Session_serializer(data=request.data)
-        if not serializer.is_valid():
+        if not serializer.is_valid(raise_exception=True):
             return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)

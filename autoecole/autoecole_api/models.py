@@ -91,9 +91,9 @@ class Student(BaseModel, SoftDeleteModel, User):
     city = models.CharField(max_length=50)
     governorate = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
-    tel = models.IntegerField(blank=True, null=True)
+    tel = models.IntegerField(blank=True, null=True, unique=True)
     birthday = models.DateField()
-    # schools=models.ManyToManyField(School)
+    gender=models.CharField(max_length=50,default='male')
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     # user=models.ForeignKey(User,on_delete=models.CASCADE)
 
@@ -148,21 +148,11 @@ class Activity(BaseModel, SoftDeleteModel):
 
 
 class Session(BaseModel, SoftDeleteModel):
-    activities = [
-        ('Acitvity 1', 'Acitvity 1'),
-        ('Acitvity 2', 'Acitvity 2'),
-        ('Acitvity 3', 'Acitvity 3'),
-        ('Acitvity 4', 'Acitvity 4'),
-        ('Acitvity 5', 'Acitvity 5'),
-        ('Acitvity 6', 'Acitvity 6'),
-        ('Acitvity 7', 'Acitvity 7'),
-    ]
     day = models.DateField()
     start_at = models.TimeField()
     end_at = models.TimeField()
-    activities = models.CharField(max_length=100, choices=activities,default='Acitvity 1')
-    # activity = models.ForeignKey(
-    #     Activity, on_delete=models.CASCADE, null=True, blank=True)
+    card = models.ForeignKey(Card,related_name='card' ,on_delete=models.CASCADE)
+    activities = models.ManyToManyField(Activity)
     price = models.DecimalField(
         max_digits=5, decimal_places=2, null=True, blank=True)
 
