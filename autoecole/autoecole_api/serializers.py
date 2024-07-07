@@ -38,7 +38,14 @@ class Card_serializer_read(serializers.ModelSerializer):
         model=Card
         fields = '__all__'
         # fields =('student', 'licence_type')
-class Session_serializer(serializers.ModelSerializer):
+class Session_serializer_read(serializers.ModelSerializer):
+    card=Card_serializer_read()
+    class Meta:
+        model= Session
+        fields = '__all__'
+        # fields = ('day','start_at','end_at','activity','price','duration')
+
+class Session_serializer_edit(serializers.ModelSerializer):
     class Meta:
         model= Session
         fields = '__all__'

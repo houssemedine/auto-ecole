@@ -165,13 +165,9 @@ def card_edit(request, id):
     if request.method == 'PUT':
         serializer = Card_serializer(card, data=request.data)
         if not (serializer.is_valid()):
-            return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
-        if serializer.validated_data['manual_price']:
-            if not serializer.validated_data['price']:
-                return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            serializer.validated_data['price'] = (
-                serializer.validated_data['hours_number']*serializer.validated_data['hour_price']) * (1 - (serializer.validated_data['discount']/100))
+            print(request.data)
+            print(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     if request.method == 'DELETE':
@@ -230,10 +226,10 @@ def session(request):
     if request.method == 'GET':
         if not (sessions := Session.undeleted_objects.all()):
             return Response(status=status.HTTP_204_NO_CONTENT)
-        serializer = Session_serializer(sessions, many=True)
+        serializer = Session_serializer_read(sessions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
-        serializer = Session_serializer(data=request.data)
+        serializer = Session_serializer_read(data=request.data)
         if not serializer.is_valid(raise_exception=True):
             return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
@@ -248,10 +244,10 @@ def session_edit(request, id):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = Session_serializer(session)
+        serializer = Session_serializer_edit(session)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'PUT':
-        serializer = Session_serializer(session, data=request.data)
+        serializer = Session_serializer_edit(session, data=request.data)
         if not (serializer.is_valid()):
             return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
@@ -260,7 +256,7 @@ def session_edit(request, id):
         session.is_deleted = True
         session.deleted_at = datetime.now()
         session.save()
-        serializer = Session_serializer(session)
+        serializer = Session_serializer_edit(session)
         return Response(status=status.HTTP_201_CREATED)
 
 # Employee CRUD
