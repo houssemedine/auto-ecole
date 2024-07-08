@@ -152,7 +152,7 @@ class Session(BaseModel, SoftDeleteModel):
     start_at = models.TimeField()
     end_at = models.TimeField()
     card = models.ForeignKey(Card,related_name='card' ,on_delete=models.CASCADE)
-    activities = models.ManyToManyField(Activity)
+    activities = models.ManyToManyField(Activity, null=True, blank=True)
     price = models.DecimalField(
         max_digits=5, decimal_places=2, null=True, blank=True)
 
