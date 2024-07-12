@@ -65,4 +65,8 @@ urlpatterns = [
                 # index
         path('licences/',views.licence,name='licences'),
 
+        # Session Types URL
+                # index
+        path('sessiontypes/',views.session_types,name='sessiontypes'),
+
 ]

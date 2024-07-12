@@ -349,3 +349,11 @@ def licence(request):
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = Licence_serializer(licences, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET', 'POST'])
+def session_types(request):
+    if request.method == 'GET':
+        if not (session_types := SessionType.undeleted_objects.all()):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = SessionTypes_serializer(session_types, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

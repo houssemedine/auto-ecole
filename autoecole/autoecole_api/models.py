@@ -147,28 +147,6 @@ class Activity(BaseModel, SoftDeleteModel):
         return self.name
 
 
-class Session(BaseModel, SoftDeleteModel):
-    day = models.DateField()
-    start_at = models.TimeField()
-    end_at = models.TimeField()
-    card = models.ForeignKey(Card,related_name='card' ,on_delete=models.CASCADE)
-    activities = models.ManyToManyField(Activity, null=True, blank=True)
-    price = models.DecimalField(
-        max_digits=5, decimal_places=2, null=True, blank=True)
-
-    class Meta:
-        ordering = ['day']
-
-    def __str__(self):
-        return self.day.strftime("%d %b, %Y")
-
-    # Session duration calcul
-    @property
-    def duration(self):
-        date = datetime.date(1, 1, 1)
-        datetime1 = datetime.datetime.combine(date, self.end_at)
-        datetime2 = datetime.datetime.combine(date, self.start_at)
-        return (datetime1 - datetime2)/3600
 
 
 class Employee(BaseModel, SoftDeleteModel, User):
@@ -191,7 +169,7 @@ class Employee(BaseModel, SoftDeleteModel, User):
         ordering = ['username']
 
     def __str__(self):
-        return self.user.username
+        return self.username
 
 
 class Car(BaseModel, SoftDeleteModel):
@@ -213,3 +191,42 @@ class Car(BaseModel, SoftDeleteModel):
 
     def __str__(self):
         return f'{self.serial_number} | {self.marque} | {self.model}'
+
+class SessionType(BaseModel, SoftDeleteModel):
+    name=models.CharField(max_length=50,default='Conduite')
+    comment=models.CharField(max_length=100,null=True, blank=True)
+
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+class Session(BaseModel, SoftDeleteModel):
+    day = models.DateField()
+    start_at = models.TimeField()
+    end_at = models.TimeField()
+    card = models.ForeignKey(Card,related_name='card' ,on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employee,related_name='employee' ,on_delete=models.CASCADE)
+    car = models.ForeignKey(Car,related_name='car' ,on_delete=models.CASCADE)
+    activities = models.ManyToManyField(Activity, null=True, blank=True)
+    session_type = models.ForeignKey(SessionType,related_name='session_type' ,on_delete=models.CASCADE)
+
+    price = models.DecimalField(
+        max_digits=5, decimal_places=2, null=True, blank=True)
+
+    class Meta:
+        ordering = ['day']
+
+    def __str__(self):
+        return self.day.strftime("%d %b, %Y")
+
+    # Session duration calcul
+    @property
+    def duration(self):
+        date = datetime.date(1, 1, 1)
+        datetime1 = datetime.datetime.combine(date, self.end_at)
+        datetime2 = datetime.datetime.combine(date, self.start_at)
+        return (datetime1 - datetime2)/3600
