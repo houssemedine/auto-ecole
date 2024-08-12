@@ -10,9 +10,10 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from autoecole_api.permissions import IsManager
 from .tools import generete_username
+from django.contrib.auth.hashers import make_password
+
+
 # Custom JWT to obtain more information
-
-
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -32,7 +33,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated, IsManager])
+# @permission_classes([IsAuthenticated, IsManager])
 def school(request):
     # Get connected user
 
@@ -40,8 +41,9 @@ def school(request):
         # Get connected User
         user = request.user
         # Get list of school for connected user
-        school_id = Employee.undeleted_objects.filter(id=user.id).values('school_id')
-        if not (schools := Employee.undeleted_objects.filter(id=user.id).values('school_id')):
+        # school_id = Employee.undeleted_objects.filter(id=user.id).values('school_id')
+        # if not (schools := Employee.undeleted_objects.filter(id=user.id).values('school_id')):
+        if not (schools := School.undeleted_objects.all()):
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = School_serializer(schools, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -165,13 +167,10 @@ def card_edit(request, id):
     if request.method == 'PUT':
         serializer = Card_serializer(card, data=request.data)
         if not (serializer.is_valid()):
-            print(request.data)
-            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     if request.method == 'DELETE':
-        print('delete',id)
         card.is_deleted = True
         card.deleted_at = datetime.now()
         card.save()
@@ -231,7 +230,6 @@ def session(request):
     if request.method == 'POST':
         serializer = Session_serializer_edit(data=request.data)
         if not serializer.is_valid():
-            print(serializer.errors)
             return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -250,7 +248,7 @@ def session_edit(request, id):
     if request.method == 'PUT':
         serializer = Session_serializer_edit(session, data=request.data)
         if not (serializer.is_valid()):
-            return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     if request.method == 'DELETE':
@@ -350,6 +348,15 @@ def licence(request):
         serializer = Licence_serializer(licences, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+def owner(request):
+    if request.method == 'GET':
+        if not (owner := Owner.undeleted_objects.all()):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = Owner_serializer(owner, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 @api_view(['GET', 'POST'])
 def session_types(request):
     if request.method == 'GET':
@@ -357,3 +364,45 @@ def session_types(request):
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = SessionTypes_serializer(session_types, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def register(request):
+    if request.method == 'POST':
+        owner_data = dict()
+        school_data = dict()
+        username_list = User.objects.values_list('username',flat=True)
+        data = request.data.copy()
+
+        #Format owner data
+        owner_data['first_name'] = data['first_name']
+        owner_data['last_name'] = data['last_name']
+        owner_data['tel'] = data['tel']
+        print('password 1', data['password'])
+        owner_data['password'] =  make_password(data['password'])
+
+        print('password 1', owner_data['password'])
+
+        owner_data['username'] = generete_username(owner_data['first_name'], owner_data['last_name'],username_list)
+        owner_serializer = Owner_serializer(data=owner_data)
+
+        #Save Owner Model
+        if not owner_serializer.is_valid():
+            return Response(owner_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        owner_serializer.save()
+
+        #Format school data
+        school_data['name']=data['name']
+        school_data['code']=data['code']
+        school_data['owner']=owner_serializer.data['id']
+        school_serializer = School_serializer(data=school_data)
+        #Save School Model
+        if not school_serializer.is_valid():
+            Owner.objects.filter(id=owner_serializer.data['id']).delete()
+            return Response(school_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        school_serializer.save()
+
+    return Response(owner_serializer.data, status=status.HTTP_200_OK)
+
+
+

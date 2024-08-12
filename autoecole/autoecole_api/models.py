@@ -57,21 +57,22 @@ class Owner(BaseModel, SoftDeleteModel, User):
     ]
 
     role = models.CharField(max_length=100, choices=roles, default='Manager')
-    city = models.CharField(max_length=50)
-    governorate = models.CharField(max_length=50)
-    country = models.CharField(max_length=50)
-    tel = models.IntegerField(blank=True, null=True)
-    birthday = models.DateField()
+    # city = models.CharField(max_length=50)
+    # governorate = models.CharField(max_length=50)
+    # country = models.CharField(max_length=50)
+    tel = models.IntegerField(unique=True)
+    birthday = models.DateField(blank=True, null=True)
 
 
 # School model
 class School(BaseModel, SoftDeleteModel):
     name = models.CharField(max_length=100)
-    adress = models.TextField(max_length=150)
-    city = models.CharField(max_length=50)
-    governorate = models.CharField(max_length=50)
-    country = models.CharField(max_length=50)
-    speciality = models.CharField(max_length=50)
+    code=models.CharField(max_length=50,unique=True)
+    adress = models.TextField(max_length=150,blank=True, null=True)
+    city = models.CharField(max_length=50,blank=True, null=True)
+    governorate = models.CharField(max_length=50,blank=True, null=True)
+    country = models.CharField(max_length=50,blank=True, null=True)
+    speciality = models.CharField(max_length=50,blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     tel = models.IntegerField(blank=True, null=True)
     logo = models.ImageField(blank=True, null=True)
@@ -106,6 +107,12 @@ class Student(BaseModel, SoftDeleteModel, User):
 class LicenceType(BaseModel, SoftDeleteModel):
     name=models.CharField(max_length=50)
     comment= models.DateField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return f'Permis: {self.name}'
 
 
 class Card(BaseModel, SoftDeleteModel):
