@@ -60,8 +60,8 @@ REST_FRAMEWORK = {
 
 # JWT Configuration
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=90),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=90),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=9999),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=9999),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': False,
@@ -123,6 +123,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'autoecole.wsgi.application'
+AUTH_USER_MODEL = 'autoecole_api.User'
 
 
 # Database

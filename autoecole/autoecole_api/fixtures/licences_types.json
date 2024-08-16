@@ -1,0 +1,53 @@
+[
+	{
+		"model": "autoecole_api.licenceType",
+		"pk": 1,
+		"fields": {
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null,
+			"name": "A",
+			"comment": null
+		}
+	},
+	{
+		"model": "autoecole_api.licenceType",
+		"pk": 2,
+		"fields": {
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null,
+			"name": "B",
+			"comment": null
+		}
+	},
+	{
+		"model": "autoecole_api.licenceType",
+		"pk": 3,
+		"fields": {
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null,
+			"name": "D",
+			"comment": null
+		}
+	}
+]

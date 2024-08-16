@@ -1,15 +1,43 @@
 from django.db import models
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+
+# Create your models here.
+class User(AbstractUser):
+    USER_TYPE_CHOICES = (
+    (1, 'Guest'),
+    (2, 'Admin'),
+    (3, 'Owner'),
+    (4, 'Trainer'),
+    (5, 'Student'),
+    )
+
+    fonction = models.PositiveSmallIntegerField(
+        choices=USER_TYPE_CHOICES,
+        default=1
+        )
+    avatar = models.ImageField(
+        verbose_name='photo de profile',
+        upload_to='media/avatars',
+        null=True,
+        blank=True
+        )
+
+    def __str__(self):
+        fonction = "Admin"
+        for loop in self.USER_TYPE_CHOICES:
+            if loop[0] == self.fonction:
+                fonction = loop[1]
+                break
+        return "{} : {}".format(self.username, fonction)
 
 # BasedModel
-
-
 class BaseModel(models.Model):
     # created_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
-    created_by = models.CharField(max_length=30, default='Ibiza')
-    updated_by = models.CharField(max_length=30, default='Ibiza')
+    created_by = models.IntegerField( null=True, blank=True)
+    updated_by = models.IntegerField( null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -27,10 +55,10 @@ class SoftDeleteManager(models.Manager):
 
 class SoftDeleteModel(models.Model):
     is_deleted = models.BooleanField(null=False, default=False)
-    deleted_by = models.CharField(max_length=30, null=True, blank=True)
+    deleted_by = models.IntegerField( null=True, blank=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
     restored_at = models.DateTimeField(null=True, blank=True)
-    restored_by = models.CharField(max_length=30, null=True, blank=True)
+    restored_by = models.IntegerField( null=True, blank=True)
 
     # objects = models.Manager()
     undeleted_objects = SoftDeleteManager()

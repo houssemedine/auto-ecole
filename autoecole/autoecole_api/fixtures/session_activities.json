@@ -1,0 +1,53 @@
+[
+	{
+		"model": "autoecole_api.activity",
+		"pk": 1,
+		"fields": {
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null,
+			"name": "Passer les vitesses",
+			"duration": null
+		}
+	},
+	{
+		"model": "autoecole_api.activity",
+		"pk": 2,
+		"fields": {
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null,
+			"name": "Tenir son volant",
+			"duration": null
+		}
+	},
+	{
+		"model": "autoecole_api.activity",
+		"pk": 3,
+		"fields": {
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null,
+			"name": "Braquer et contre-braquer",
+			"duration": null
+		}
+	}
+]

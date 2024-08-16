@@ -22,7 +22,18 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add custom claims
         token['username'] = user.username
         token['email'] = user.email
+        token['first_name'] = user.first_name
+        token['last_name'] = user.last_name
+        token['fonction'] = user.fonction
+        if user.fonction == 3:
+            school=School.undeleted_objects.filter(owner=user.id).all()
+            token['school'] = School_serializer(school, many=True).data
+            print( token['school'])
 
+        if user.fonction == 1:
+            token['school']=0
+
+        # print(token)
         return token
 
 
@@ -83,16 +94,21 @@ def school_edit(request, id):
 
 @api_view(['GET', 'POST'])
 # @permission_classes([IsAuthenticated])
-def student(request):
+def student(request,school_id):
+    user = request.user
     if request.method == 'GET':
-        if not (students := Student.undeleted_objects.all()):
+        if not (students := Student.undeleted_objects.filter(school=school_id)).all():
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = Student_serializer(students, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
         username_list=User.objects.values_list('username',flat=True)
         data=request.data.copy()
-        data['school']=2
+        data['created_by']=user.id
+        data['fonction']=5
+        print('school_id',school_id)
+        print('school_id type',type(school_id))
+        data['school']=school_id
         data['username']=generete_username(data['first_name'], data['last_name'], username_list)
         data['password']='test'
         serializer = Student_serializer(data=data)
@@ -133,7 +149,6 @@ def student_edit(request, id):
 # @permission_classes([IsAuthenticated])
 def card(request):
     user = request.user
-    user.id=9
     if request.method == 'GET':
         if not (cards := Card.undeleted_objects.filter(student__school__owner=user.id)):
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -374,14 +389,11 @@ def register(request):
         data = request.data.copy()
 
         #Format owner data
+        owner_data['fonction']=3
         owner_data['first_name'] = data['first_name']
         owner_data['last_name'] = data['last_name']
         owner_data['tel'] = data['tel']
-        print('password 1', data['password'])
         owner_data['password'] =  make_password(data['password'])
-
-        print('password 1', owner_data['password'])
-
         owner_data['username'] = generete_username(owner_data['first_name'], owner_data['last_name'],username_list)
         owner_serializer = Owner_serializer(data=owner_data)
 
