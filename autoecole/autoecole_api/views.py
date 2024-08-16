@@ -106,8 +106,6 @@ def student(request,school_id):
         data=request.data.copy()
         data['created_by']=user.id
         data['fonction']=5
-        print('school_id',school_id)
-        print('school_id type',type(school_id))
         data['school']=school_id
         data['username']=generete_username(data['first_name'], data['last_name'], username_list)
         data['password']='test'
@@ -277,9 +275,9 @@ def session_edit(request, id):
 
 
 @api_view(['GET', 'POST'])
-def employee(request):
+def employee(request,school_id):
     if request.method == 'GET':
-        if not (employees := Employee.undeleted_objects.all()):
+        if not (employees := Employee.undeleted_objects.filter(school=school_id).all()):
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = Employee_serializer(employees, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

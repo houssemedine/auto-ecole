@@ -51,7 +51,7 @@ urlpatterns = [
 
         # Session URL
                 # index and save
-        path('employee/',views.employee,name='employee'),
+        path('school/<int:school_id>/employees/',views.employee,name='employee'),
                 # edit and delete
         path('employee/<int:id>/edit',views.employee_edit,name='employee_edit'),
 
