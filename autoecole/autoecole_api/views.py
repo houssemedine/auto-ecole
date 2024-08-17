@@ -276,15 +276,23 @@ def session_edit(request, id):
 
 @api_view(['GET', 'POST'])
 def employee(request,school_id):
+    user=request.user
     if request.method == 'GET':
         if not (employees := Employee.undeleted_objects.filter(school=school_id).all()):
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = Employee_serializer(employees, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
-        serializer = Employee_serializer(data=request.data)
+        username_list=User.objects.values_list('username',flat=True)
+        data=request.data.copy()
+        data['created_by']=user.id
+        data['role']='Trainer'
+        data['school']=school_id
+        data['username']=generete_username(data['first_name'], data['last_name'], username_list)
+        data['password']='test'
+        serializer = Employee_serializer(data=data)
         if not serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

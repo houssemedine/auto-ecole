@@ -1,6 +1,7 @@
 from django.db import models
 # from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 class User(AbstractUser):
@@ -194,11 +195,10 @@ class Employee(BaseModel, SoftDeleteModel, User):
     city = models.CharField(max_length=50)
     governorate = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
-    tel = models.IntegerField(blank=True, null=True)
+    tel = models.IntegerField(unique=True)
     birthday = models.DateField()
     school = models.ForeignKey(School, on_delete=models.CASCADE)
-    # schools=models.ManyToManyField(School)
-    # user=models.ForeignKey(User,on_delete=models.CASCADE)
+
 
     class Meta:
         ordering = ['username']
