@@ -50,7 +50,7 @@ class BaseModel(models.Model):
 class SoftDeleteManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_deleted=False)
-
+        # return super().get_queryset().all()
 # SoftDeleteModel
 
 
@@ -190,14 +190,15 @@ class Employee(BaseModel, SoftDeleteModel, User):
         ('Manager', 'Manager'),
         ('Trainer', 'Trainer'),
     ]
-
+    matricule=models.CharField(max_length=50,unique=True)
     role = models.CharField(max_length=100, choices=roles, default='Trainer')
     city = models.CharField(max_length=50)
     governorate = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
-    tel = models.IntegerField(unique=True)
+    tel = models.IntegerField()
     birthday = models.DateField()
     school = models.ForeignKey(School, on_delete=models.CASCADE)
+    image=models.ImageField(blank=True,null=True)
 
 
     class Meta:

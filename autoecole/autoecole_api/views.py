@@ -283,13 +283,20 @@ def employee(request,school_id):
         serializer = Employee_serializer(employees, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
+
         username_list=User.objects.values_list('username',flat=True)
+        print('Before',request.data)
         data=request.data.copy()
         data['created_by']=user.id
         data['role']='Trainer'
         data['school']=school_id
         data['username']=generete_username(data['first_name'], data['last_name'], username_list)
         data['password']='test'
+        # data['image']='image'
+        # data['matricule']='matricule'
+
+        print(data)
+
         serializer = Employee_serializer(data=data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -299,6 +306,7 @@ def employee(request,school_id):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def employee_edit(request, id):
+    user=request.user
     try:
         employee = Employee.undeleted_objects.get(id=id)
     except Exception:
@@ -308,9 +316,15 @@ def employee_edit(request, id):
         serializer = Employee_serializer(employee)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'PUT':
-        serializer = Employee_serializer(employee, data=request.data)
+        username_list=User.objects.values_list('username',flat=True)
+        data=request.data.copy()
+        data['updated_by']=user.id
+        data['school']=employee.school.id
+        data['username']=generete_username(data['first_name'], data['last_name'], username_list)
+        data['password']=employee.password
+        serializer = Employee_serializer(employee, data=data)
         if not (serializer.is_valid()):
-            return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     if request.method == 'DELETE':
