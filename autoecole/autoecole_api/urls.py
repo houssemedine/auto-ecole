@@ -57,7 +57,7 @@ urlpatterns = [
 
         # Car URL
                 # index and save
-        path('car/',views.car,name='car'),
+        path('school/<int:school_id>/cars/',views.car,name='car'),
                 # edit and delete
         path('car/<int:id>/edit',views.car_edit,name='car_edit'),
 

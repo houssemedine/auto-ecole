@@ -288,14 +288,10 @@ def employee(request,school_id):
         print('Before',request.data)
         data=request.data.copy()
         data['created_by']=user.id
-        data['role']='Trainer'
         data['school']=school_id
+        data['is_active']=True
         data['username']=generete_username(data['first_name'], data['last_name'], username_list)
         data['password']='test'
-        # data['image']='image'
-        # data['matricule']='matricule'
-
-        print(data)
 
         serializer = Employee_serializer(data=data)
         if not serializer.is_valid():
@@ -320,7 +316,15 @@ def employee_edit(request, id):
         data=request.data.copy()
         data['updated_by']=user.id
         data['school']=employee.school.id
-        data['username']=generete_username(data['first_name'], data['last_name'], username_list)
+        first_name=employee.first_name
+        last_name=employee.last_name
+        if 'first_name' in data:
+            first_name=data['first_name']
+
+        if 'last_name' in data:
+            last_name=data['last_name']
+
+        data['username']=generete_username(first_name, last_name, username_list)
         data['password']=employee.password
         serializer = Employee_serializer(employee, data=data)
         if not (serializer.is_valid()):
@@ -337,16 +341,21 @@ def employee_edit(request, id):
 
 # Employee CRUD
 @api_view(['GET', 'POST'])
-def car(request):
+def car(request,school_id):
+    user=request.user
+
     if request.method == 'GET':
-        if not (cars := Car.undeleted_objects.all()):
+        if not (cars := Car.undeleted_objects.filter(school=school_id).all()):
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = Car_serializer(cars, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
-        serializer = Car_serializer(data=request.data)
+        data=request.data.copy()
+        data['created_by']=user.id
+        data['school']=school_id
+        serializer = Car_serializer(data=data)
         if not serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -362,9 +371,11 @@ def car_edit(request, id):
         serializer = Car_serializer(car)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'PUT':
-        serializer = Car_serializer(car, data=request.data)
+        data=request.data.copy()
+        data['school']=car.school.id
+        serializer = Car_serializer(car, data=data)
         if not (serializer.is_valid()):
-            return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     if request.method == 'DELETE':
