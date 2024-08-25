@@ -77,6 +77,10 @@ urlpatterns = [
                 # index
         path('register/',views.register,name='register'),
 
+        # status URL
+                # index
+        path('status/',views.status_progress,name='status'),
+
         # stats URL
                 # index
         path('school/<int:school_id>/stats/',views.stats,name='stats'),

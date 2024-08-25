@@ -1,0 +1,50 @@
+[
+	{
+		"model": "autoecole_api.status",
+		"pk": 1,
+		"fields": {
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null,
+			"name": "In progress"
+		}
+	},
+	{
+		"model": "autoecole_api.status",
+		"pk": 2,
+		"fields": {
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null,
+			"name": "Completed"
+		}
+	},
+	{
+		"model": "autoecole_api.status",
+		"pk": 3,
+		"fields": {
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null,
+			"name": "Canceled"
+		}
+	}
+]

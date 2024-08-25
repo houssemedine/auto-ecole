@@ -390,12 +390,20 @@ def car_edit(request, id):
         return Response(status=status.HTTP_201_CREATED)
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def licence(request):
     if request.method == 'GET':
         if not (licences := LicenceType.undeleted_objects.all()):
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = Licence_serializer(licences, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def status_progress(request):
+    if request.method == 'GET':
+        if not (status_progress_data := Status.undeleted_objects.all()):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = Licence_serializer(status_progress_data, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])

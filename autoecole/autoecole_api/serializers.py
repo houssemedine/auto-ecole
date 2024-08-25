@@ -1,6 +1,6 @@
 from dataclasses import field
 from rest_framework import serializers
-from autoecole_api.models import School,Student,Card,Activity,Session,Employee,Car,LicenceType,SessionType,Owner
+from autoecole_api.models import School,Student,Card,Activity,Session,Employee,Car,LicenceType,SessionType,Owner,Status
 
 
 class School_serializer(serializers.ModelSerializer):
@@ -29,6 +29,12 @@ class Activity_serializer(serializers.ModelSerializer):
 class Licence_serializer(serializers.ModelSerializer):
     class Meta:
         model= LicenceType
+        fields = '__all__'
+
+
+class Status_serializer(serializers.ModelSerializer):
+    class Meta:
+        model= Status
         fields = '__all__'
 
 class Card_serializer_read(serializers.ModelSerializer):

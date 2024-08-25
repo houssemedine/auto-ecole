@@ -49,8 +49,8 @@ class BaseModel(models.Model):
 # automatically without using filter(is_delete=False)
 class SoftDeleteManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(is_deleted=False)
-        # return super().get_queryset().all()
+        # return super().get_queryset().filter(is_deleted=False)
+        return super().get_queryset().all()
 # SoftDeleteModel
 
 
@@ -144,6 +144,15 @@ class LicenceType(BaseModel, SoftDeleteModel):
         return f'Permis: {self.name}'
 
 
+class Status(BaseModel, SoftDeleteModel):
+    name=models.CharField(max_length=50, unique=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return f'Status: {self.name}'
+
 class Card(BaseModel, SoftDeleteModel):
     status = [
         ('1', 'In progress'),
@@ -153,8 +162,8 @@ class Card(BaseModel, SoftDeleteModel):
     licence_type = models.ForeignKey(LicenceType,related_name='licence_type' ,on_delete=models.CASCADE)
     start_at = models.DateField()
     end_at = models.DateField(null=True, blank=True)
-    status = models.CharField(max_length=50, default=1,choices=status)
     student = models.ForeignKey(Student,related_name='student' ,on_delete=models.CASCADE)
+    status = models.ForeignKey(Status,related_name='status',default=1, on_delete=models.CASCADE)
     # if True price will be an input, if false price will be calucle in proprety
     manual_price = models.BooleanField(null=True, blank=True)
     price = models.DecimalField(
