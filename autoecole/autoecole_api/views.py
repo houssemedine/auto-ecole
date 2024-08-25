@@ -11,6 +11,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from autoecole_api.permissions import IsManager
 from .tools import generete_username
 from django.contrib.auth.hashers import make_password
+import pandas as pd
 
 
 # Custom JWT to obtain more information
@@ -28,7 +29,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         if user.fonction == 3:
             school=School.undeleted_objects.filter(owner=user.id).all()
             token['school'] = School_serializer(school, many=True).data
-            print( token['school'])
 
         if user.fonction == 1:
             token['school']=0
@@ -145,10 +145,9 @@ def student_edit(request, id):
 
 @api_view(['GET', 'POST'])
 # @permission_classes([IsAuthenticated])
-def card(request):
-    user = request.user
+def card(request,school_id,progress_status):
     if request.method == 'GET':
-        if not (cards := Card.undeleted_objects.filter(student__school__owner=user.id)):
+        if not (cards := Card.undeleted_objects.filter(student__school=school_id).filter(status=progress_status).all()):
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = Card_serializer_read(cards, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -178,7 +177,13 @@ def card_edit(request, id):
         serializer = Card_serializer(card)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'PUT':
-        serializer = Card_serializer(card, data=request.data)
+        data=request.data.copy()
+        print('data before',data)
+        if data['status'] != '2':
+            data['end_at']=None
+        print('data after',data)
+
+        serializer = Card_serializer(card, data=data)
         if not (serializer.is_valid()):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
@@ -285,7 +290,6 @@ def employee(request,school_id):
     if request.method == 'POST':
 
         username_list=User.objects.values_list('username',flat=True)
-        print('Before',request.data)
         data=request.data.copy()
         data['created_by']=user.id
         data['school']=school_id
@@ -448,4 +452,31 @@ def register(request):
     return Response(owner_serializer.data, status=status.HTTP_200_OK)
 
 
+# Employee CRUD
+@api_view(['GET'])
+def stats(request, school_id):
+    stats=dict()
+    card_stat=dict()
+    students_stat=dict()
+    cards=Card.undeleted_objects.filter(student__school=school_id).values()
+    df_card=pd.DataFrame(cards)
+
+    df_cards_inprogress=df_card[df_card["status"] == "1"]
+    df_cards_completed=df_card[df_card["status"] == "2"]
+    df_cards_canceled=df_card[df_card["status"] == "3"]
+    card_stat["cards_count"]=len(df_card)
+    card_stat["count_cards_inprogress"]=len(df_cards_inprogress)
+    card_stat["count_cards_completed"]=len(df_cards_completed)
+    card_stat["count_cards_canceled"]=len(df_cards_canceled)
+
+    students=Student.undeleted_objects.filter(school=school_id).values()
+    df_students=pd.DataFrame(students)
+    students_stat['students_count']=len(df_students)
+
+
+    stats.update(card_stat)
+    stats.update(students_stat)
+
+
+    return Response(stats,status=status.HTTP_200_OK)
 

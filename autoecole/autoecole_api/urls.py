@@ -32,7 +32,7 @@ urlpatterns = [
 
         # Card URL
                 # index and save
-        path('cards/',views.card,name='card'),
+        path('school/<int:school_id>/cards/<str:progress_status>/',views.card,name='card'),
                 # edit and delete
         path('cards/<int:id>/edit',views.card_edit,name='card_edit'),
 
@@ -76,5 +76,9 @@ urlpatterns = [
         # Register URL
                 # index
         path('register/',views.register,name='register'),
+
+        # stats URL
+                # index
+        path('school/<int:school_id>/stats/',views.stats,name='stats'),
 
 ]

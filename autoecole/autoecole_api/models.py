@@ -145,10 +145,15 @@ class LicenceType(BaseModel, SoftDeleteModel):
 
 
 class Card(BaseModel, SoftDeleteModel):
+    status = [
+        ('1', 'In progress'),
+        ('2', 'Completed'),
+        ('3', 'Canceled'),
+    ]
     licence_type = models.ForeignKey(LicenceType,related_name='licence_type' ,on_delete=models.CASCADE)
     start_at = models.DateField()
     end_at = models.DateField(null=True, blank=True)
-    status = models.CharField(max_length=50, default='In progress')
+    status = models.CharField(max_length=50, default=1,choices=status)
     student = models.ForeignKey(Student,related_name='student' ,on_delete=models.CASCADE)
     # if True price will be an input, if false price will be calucle in proprety
     manual_price = models.BooleanField(null=True, blank=True)
