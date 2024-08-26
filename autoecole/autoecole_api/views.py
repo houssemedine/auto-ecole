@@ -179,7 +179,7 @@ def card_edit(request, id):
     if request.method == 'PUT':
         data=request.data.copy()
         print('data before',data)
-        if data['status'] != '2':
+        if data['status'] != 2:
             data['end_at']=None
         print('data after',data)
 
@@ -469,9 +469,9 @@ def stats(request, school_id):
     cards=Card.undeleted_objects.filter(student__school=school_id).values()
     df_card=pd.DataFrame(cards)
 
-    df_cards_inprogress=df_card[df_card["status"] == "1"]
-    df_cards_completed=df_card[df_card["status"] == "2"]
-    df_cards_canceled=df_card[df_card["status"] == "3"]
+    df_cards_inprogress=df_card[df_card["status_id"] == 1]
+    df_cards_completed=df_card[df_card["status_id"] == 2]
+    df_cards_canceled=df_card[df_card["status_id"] == 3]
     card_stat["cards_count"]=len(df_card)
     card_stat["count_cards_inprogress"]=len(df_cards_inprogress)
     card_stat["count_cards_completed"]=len(df_cards_completed)

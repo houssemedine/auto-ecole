@@ -40,6 +40,7 @@ class Status_serializer(serializers.ModelSerializer):
 class Card_serializer_read(serializers.ModelSerializer):
     student = Student_serializer()
     licence_type = Licence_serializer()
+    status = Status_serializer()
     class Meta:
         model=Card
         fields = '__all__'
