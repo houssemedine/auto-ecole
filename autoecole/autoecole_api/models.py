@@ -153,6 +153,8 @@ class Status(BaseModel, SoftDeleteModel):
     def __str__(self):
         return f'Status: {self.name}'
 
+
+
 class Card(BaseModel, SoftDeleteModel):
     status = [
         ('1', 'In progress'),
@@ -174,6 +176,8 @@ class Card(BaseModel, SoftDeleteModel):
     discount = models.DecimalField(
         max_digits=99999999, decimal_places=2, null=True, blank=True)
 
+    # payments=models.ManyToManyField(Payment, related_name='payments')
+
     class Meta:
         ordering = ['licence_type']
 
@@ -185,6 +189,17 @@ class Card(BaseModel, SoftDeleteModel):
     #     total_price=((self.hours_number*self.hour_price)*self.discount)/100
     #     return total_price
 
+class Payment(BaseModel, SoftDeleteModel):
+    amount=models.DecimalField(max_digits=99999999, decimal_places=2)
+    date=models.DateField()
+    motive=models.CharField(max_length=50)
+    card=models.ForeignKey(Card, related_name='cardP' ,on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['date']
+
+    def __str__(self):
+        return f'Date: {self.date}'
 
 class Activity(BaseModel, SoftDeleteModel):
     name = models.CharField(max_length=50, unique=True)

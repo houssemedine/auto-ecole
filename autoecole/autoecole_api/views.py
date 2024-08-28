@@ -343,7 +343,7 @@ def employee_edit(request, id):
         return Response(status=status.HTTP_201_CREATED)
 
 
-# Employee CRUD
+# Car CRUD
 @api_view(['GET', 'POST'])
 def car(request,school_id):
     user=request.user
@@ -487,4 +487,25 @@ def stats(request, school_id):
 
 
     return Response(stats,status=status.HTTP_200_OK)
+
+
+# Payment CRUD
+@api_view(['GET', 'POST'])
+def payment(request,school_id):
+    user=request.user
+
+    if request.method == 'GET':
+        if not (payments := Payment.undeleted_objects.filter(card__student__school=school_id).all()):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = Payments_serializer(payments, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    if request.method == 'POST':
+        data=request.data.copy()
+        data['created_by']=user.id
+        print(data)
+        serializer = Payments_serializer(data=data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 

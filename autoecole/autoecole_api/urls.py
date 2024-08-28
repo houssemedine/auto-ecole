@@ -16,8 +16,6 @@ urlpatterns = [
                 #Refresh Token
         path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
-
-
         # School URL
                 # index and save
         path('school/<int:id>',views.school,name='school'),
@@ -84,5 +82,9 @@ urlpatterns = [
         # stats URL
                 # index
         path('school/<int:school_id>/stats/',views.stats,name='stats'),
+
+        # Payment URL
+                # index and save
+        path('school/<int:school_id>/payments/',views.payment,name='payment'),
 
 ]
