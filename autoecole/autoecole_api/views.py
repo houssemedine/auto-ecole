@@ -174,7 +174,7 @@ def card_edit(request, id):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = Card_serializer(card)
+        serializer = Card_serializer_read(card)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'PUT':
         data=request.data.copy()
@@ -502,10 +502,17 @@ def payment(request,school_id):
     if request.method == 'POST':
         data=request.data.copy()
         data['created_by']=user.id
-        print(data)
         serializer = Payments_serializer(data=data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+# Payment CRUD
+@api_view(['GET', 'POST'])
+def payment_dossier(request,card_id):
+    if request.method == 'GET':
+        if not (payments := Payment.undeleted_objects.filter(card=card_id).all()):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = Payments_serializer(payments, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

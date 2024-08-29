@@ -196,7 +196,7 @@ class Payment(BaseModel, SoftDeleteModel):
     card=models.ForeignKey(Card, related_name='cardP' ,on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ['date']
+        ordering = ['-date']
 
     def __str__(self):
         return f'Date: {self.date}'
