@@ -11,9 +11,3 @@ def generete_username(first_name, last_name, username_list):
         username = f"{username}{suffixe}"
 
     return username
-
-
-def get_user_school(user):
-
-    #get user fonction
-    user_fonction=User.undeleted_objects.filter(user.id)

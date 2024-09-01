@@ -178,15 +178,32 @@ def card_edit(request, id):
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'PUT':
         data=request.data.copy()
-        print('data before',data)
         if data['status'] != 2:
             data['end_at']=None
-        print('data after',data)
-
         serializer = Card_serializer(card, data=data)
-        if not (serializer.is_valid()):
+
+        if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         serializer.save()
+
+        #Save History
+        history=CardStatusHistory.undeleted_objects.filter(card=id).latest("id")
+
+        if history.status != card.status:
+            history_data={
+                'card':id,
+                'status':card.status.id,
+                'date':datetime.now().date(),
+                'created_by':request.user.id
+            }
+            serializer_history=Card_status_serializer(data=history_data)
+
+            if not serializer_history.is_valid():
+                return Response(serializer_history.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            serializer_history.save()
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     if request.method == 'DELETE':
         card.is_deleted = True
@@ -195,9 +212,21 @@ def card_edit(request, id):
         serializer = Card_serializer(card)
         return Response(status=status.HTTP_201_CREATED)
 
+@api_view(['GET'])
+def card_history(request, card_id):
+        history=CardStatusHistory.undeleted_objects.filter(card=card_id).all()
+        if not history:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        serializer_history = Card_status_serializer_read(history,many=True)
+        return Response(serializer_history.data, status=status.HTTP_200_OK)
+
+
+
+
+
+
 # Acitivity CRUD
-
-
 @api_view(['GET', 'POST'])
 def activity(request):
     if request.method == 'GET':

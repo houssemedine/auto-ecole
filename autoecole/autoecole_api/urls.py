@@ -89,6 +89,10 @@ urlpatterns = [
 
         #Payment for one card
         # index and save
-        path('card/<int:card_id>/payments/',views.payment_dossier,name='dossier_payment'),
+        path('card/<int:card_id>/payments/',views.payment_dossier,name='card_payment'),
+
+        #Card History
+        path('card/<int:card_id>/history/',views.card_history,name='card_history'),
+
 
 ]

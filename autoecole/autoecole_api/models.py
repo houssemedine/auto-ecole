@@ -151,7 +151,7 @@ class Status(BaseModel, SoftDeleteModel):
         ordering = ['name']
 
     def __str__(self):
-        return f'Status: {self.name}'
+        return f'{self.name}'
 
 
 
@@ -188,6 +188,17 @@ class Card(BaseModel, SoftDeleteModel):
     # def total_price(self):
     #     total_price=((self.hours_number*self.hour_price)*self.discount)/100
     #     return total_price
+
+class CardStatusHistory(BaseModel, SoftDeleteModel):
+    card = models.ForeignKey(Card,related_name='card_history' ,on_delete=models.CASCADE)
+    status =models.ForeignKey(Status, related_name='status_history', on_delete=models.CASCADE)
+    date=models.DateField()
+
+    class Meta:
+        ordering = ['date']
+
+    def __str__(self):
+        return f'Card: {self.card}, Status: {self.status}'
 
 class Payment(BaseModel, SoftDeleteModel):
     amount=models.DecimalField(max_digits=99999999, decimal_places=2)
