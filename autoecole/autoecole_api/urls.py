@@ -77,7 +77,7 @@ urlpatterns = [
 
         # status URL
                 # index
-        path('status/',views.status_progress,name='status'),
+        path('status/',views.status_status,name='status'),
 
         # stats URL
                 # index
@@ -93,6 +93,9 @@ urlpatterns = [
 
         #Card History
         path('card/<int:card_id>/history/',views.card_history,name='card_history'),
+
+        #Session for one card
+        path('card/<int:card_id>/sessions/',views.card_session,name='card_session'),
 
 
 ]

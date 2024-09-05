@@ -12,7 +12,7 @@
 			"deleted_at": null,
 			"restored_at": null,
 			"restored_by": null,
-			"name": "In progress"
+			"name": "Created"
 		}
 	},
 	{
@@ -28,7 +28,7 @@
 			"deleted_at": null,
 			"restored_at": null,
 			"restored_by": null,
-			"name": "Completed"
+			"name": "Code"
 		}
 	},
 	{
@@ -44,7 +44,71 @@
 			"deleted_at": null,
 			"restored_at": null,
 			"restored_by": null,
-			"name": "Canceled"
+			"name": "Examin code"
+		}
+	},
+	{
+		"model": "autoecole_api.status",
+		"pk": 4,
+		"fields": {
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null,
+			"name": "Conduite"
+		}
+	},
+	{
+		"model": "autoecole_api.status",
+		"pk": 5,
+		"fields": {
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null,
+			"name": "Examin conduite"
+		}
+	},
+	{
+		"model": "autoecole_api.status",
+		"pk": 6,
+		"fields": {
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null,
+			"name": "Examin Parc"
+		}
+	},
+	{
+		"model": "autoecole_api.status",
+		"pk": 99,
+		"fields": {
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null,
+			"name": "Completed"
 		}
 	}
 ]

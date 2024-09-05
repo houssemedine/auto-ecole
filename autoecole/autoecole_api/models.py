@@ -148,12 +148,19 @@ class Status(BaseModel, SoftDeleteModel):
     name=models.CharField(max_length=50, unique=True)
 
     class Meta:
-        ordering = ['name']
+        ordering = ['id']
 
     def __str__(self):
         return f'{self.name}'
 
+# class Progress(BaseModel, SoftDeleteModel):
+#     name=models.CharField(max_length=50, unique=True)
 
+#     class Meta:
+#         ordering = ['id']
+
+#     def __str__(self):
+#         return f'{self.name}'
 
 class Card(BaseModel, SoftDeleteModel):
     status = [
@@ -175,8 +182,8 @@ class Card(BaseModel, SoftDeleteModel):
     hours_number = models.IntegerField(null=True, blank=True)
     discount = models.DecimalField(
         max_digits=99999999, decimal_places=2, null=True, blank=True)
+    # progress = models.ForeignKey(Progress,related_name='progress' ,on_delete=models.CASCADE, default=1)
 
-    # payments=models.ManyToManyField(Payment, related_name='payments')
 
     class Meta:
         ordering = ['licence_type']
@@ -195,7 +202,7 @@ class CardStatusHistory(BaseModel, SoftDeleteModel):
     date=models.DateField()
 
     class Meta:
-        ordering = ['date']
+        ordering = ['-created_at']
 
     def __str__(self):
         return f'Card: {self.card}, Status: {self.status}'
@@ -286,7 +293,7 @@ class Session(BaseModel, SoftDeleteModel):
     end_at = models.TimeField()
     card = models.ForeignKey(Card,related_name='card' ,on_delete=models.CASCADE)
     employee = models.ForeignKey(Employee,related_name='employee' ,on_delete=models.CASCADE)
-    car = models.ForeignKey(Car,related_name='car' ,on_delete=models.CASCADE)
+    car = models.ForeignKey(Car,related_name='car' ,on_delete=models.CASCADE,null=True, blank=True)
     activities = models.ManyToManyField(Activity, null=True, blank=True)
     session_type = models.ForeignKey(SessionType,related_name='session_type' ,on_delete=models.CASCADE)
 

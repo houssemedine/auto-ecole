@@ -147,7 +147,11 @@ def student_edit(request, id):
 # @permission_classes([IsAuthenticated])
 def card(request,school_id,progress_status):
     if request.method == 'GET':
-        if not (cards := Card.undeleted_objects.filter(student__school=school_id).filter(status=progress_status).all()):
+        status_list=[1,2,3,4,5,6]
+        if progress_status == 'completed':
+            status_list=[7]
+
+        if not (cards := Card.undeleted_objects.filter(student__school=school_id).filter(status__in=status_list).all()):
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = Card_serializer_read(cards, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -161,7 +165,21 @@ def card(request,school_id,progress_status):
         # else:
         #     serializer.validated_data['price'] = (
         #         serializer.validated_data['hours_number']*serializer.validated_data['hour_price']) * (1 - (serializer.validated_data['discount']/100))
-        serializer.save()
+        obj=serializer.save()
+
+        history_data={
+                    'card':obj.id,
+                    'status':1,
+                    'date':datetime.now().date(),
+                    'created_by':request.user.id
+                    }
+        serializer_history=Card_status_serializer(data=history_data)
+
+        if not serializer_history.is_valid():
+            return Response(serializer_history.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer_history.save()
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -178,7 +196,7 @@ def card_edit(request, id):
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'PUT':
         data=request.data.copy()
-        if data['status'] != 2:
+        if data['status'] != 99:
             data['end_at']=None
         serializer = Card_serializer(card, data=data)
 
@@ -188,15 +206,29 @@ def card_edit(request, id):
         serializer.save()
 
         #Save History
-        history=CardStatusHistory.undeleted_objects.filter(card=id).latest("id")
+        try:
+            history=CardStatusHistory.undeleted_objects.filter(card=id).latest("id")
+            if history.status != card.status:
+                history_data={
+                    'card':id,
+                    'status':card.status.id,
+                    'date':datetime.now().date(),
+                    'created_by':request.user.id
+                }
+                serializer_history=Card_status_serializer(data=history_data)
 
-        if history.status != card.status:
+                if not serializer_history.is_valid():
+                    return Response(serializer_history.errors, status=status.HTTP_400_BAD_REQUEST)
+
+                serializer_history.save()
+
+        except Exception:
             history_data={
-                'card':id,
-                'status':card.status.id,
-                'date':datetime.now().date(),
-                'created_by':request.user.id
-            }
+                    'card':id,
+                    'status':card.status.id,
+                    'date':datetime.now().date(),
+                    'created_by':request.user.id
+                }
             serializer_history=Card_status_serializer(data=history_data)
 
             if not serializer_history.is_valid():
@@ -277,9 +309,18 @@ def session(request):
     if request.method == 'POST':
         serializer = Session_serializer_edit(data=request.data)
         if not serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+def card_session(request, card_id):
+    if request.method == 'GET':
+        if not (sessions := Session.undeleted_objects.filter(card=card_id).all()):
+            print(sessions)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = Session_serializer_read(sessions, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -428,11 +469,11 @@ def licence(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
-def status_progress(request):
+def status_status(request):
     if request.method == 'GET':
-        if not (status_progress_data := Status.undeleted_objects.all()):
+        if not (status_status_data := Status.undeleted_objects.all()):
             return Response(status=status.HTTP_204_NO_CONTENT)
-        serializer = Licence_serializer(status_progress_data, many=True)
+        serializer = Status_serializer(status_status_data, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
@@ -497,14 +538,20 @@ def stats(request, school_id):
     students_stat=dict()
     cards=Card.undeleted_objects.filter(student__school=school_id).values()
     df_card=pd.DataFrame(cards)
+    if df_card.size > 0:
+        df_cards_inprogress=df_card[df_card["status_id"] == 1]
+        df_cards_completed=df_card[df_card["status_id"] == 2]
+        df_cards_canceled=df_card[df_card["status_id"] == 3]
+        card_stat["cards_count"]=len(df_card)
+        card_stat["count_cards_inprogress"]=len(df_cards_inprogress)
+        card_stat["count_cards_completed"]=len(df_cards_completed)
+        card_stat["count_cards_canceled"]=len(df_cards_canceled)
 
-    df_cards_inprogress=df_card[df_card["status_id"] == 1]
-    df_cards_completed=df_card[df_card["status_id"] == 2]
-    df_cards_canceled=df_card[df_card["status_id"] == 3]
-    card_stat["cards_count"]=len(df_card)
-    card_stat["count_cards_inprogress"]=len(df_cards_inprogress)
-    card_stat["count_cards_completed"]=len(df_cards_completed)
-    card_stat["count_cards_canceled"]=len(df_cards_canceled)
+    else:
+        card_stat["cards_count"]=0
+        card_stat["count_cards_inprogress"]=0
+        card_stat["count_cards_completed"]=0
+        card_stat["count_cards_canceled"]=0
 
     students=Student.undeleted_objects.filter(school=school_id).values()
     df_students=pd.DataFrame(students)
