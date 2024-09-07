@@ -294,7 +294,7 @@ class Session(BaseModel, SoftDeleteModel):
     card = models.ForeignKey(Card,related_name='card' ,on_delete=models.CASCADE)
     employee = models.ForeignKey(Employee,related_name='employee' ,on_delete=models.CASCADE)
     car = models.ForeignKey(Car,related_name='car' ,on_delete=models.CASCADE,null=True, blank=True)
-    activities = models.ManyToManyField(Activity, null=True, blank=True)
+    note=models.CharField(max_length=100,null=True, blank=True)
     session_type = models.ForeignKey(SessionType,related_name='session_type' ,on_delete=models.CASCADE)
 
     price = models.DecimalField(
