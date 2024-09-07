@@ -300,9 +300,9 @@ def activity_edit(request, id):
 
 # Session CRUD
 @api_view(['GET', 'POST'])
-def session(request):
+def session(request, school_id):
     if request.method == 'GET':
-        if not (sessions := Session.undeleted_objects.all()):
+        if not (sessions := Session.undeleted_objects.filter(card__student__school=school_id).all()):
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = Session_serializer_read(sessions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -334,6 +334,7 @@ def session_edit(request, id):
         serializer = Session_serializer_edit(session)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'PUT':
+        print(request.data)
         serializer = Session_serializer_edit(session, data=request.data)
         if not (serializer.is_valid()):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
