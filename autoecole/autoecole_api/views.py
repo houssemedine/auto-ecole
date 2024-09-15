@@ -12,7 +12,7 @@ from autoecole_api.permissions import IsManager
 from .tools import generete_username
 from django.contrib.auth.hashers import make_password
 import pandas as pd
-
+from django.db.models import Q
 
 # Custom JWT to obtain more information
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -308,6 +308,24 @@ def session(request, school_id):
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
         serializer = Session_serializer_edit(data=request.data)
+
+        car=request.data['car']
+        employee=request.data['employee']
+        start_at=request.data['start_at']
+        end_at=request.data['end_at']
+        day=request.data['day']
+
+        # Check the availability of the employee and the car for this session
+        sessions=Session.undeleted_objects.filter(
+            card__student__school=school_id,
+            day=day,
+            ).filter(
+                Q(start_at__lt=end_at) & Q(end_at__gt=start_at)).filter(
+                    Q(employee=employee) | Q(car=car))
+
+        if sessions.count() > 0:
+            return Response({'error':'session conflict'}, status=status.HTTP_400_BAD_REQUEST)
+
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
@@ -334,7 +352,22 @@ def session_edit(request, id):
         serializer = Session_serializer_edit(session)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'PUT':
-        print(request.data)
+        car=request.data['car']
+        employee=request.data['employee']
+        start_at=request.data['start_at']
+        end_at=request.data['end_at']
+        day=request.data['day']
+
+        # Check the availability of the employee and the car for this session
+        sessions=Session.undeleted_objects.filter(
+            card__student__school=session.card.student.school,
+            day=day,
+            ).filter(
+                Q(start_at__lt=end_at) & Q(end_at__gt=start_at)).filter(
+                    Q(employee=employee) | Q(car=car))
+
+        if sessions.count() > 0:
+            return Response({'error':'session conflict'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = Session_serializer_edit(session, data=request.data)
         if not (serializer.is_valid()):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -584,6 +617,26 @@ def payment(request,school_id):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['GET','PUT','DELETE'])
+def payment_edit(request,id):
+    try:
+        payment = Payment.undeleted_objects.get(id=id)
+    except Exception:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        serializer = Payments_serializer(payment)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    if request.method == 'PUT':
+        serializer = Payments_serializer(payment,data=request.data)
+        if not (serializer.is_valid()):
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
 
 # Payment CRUD
 @api_view(['GET', 'POST'])
