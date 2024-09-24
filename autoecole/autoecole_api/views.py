@@ -635,6 +635,12 @@ def payment_edit(request,id):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    if request.method == 'DELETE':
+        print('delete', id)
+        payment.is_deleted = True
+        serializer = Payments_serializer(payment)
+        serializer.save()
+        return Response(status=status.HTTP_201_CREATED)
 
 
 
