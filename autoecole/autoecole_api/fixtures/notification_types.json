@@ -1,0 +1,38 @@
+[
+	{
+		"model": "autoecole_api.notificationType",
+		"pk": 1,
+		"fields": {
+			"name": "Activity",
+			"description": null,
+			"importance": "medium"
+		}
+	},
+	{
+		"model": "autoecole_api.notificationType",
+		"pk": 2,
+		"fields": {
+			"name": "System",
+			"description": null,
+			"importance": "high"
+		}
+	},
+	{
+		"model": "autoecole_api.notificationType",
+		"pk": 3,
+		"fields": {
+			"name": "Marketing",
+			"description": null,
+			"importance": "medium"
+		}
+	},
+	{
+		"model": "autoecole_api.notificationType",
+		"pk": 4,
+		"fields": {
+			"name": "Alert",
+			"description": null,
+			"importance": "medium"
+		}
+	}
+]

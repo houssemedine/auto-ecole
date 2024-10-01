@@ -3,6 +3,11 @@ from rest_framework import serializers
 from autoecole_api.models import *
 
 
+class User_serializer(serializers.ModelSerializer):
+    class Meta:
+        model=User
+        fields = '__all__'
+
 class School_serializer(serializers.ModelSerializer):
     class Meta:
         model=School
@@ -105,3 +110,23 @@ class Session_serializer_read(serializers.ModelSerializer):
         model= Session
         fields = '__all__'
         # fields = ('day','start_at','end_at','activity','price','duration')
+
+class NotificationType_serializer(serializers.ModelSerializer):
+    class Meta:
+        model= NotificationType
+        fields = '__all__'
+
+
+class Notification_serializer(serializers.ModelSerializer):
+    class Meta:
+        model= Notification
+        fields = '__all__'
+
+
+class Notification_serializer_read(serializers.ModelSerializer):
+    user = User_serializer()
+    notification_type=NotificationType_serializer()
+
+    class Meta:
+        model= Notification
+        fields = '__all__'

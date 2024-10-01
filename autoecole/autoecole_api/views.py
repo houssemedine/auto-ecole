@@ -13,7 +13,8 @@ from .tools import generete_username
 from django.contrib.auth.hashers import make_password
 import pandas as pd
 from django.db.models import Q
-
+from django.apps import apps
+import json
 # Custom JWT to obtain more information
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -180,6 +181,21 @@ def card(request,school_id,progress_status):
 
         serializer_history.save()
 
+        # notication_data={
+        #     'school':school_id,
+        #     'action':'add',
+        #     'module':'Card',
+        #     'element_id':obj.id,
+        #     'created_by':obj.created_by
+        # }
+
+        # notification_serializer=Notification_serializer(data=notication_data)
+
+        # if not notification_serializer.is_valid():
+        #     return Response(Notification_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        # notification_serializer.save()
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -252,11 +268,6 @@ def card_history(request, card_id):
 
         serializer_history = Card_status_serializer_read(history,many=True)
         return Response(serializer_history.data, status=status.HTTP_200_OK)
-
-
-
-
-
 
 # Acitivity CRUD
 @api_view(['GET', 'POST'])
@@ -465,6 +476,13 @@ def car(request,school_id):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
+        #save notification
+            #get users
+        employees=Employee.undeleted_objects.filter(school=school_id).values_list('id',flat=True)
+        owners=School.undeleted_objects.filter(id=school_id).values_list('owner',flat=True)
+        notification_users=list(employees) + list(owners)
+        save_notif=notification_db(notification_users,'New car added', 1)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -564,6 +582,44 @@ def register(request):
     return Response(owner_serializer.data, status=status.HTTP_200_OK)
 
 
+def notification_db(users:list,text:str,notifcation_type:str)->bool:
+    """Save notification to DB
+
+    Args:
+        users (list): list of users
+        text (str): notification text
+        notifcation_type (str): notification type
+
+    Returns:
+        bool: True if successfully saved to DB
+    """
+    notication_data={
+    'user':'',
+    'notification_type': notifcation_type,
+    'message':text
+    }
+    for user in users:
+        notication_data['user']=user
+        print(f'user: {user}')
+        print(f'user type: {type(user)}')
+        notification_serializer=Notification_serializer(data=notication_data)
+
+        if not notification_serializer.is_valid():
+            return (notification_serializer.errors)
+
+        notification_serializer.save()
+
+    return True
+
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def notification(request):
+    if request.method == 'GET':
+        notifications = Notification.objects.all()
+        serializer=Notification_serializer_read(notifications,many=True)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
 # Employee CRUD
 @api_view(['GET'])
 def stats(request, school_id):
@@ -641,7 +697,6 @@ def payment_edit(request,id):
         serializer = Payments_serializer(payment)
         serializer.save()
         return Response(status=status.HTTP_201_CREATED)
-
 
 
 # Payment CRUD

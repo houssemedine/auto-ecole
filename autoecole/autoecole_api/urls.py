@@ -99,5 +99,7 @@ urlpatterns = [
         #Session for one card
         path('card/<int:card_id>/sessions/',views.card_session,name='card_session'),
 
+        #Session for one card
+        path('notifications/',views.notification,name='notification'),
 
 ]
