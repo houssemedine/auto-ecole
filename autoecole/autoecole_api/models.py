@@ -230,7 +230,7 @@ class Activity(BaseModel, SoftDeleteModel):
         return self.name
 
 
-class NotificationType(models.Model):
+class NotificationType(models.Model,SoftDeleteManager):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
     importance = models.CharField(max_length=50, choices=[('low', 'Low'), ('medium', 'Medium'), ('high', 'High')])
@@ -241,9 +241,10 @@ class NotificationType(models.Model):
     def __str__(self):
         return f'{self.name}'
 
-class Notification(BaseModel, SoftDeleteManager):
+class Notification(BaseModel, SoftDeleteModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     notification_type = models.ForeignKey(NotificationType, on_delete=models.CASCADE)
+    title=models.CharField(max_length=100)
     message = models.TextField()
     date_sent = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
@@ -254,7 +255,7 @@ class Notification(BaseModel, SoftDeleteManager):
     def __str__(self):
         return f'{self.user}'
 
-class UserNotificationPreference(BaseModel, SoftDeleteManager):
+class UserNotificationPreference(BaseModel, SoftDeleteModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email_notifications = models.BooleanField(default=True)
     push_notifications = models.BooleanField(default=True)

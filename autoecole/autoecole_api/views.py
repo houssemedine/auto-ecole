@@ -481,8 +481,7 @@ def car(request,school_id):
         employees=Employee.undeleted_objects.filter(school=school_id).values_list('id',flat=True)
         owners=School.undeleted_objects.filter(id=school_id).values_list('owner',flat=True)
         notification_users=list(employees) + list(owners)
-        save_notif=notification_db(notification_users,'New car added', 1)
-
+        save_notif=notification_db(notification_users,'new car','new car added', 1)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -582,7 +581,7 @@ def register(request):
     return Response(owner_serializer.data, status=status.HTTP_200_OK)
 
 
-def notification_db(users:list,text:str,notifcation_type:str)->bool:
+def notification_db(users:list,title:str,text:str,notifcation_type:str)->bool:
     """Save notification to DB
 
     Args:
@@ -596,12 +595,11 @@ def notification_db(users:list,text:str,notifcation_type:str)->bool:
     notication_data={
     'user':'',
     'notification_type': notifcation_type,
-    'message':text
+    'title':title.capitalize(),
+    'message':text.capitalize()
     }
     for user in users:
         notication_data['user']=user
-        print(f'user: {user}')
-        print(f'user type: {type(user)}')
         notification_serializer=Notification_serializer(data=notication_data)
 
         if not notification_serializer.is_valid():
@@ -611,11 +609,38 @@ def notification_db(users:list,text:str,notifcation_type:str)->bool:
 
     return True
 
+@api_view(['PUT'])
+def read_notification(request, id):
+    if request.method == 'PUT':
+        try:
+            notification = Notification.undeleted_objects.get(id=id)
+        except Exception:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        notification.is_read=True
+        notification.save()
+        serializer=Notification_serializer_read(notification)
+        return Response (serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['DELETE'])
+def delete_notification(request, id):
+    if request.method == 'DELETE':
+        try:
+            notification = Notification.undeleted_objects.get(id=id)
+        except Exception:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        notification.is_deleted=True
+        notification.save()
+        serializer=Notification_serializer_read(notification)
+        return Response (serializer.data, status=status.HTTP_200_OK)
+
+
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def notification(request):
     if request.method == 'GET':
-        notifications = Notification.objects.all()
+        notifications = Notification.undeleted_objects.filter(user=request.user).all()
         serializer=Notification_serializer_read(notifications,many=True)
 
     return Response(serializer.data, status=status.HTTP_200_OK)

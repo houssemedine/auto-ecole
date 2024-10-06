@@ -101,5 +101,7 @@ urlpatterns = [
 
         #Session for one card
         path('notifications/',views.notification,name='notification'),
+        path('notification/<int:id>/read',views.read_notification,name='read_notification'),
+        path('notification/<int:id>/delete',views.delete_notification,name='delete_notification'),
 
 ]
