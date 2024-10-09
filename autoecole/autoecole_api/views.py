@@ -113,7 +113,19 @@ def student(request,school_id):
         serializer = Student_serializer(data=data)
         if not serializer.is_valid(raise_exception=True):
             return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
+        save_student=serializer.save()
+
+        student=Student.undeleted_objects.filter(id=save_student.id).values_list('id',flat=True)
+        employees=Employee.undeleted_objects.filter(school=school_id).values_list('id',flat=True)
+        owners=School.undeleted_objects.filter(id=school_id).values_list('owner',flat=True)
+        notification_users=list(employees) + list(owners) + list(student)
+
+        #Save Notif
+        save_notif=notification_db(notification_users,
+                                'student','Add new student',
+                                f'Student {save_student.first_name} {save_student.last_name} is added',
+                                1)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -122,8 +134,14 @@ def student(request,school_id):
 def student_edit(request, id):
     try:
         student = Student.undeleted_objects.get(id=id)
+        #Get user notification
+        employees=Employee.undeleted_objects.filter(school=student.school.id).values_list('id',flat=True)
+        owners=School.undeleted_objects.filter(id=student.school.id).values_list('owner',flat=True)
+        notification_users=list(employees) + list(owners)
+        notification_users.append(student.id)
     except Exception:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
 
     if request.method == 'GET':
         serializer = Student_serializer(student)
@@ -132,13 +150,27 @@ def student_edit(request, id):
         serializer = Student_serializer(student, data=request.data)
         if not (serializer.is_valid()):
             return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
+        save_student=serializer.save()
+
+        #Save Notif
+        save_notif=notification_db(notification_users,
+                                'student','Edit student',
+                                f'Student {save_student.first_name} {save_student.last_name} edited',
+                                1)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     if request.method == 'DELETE':
         student.is_deleted = True
         student.deleted_at = datetime.now()
         student.save()
         serializer = Student_serializer(student)
+
+        #Save Notif
+        save_notif=notification_db(notification_users,
+                                'student','delete student',
+                                f'Student {student.first_name} {student.last_name} deleted',
+                                1)
+
         return Response(status=status.HTTP_201_CREATED)
 
 # Card CRUD
@@ -181,20 +213,17 @@ def card(request,school_id,progress_status):
 
         serializer_history.save()
 
-        # notication_data={
-        #     'school':school_id,
-        #     'action':'add',
-        #     'module':'Card',
-        #     'element_id':obj.id,
-        #     'created_by':obj.created_by
-        # }
+        #Save Notif
+            #get users
+        employees=Employee.undeleted_objects.filter(school=school_id).values_list('id',flat=True)
+        owners=School.undeleted_objects.filter(id=school_id).values_list('owner',flat=True)
+        notification_users=list(employees) + list(owners)
+        notification_users.append(obj.student.id)
 
-        # notification_serializer=Notification_serializer(data=notication_data)
-
-        # if not notification_serializer.is_valid():
-        #     return Response(Notification_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        # notification_serializer.save()
+        save_notif=notification_db(notification_users,
+                                'card','Add new card',
+                                f' new card for {obj.student.first_name} is added',
+                                1)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -204,6 +233,13 @@ def card(request,school_id,progress_status):
 def card_edit(request, id):
     try:
         card = Card.undeleted_objects.get(id=id)
+        #Save Notif
+            #get users
+        employees=Employee.undeleted_objects.filter(school=card.student.school.id).values_list('id',flat=True)
+        owners=School.undeleted_objects.filter(id=card.student.school.id).values_list('owner',flat=True)
+        notification_users=list(employees) + list(owners)
+        notification_users.append(card.student.id)
+
     except Exception:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -219,7 +255,7 @@ def card_edit(request, id):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer.save()
+        save_card=serializer.save()
 
         #Save History
         try:
@@ -252,12 +288,25 @@ def card_edit(request, id):
 
             serializer_history.save()
 
+        #Save notif
+        save_notif=notification_db(notification_users,
+                        'card','Update card',
+                        f' Update card {save_card.student.first_name} number {save_card.id}',
+                        1)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     if request.method == 'DELETE':
         card.is_deleted = True
         card.deleted_at = datetime.now()
         card.save()
         serializer = Card_serializer(card)
+
+        #Save notif
+        save_notif=notification_db(notification_users,
+                'card','Delete card',
+                f' Delete card {card.student.first_name} number {card.id}',
+                1)
+
         return Response(status=status.HTTP_201_CREATED)
 
 @api_view(['GET'])
@@ -339,7 +388,19 @@ def session(request, school_id):
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
+        save_session=serializer.save()
+
+        #save notification
+            #get users
+        owners=School.undeleted_objects.filter(id=save_session.card.student.school.id).values_list('owner',flat=True)
+        notification_users = list(owners)
+        notification_users.append(save_session.employee.id)
+        notification_users.append(save_session.card.student.id)
+
+        save_notif=notification_db(notification_users,
+                'session','Add new session',
+                f'new session start at {save_session.day} {save_session.start_at} for card number {save_session.card.id} is added',2)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(['GET'])
@@ -382,13 +443,37 @@ def session_edit(request, id):
         serializer = Session_serializer_edit(session, data=request.data)
         if not (serializer.is_valid()):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
+        save_session = serializer.save()
+
+        #save notification
+            #get users
+        owners=School.undeleted_objects.filter(id=save_session.card.student.school.id).values_list('owner',flat=True)
+        notification_users = list(owners)
+        notification_users.append(save_session.employee.id)
+        notification_users.append(save_session.card.student.id)
+
+        save_notif=notification_db(notification_users,
+                'session','Edit session',
+                f'The session number {session.id} is updated',2)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     if request.method == 'DELETE':
         session.is_deleted = True
         session.deleted_at = datetime.now()
         session.save()
         serializer = Session_serializer_edit(session)
+
+        #save notification
+            #get users
+        owners=School.undeleted_objects.filter(id=session.card.student.school.id).values_list('owner',flat=True)
+        notification_users = list(owners)
+        notification_users.append(session.employee.id)
+        notification_users.append(session.card.student.id)
+
+        save_notif=notification_db(notification_users,
+                'session','Delete session',
+                f'The session number {session.id} is deleted',2)
+
         return Response(status=status.HTTP_201_CREATED)
 
 # Employee CRUD
@@ -481,7 +566,7 @@ def car(request,school_id):
         employees=Employee.undeleted_objects.filter(school=school_id).values_list('id',flat=True)
         owners=School.undeleted_objects.filter(id=school_id).values_list('owner',flat=True)
         notification_users=list(employees) + list(owners)
-        save_notif=notification_db(notification_users,'new car','new car added', 1)
+        save_notif=notification_db(notification_users,'car','new car','new car added', 1)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -489,6 +574,11 @@ def car(request,school_id):
 def car_edit(request, id):
     try:
         car = Car.undeleted_objects.get(id=id)
+        #save notification
+            #get users
+        employees=Employee.undeleted_objects.filter(school=car.school.id).values_list('id',flat=True)
+        owners=School.undeleted_objects.filter(id=car.school.id).values_list('owner',flat=True)
+        notification_users=list(employees) + list(owners)
     except Exception:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -502,12 +592,18 @@ def car_edit(request, id):
         if not (serializer.is_valid()):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
+
+        #save notif
+        save_notif=notification_db(notification_users,'car','edit car',f'Car {car.marque} {car.model} edited', 1)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     if request.method == 'DELETE':
         car.is_deleted = True
         car.deleted_at = datetime.now()
         car.save()
         serializer = Car_serializer(car)
+
+        #save notif
+        save_notif=notification_db(notification_users,'car','Delete car',f'Car {car.marque} {car.model} deleted', 1)
         return Response(status=status.HTTP_201_CREATED)
 
 
@@ -581,7 +677,7 @@ def register(request):
     return Response(owner_serializer.data, status=status.HTTP_200_OK)
 
 
-def notification_db(users:list,title:str,text:str,notifcation_type:str)->bool:
+def notification_db(users:list,module:str,title:str,text:str,notifcation_type:str)->bool:
     """Save notification to DB
 
     Args:
@@ -595,6 +691,7 @@ def notification_db(users:list,title:str,text:str,notifcation_type:str)->bool:
     notication_data={
     'user':'',
     'notification_type': notifcation_type,
+    'module':module,
     'title':title.capitalize(),
     'message':text.capitalize()
     }
@@ -696,7 +793,19 @@ def payment(request,school_id):
         serializer = Payments_serializer(data=data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
+        save_payement=serializer.save()
+
+        #Save nofications
+        owners=School.undeleted_objects.filter(id=save_payement.card.student.school.id).values_list('owner',flat=True)
+        notification_users= list(owners)
+        notification_users.append(save_payement.card.student.id)
+
+        #Save Notif
+        save_notif=notification_db(notification_users,
+                                'payment','Add new payment',
+                                f'Add new payment for card number {save_payement.card.id}',
+                                2)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(['GET','PUT','DELETE'])
@@ -713,14 +822,36 @@ def payment_edit(request,id):
         serializer = Payments_serializer(payment,data=request.data)
         if not (serializer.is_valid()):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
+        save_payement=serializer.save()
+
+        #Save nofications
+        owners=School.undeleted_objects.filter(id=save_payement.card.student.school.id).values_list('owner',flat=True)
+        notification_users= list(owners)
+        notification_users.append(save_payement.card.student.id)
+
+        #Save Notif
+        save_notif=notification_db(notification_users,
+                                'payment','Edit payment',
+                                f'Edit payment number {save_payement.id} for card number {save_payement.card.id}',
+                                1)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     if request.method == 'DELETE':
-        print('delete', id)
         payment.is_deleted = True
+        payment.deleted_at = datetime.now()
+        payment.save()
         serializer = Payments_serializer(payment)
-        serializer.save()
+
+        #Save nofications
+        owners=School.undeleted_objects.filter(id=payment.card.student.school.id).values_list('owner',flat=True)
+        notification_users= list(owners)
+        notification_users.append(payment.card.student.id)
+
+        #Save Notif
+        save_notif=notification_db(notification_users,
+                                'payment','Delete payment',
+                                f'delete payment number {payment.id}  for card number {payment.card.id}',
+                                2)
         return Response(status=status.HTTP_201_CREATED)
 
 
