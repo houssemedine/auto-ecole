@@ -27,6 +27,8 @@ urlpatterns = [
         path('school/<int:school_id>/student/',views.student,name='student'),
                 # edit and delete
         path('student/<int:id>/edit',views.student_edit,name='student_edit'),
+        path('student/<int:id>/resetPassword',views.student_reset_password,name='student_reset_password'),
+        path('student/<int:id>/enableDisableAccount',views.student_enable_disable_account,name='student_enable_disable_account'),
 
         # Card URL
                 # index and save

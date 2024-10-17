@@ -173,9 +173,33 @@ def student_edit(request, id):
 
         return Response(status=status.HTTP_201_CREATED)
 
+@api_view(['PUT'])
+def student_reset_password(request, id):
+    try:
+        student = Student.undeleted_objects.get(id=id)
+    except Exception:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'PUT':
+        ##Send mail to student
+        serializer = Student_serializer(student)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['PUT'])
+def student_enable_disable_account(request, id):
+    try:
+        student = Student.undeleted_objects.get(id=id)
+    except Exception:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'PUT':
+        account_status=student.is_active
+        student.is_active= not account_status
+        student.save()
+
+        serializer = Student_serializer(student)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+
 # Card CRUD
-
-
 @api_view(['GET', 'POST'])
 # @permission_classes([IsAuthenticated])
 def card(request,school_id,progress_status):
