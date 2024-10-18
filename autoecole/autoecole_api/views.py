@@ -147,9 +147,26 @@ def student_edit(request, id):
         serializer = Student_serializer(student)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'PUT':
-        serializer = Student_serializer(student, data=request.data)
+        username_list=User.objects.values_list('username',flat=True)
+        new_data=request.data.copy()
+
+        new_data['school']=student.school.id
+        new_data['is_active']=student.is_active
+
+        first_name=student.first_name
+        last_name=student.last_name
+        if 'first_name' in new_data:
+            first_name=new_data['first_name']
+
+        if 'last_name' in new_data:
+            last_name=new_data['last_name']
+
+        new_data['username']=generete_username(first_name, last_name, username_list)
+        new_data['password']=student.password
+
+        serializer = Student_serializer(student, data=new_data)
         if not (serializer.is_valid()):
-            return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         save_student=serializer.save()
 
         #Save Notif
