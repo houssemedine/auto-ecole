@@ -49,8 +49,8 @@ class BaseModel(models.Model):
 # automatically without using filter(is_delete=False)
 class SoftDeleteManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(is_deleted=False)
-        # return super().get_queryset().all()
+        # return super().get_queryset().filter(is_deleted=False)
+        return super().get_queryset().all()
 # SoftDeleteModel
 
 
@@ -163,11 +163,11 @@ class Status(BaseModel, SoftDeleteModel):
 #         return f'{self.name}'
 
 class Card(BaseModel, SoftDeleteModel):
-    status = [
-        ('1', 'In progress'),
-        ('2', 'Completed'),
-        ('3', 'Canceled'),
-    ]
+    # status = [
+    #     ('1', 'In progress'),
+    #     ('2', 'Completed'),
+    #     ('3', 'Canceled'),
+    # ]
     licence_type = models.ForeignKey(LicenceType,related_name='licence_type' ,on_delete=models.CASCADE)
     start_at = models.DateField()
     end_at = models.DateField(null=True, blank=True)

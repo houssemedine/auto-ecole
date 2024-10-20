@@ -181,7 +181,10 @@ def student_edit(request, id):
         student.deleted_at = datetime.now()
         student.save()
         serializer = Student_serializer(student)
-
+        cards=Card.undeleted_objects.filter(student=id).all()
+        for card in cards:
+            card.is_deleted= True
+            card.save()
         #Save Notif
         save_notif=notification_db(notification_users,
                                 'student','delete student',
@@ -221,11 +224,16 @@ def student_enable_disable_account(request, id):
 # @permission_classes([IsAuthenticated])
 def card(request,school_id,progress_status):
     if request.method == 'GET':
-        status_list=[1,2,3,4,5,6]
-        if progress_status == 'completed':
-            status_list=[7]
+        cards=None
 
-        if not (cards := Card.undeleted_objects.filter(student__school=school_id).filter(status__in=status_list).all()):
+        if progress_status == 'completed':
+            #Filter all cards with status equal to completed ( status id 99)
+            cards = Card.undeleted_objects.filter(student__school=school_id).filter(status=99).all()
+        else:
+            #Filter all cards with status Not equal to completed ( status id 99)
+            cards = Card.undeleted_objects.filter(student__school=school_id).filter(~Q(status = 99)).all()
+
+        if not cards:
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = Card_serializer_read(cards, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
