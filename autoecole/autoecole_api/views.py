@@ -844,7 +844,7 @@ def payment(request,school_id):
         #Save Notif
         save_notif=notification_db(notification_users,
                                 'payment','Add new payment',
-                                f'Add new payment for card number {save_payement.card.id}',
+                                f'Add {save_payement.amount} for card number {save_payement.card.id}',
                                 2)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
