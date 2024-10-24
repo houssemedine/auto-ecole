@@ -478,17 +478,19 @@ def session_edit(request, id):
         start_at=request.data['start_at']
         end_at=request.data['end_at']
         day=request.data['day']
-
+        print('session start', str(session.start_at), start_at, )
+        print('session end', str(session.end_at), end_at)
         # Check the availability of the employee and the car for this session
-        sessions=Session.undeleted_objects.filter(
+        if (start_at != str(session.start_at)) or (end_at != str(session.end_at)):
+            sessions=Session.undeleted_objects.filter(
             card__student__school=session.card.student.school,
             day=day,
             ).filter(
                 Q(start_at__lt=end_at) & Q(end_at__gt=start_at)).filter(
                     Q(employee=employee) | Q(car=car))
 
-        if sessions.count() > 0:
-            return Response({'error':'session conflict'}, status=status.HTTP_400_BAD_REQUEST)
+            if sessions.count() > 0:
+                return Response({'error':'session conflict'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = Session_serializer_edit(session, data=request.data)
         if not (serializer.is_valid()):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

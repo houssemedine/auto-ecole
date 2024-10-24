@@ -119,6 +119,7 @@ class School(BaseModel, SoftDeleteModel):
 class Student(BaseModel, SoftDeleteModel, User):
     # name=models.CharField(max_length=100)
     city = models.CharField(max_length=50)
+    cin=models.IntegerField(unique=True)
     governorate = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
     tel = models.IntegerField(blank=True, null=True, unique=True)
