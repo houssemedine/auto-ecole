@@ -7,13 +7,40 @@ class User_serializer(serializers.ModelSerializer):
     class Meta:
         model=User
         fields = '__all__'
+class Country_serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model= Country
+        fields = '__all__'
+
+class Governorate_serializer(serializers.ModelSerializer):
+    country = Country_serializer()
+
+    class Meta:
+        model= Governorate
+        fields = '__all__'
+
+class City_serializer(serializers.ModelSerializer):
+    governorate = Governorate_serializer()
+
+    class Meta:
+        model= City
+        fields = '__all__'
 
 class School_serializer(serializers.ModelSerializer):
     class Meta:
         model=School
         fields = '__all__'
 
+class Student_serializer_read(serializers.ModelSerializer):
+    city = City_serializer()
+
+    class Meta:
+        model=Student
+        fields = '__all__'
+
 class Student_serializer(serializers.ModelSerializer):
+
     class Meta:
         model=Student
         fields = '__all__'
@@ -131,21 +158,5 @@ class Notification_serializer_read(serializers.ModelSerializer):
         model= Notification
         fields = '__all__'
 
-class Country_serializer(serializers.ModelSerializer):
 
-    class Meta:
-        model= Country
-        fields = '__all__'
-
-class Governorate_serializer(serializers.ModelSerializer):
-
-    class Meta:
-        model= Governorate
-        fields = '__all__'
-
-class City_serializer(serializers.ModelSerializer):
-
-    class Meta:
-        model= City
-        fields = '__all__'
 

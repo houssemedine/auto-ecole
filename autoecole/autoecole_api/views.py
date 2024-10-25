@@ -100,7 +100,7 @@ def student(request,school_id):
     if request.method == 'GET':
         if not (students := Student.undeleted_objects.filter(school=school_id)).all():
             return Response(status=status.HTTP_204_NO_CONTENT)
-        serializer = Student_serializer(students, many=True)
+        serializer = Student_serializer_read(students, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
         username_list=User.objects.values_list('username',flat=True)
@@ -144,7 +144,7 @@ def student_edit(request, id):
 
 
     if request.method == 'GET':
-        serializer = Student_serializer(student)
+        serializer = Student_serializer_read(student)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'PUT':
         username_list=User.objects.values_list('username',flat=True)
@@ -163,7 +163,7 @@ def student_edit(request, id):
 
         new_data['username']=generete_username(first_name, last_name, username_list)
         new_data['password']=student.password
-
+        print('new data',new_data)
         serializer = Student_serializer(student, data=new_data)
         if not (serializer.is_valid()):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
