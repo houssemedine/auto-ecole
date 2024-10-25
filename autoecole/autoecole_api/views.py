@@ -536,10 +536,9 @@ def employee(request,school_id):
     if request.method == 'GET':
         if not (employees := Employee.undeleted_objects.filter(school=school_id).all()):
             return Response(status=status.HTTP_204_NO_CONTENT)
-        serializer = Employee_serializer(employees, many=True)
+        serializer = Employee_serializer_read(employees, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
-
         username_list=User.objects.values_list('username',flat=True)
         data=request.data.copy()
         data['created_by']=user.id
@@ -547,7 +546,7 @@ def employee(request,school_id):
         data['is_active']=True
         data['username']=generete_username(data['first_name'], data['last_name'], username_list)
         data['password']='test'
-
+        data['fonction'] = 4 #trainer
         serializer = Employee_serializer(data=data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -564,7 +563,7 @@ def employee_edit(request, id):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = Employee_serializer(employee)
+        serializer = Employee_serializer_read(employee)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'PUT':
         username_list=User.objects.values_list('username',flat=True)
@@ -581,6 +580,8 @@ def employee_edit(request, id):
 
         data['username']=generete_username(first_name, last_name, username_list)
         data['password']=employee.password
+        data['is_active']=employee.is_active
+
         serializer = Employee_serializer(employee, data=data)
         if not (serializer.is_valid()):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

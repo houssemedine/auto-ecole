@@ -105,6 +105,12 @@ class Session_serializer_edit(serializers.ModelSerializer):
         fields = '__all__'
         # fields = ('day','start_at','end_at','activity','price','duration')
 
+class Employee_serializer_read(serializers.ModelSerializer):
+    city=City_serializer()
+    class Meta:
+        model=Employee
+        fields = '__all__'
+
 class Employee_serializer(serializers.ModelSerializer):
     class Meta:
         model=Employee

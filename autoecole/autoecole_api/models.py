@@ -308,9 +308,7 @@ class Employee(BaseModel, SoftDeleteModel, User):
     ]
     matricule=models.CharField(max_length=50,unique=True)
     role = models.CharField(max_length=100, choices=roles, default='Trainer')
-    city = models.CharField(max_length=50)
-    governorate = models.CharField(max_length=50)
-    country = models.CharField(max_length=50)
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
     tel = models.IntegerField()
     birthday = models.DateField()
     school = models.ForeignKey(School, on_delete=models.CASCADE)
