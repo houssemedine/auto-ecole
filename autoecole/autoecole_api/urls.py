@@ -106,4 +106,13 @@ urlpatterns = [
         path('notification/<int:id>/read',views.read_notification,name='read_notification'),
         path('notification/<int:id>/delete',views.delete_notification,name='delete_notification'),
 
+        #Country
+	path('countries/', views.countries, name='countries'),
+
+        #Governorate
+	path('countries/<int:id>/governorates/', views.governorates, name='governorates'),
+
+        #Cities
+	path('governorate/<int:id>/cities/', views.cities, name='cities'),
+
 ]

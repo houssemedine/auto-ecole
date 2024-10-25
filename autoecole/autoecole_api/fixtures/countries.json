@@ -1,0 +1,19 @@
+[
+	{
+		"model": "autoecole_api.country",
+		"pk": 1,
+		"fields": {
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null,
+			"name": "Tunisie",
+			"tel_code": "+216"
+		}
+	}
+]

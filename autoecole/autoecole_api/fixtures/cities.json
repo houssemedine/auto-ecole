@@ -1,0 +1,4422 @@
+[
+	{
+		"model": "autoecole_api.city",
+		"pk": 1,
+		"fields": {
+			"name": "Carthage",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 2,
+		"fields": {
+			"name": "La Médina",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 3,
+		"fields": {
+			"name": "Bab Bhar",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 4,
+		"fields": {
+			"name": "Bab Souika",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 5,
+		"fields": {
+			"name": "El Omrane",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 6,
+		"fields": {
+			"name": "Omrane Supérieur",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 7,
+		"fields": {
+			"name": "Ettahrir",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 8,
+		"fields": {
+			"name": "El Menzah",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 9,
+		"fields": {
+			"name": "Cité Alkhadhra",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 10,
+		"fields": {
+			"name": "Séjoumi",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 11,
+		"fields": {
+			"name": "Azzouhour",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 12,
+		"fields": {
+			"name": "Alhrairia",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 13,
+		"fields": {
+			"name": "Sidi Hsine",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 14,
+		"fields": {
+			"name": "Ouardia",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 15,
+		"fields": {
+			"name": "Sidi Elbéchir",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 16,
+		"fields": {
+			"name": "Jebel Jelloud",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 17,
+		"fields": {
+			"name": "La Goulette",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 18,
+		"fields": {
+			"name": "Le Kram",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 19,
+		"fields": {
+			"name": "El Kabbaria",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 20,
+		"fields": {
+			"name": "La Marsa",
+			"governorate": 1,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 21,
+		"fields": {
+			"name": "Ariana Ville",
+			"governorate": 2,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 22,
+		"fields": {
+			"name": "Ettadhamen",
+			"governorate": 2,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 23,
+		"fields": {
+			"name": "M’nihla",
+			"governorate": 2,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 24,
+		"fields": {
+			"name": "Kalâat el-Andalous",
+			"governorate": 2,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 25,
+		"fields": {
+			"name": "La Soukra",
+			"governorate": 2,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 26,
+		"fields": {
+			"name": "Raoued",
+			"governorate": 2,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 27,
+		"fields": {
+			"name": "Sidi Thabet",
+			"governorate": 2,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 28,
+		"fields": {
+			"name": "Manouba",
+			"governorate": 3,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 29,
+		"fields": {
+			"name": "Oued Ellil",
+			"governorate": 3,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 30,
+		"fields": {
+			"name": "Tebourba",
+			"governorate": 3,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 31,
+		"fields": {
+			"name": "Battan",
+			"governorate": 3,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 32,
+		"fields": {
+			"name": "Jedaida",
+			"governorate": 3,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 33,
+		"fields": {
+			"name": "Mornaguia",
+			"governorate": 3,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 34,
+		"fields": {
+			"name": "Borj Amri",
+			"governorate": 3,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 35,
+		"fields": {
+			"name": "Douar Hicher",
+			"governorate": 3,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 36,
+		"fields": {
+			"name": "Ben Arous",
+			"governorate": 4,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 37,
+		"fields": {
+			"name": "Nouvelle Médina",
+			"governorate": 4,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 38,
+		"fields": {
+			"name": "Mourouj",
+			"governorate": 4,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 39,
+		"fields": {
+			"name": "Hammam Lif",
+			"governorate": 4,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 40,
+		"fields": {
+			"name": "Hammam Chatt",
+			"governorate": 4,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 41,
+		"fields": {
+			"name": "Boumhel Bassatine",
+			"governorate": 4,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 42,
+		"fields": {
+			"name": "Ezzahra",
+			"governorate": 4,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 43,
+		"fields": {
+			"name": "Radès",
+			"governorate": 4,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 44,
+		"fields": {
+			"name": "Mégrine",
+			"governorate": 4,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 45,
+		"fields": {
+			"name": "M’hamdia",
+			"governorate": 4,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 46,
+		"fields": {
+			"name": "Fouchana",
+			"governorate": 4,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 47,
+		"fields": {
+			"name": "Mornag",
+			"governorate": 4,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 48,
+		"fields": {
+			"name": "Nabeul",
+			"governorate": 5,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 49,
+		"fields": {
+			"name": "Dar Chaâbane Elfehri",
+			"governorate": 5,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 50,
+		"fields": {
+			"name": "Béni Khiar",
+			"governorate": 5,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 51,
+		"fields": {
+			"name": "Korba",
+			"governorate": 5,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 52,
+		"fields": {
+			"name": "Menzel Temime",
+			"governorate": 5,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 53,
+		"fields": {
+			"name": "Mida",
+			"governorate": 5,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 54,
+		"fields": {
+			"name": "Kelibia",
+			"governorate": 5,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 55,
+		"fields": {
+			"name": "Hammam Ghezaz",
+			"governorate": 5,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 56,
+		"fields": {
+			"name": "Haouaria",
+			"governorate": 5,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 57,
+		"fields": {
+			"name": "Takelsa",
+			"governorate": 5,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 58,
+		"fields": {
+			"name": "Slimane",
+			"governorate": 5,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 59,
+		"fields": {
+			"name": "Menzel Bouzelfa",
+			"governorate": 5,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 60,
+		"fields": {
+			"name": "Béni Khalled",
+			"governorate": 5,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 61,
+		"fields": {
+			"name": "Grombalia",
+			"governorate": 5,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 62,
+		"fields": {
+			"name": "Bouârgoub",
+			"governorate": 5,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 63,
+		"fields": {
+			"name": "Hammamet",
+			"governorate": 5,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 64,
+		"fields": {
+			"name": "Bizerte Nord",
+			"governorate": 6,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 65,
+		"fields": {
+			"name": "Jarzouna",
+			"governorate": 6,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 66,
+		"fields": {
+			"name": "Bizerte Sud",
+			"governorate": 6,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 67,
+		"fields": {
+			"name": "Sejnane",
+			"governorate": 6,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 68,
+		"fields": {
+			"name": "Joumine",
+			"governorate": 6,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 69,
+		"fields": {
+			"name": "Mateur",
+			"governorate": 6,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 70,
+		"fields": {
+			"name": "Ghezala",
+			"governorate": 6,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 71,
+		"fields": {
+			"name": "Menzel Bourguiba",
+			"governorate": 6,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 72,
+		"fields": {
+			"name": "Tinja",
+			"governorate": 6,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 73,
+		"fields": {
+			"name": "Utique",
+			"governorate": 6,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 74,
+		"fields": {
+			"name": "Ghar El Melh",
+			"governorate": 6,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 75,
+		"fields": {
+			"name": "Menzel Jemil",
+			"governorate": 6,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 76,
+		"fields": {
+			"name": "El Alia",
+			"governorate": 6,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 77,
+		"fields": {
+			"name": "Ras Jebel",
+			"governorate": 6,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 78,
+		"fields": {
+			"name": "Zaghouan",
+			"governorate": 7,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 79,
+		"fields": {
+			"name": "Zériba",
+			"governorate": 7,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 80,
+		"fields": {
+			"name": "Bir Mecharga",
+			"governorate": 7,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 81,
+		"fields": {
+			"name": "Fahs",
+			"governorate": 7,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 82,
+		"fields": {
+			"name": "Nadhour",
+			"governorate": 7,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 83,
+		"fields": {
+			"name": "Saouaf",
+			"governorate": 7,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 84,
+		"fields": {
+			"name": "Sousse",
+			"governorate": 8,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 85,
+		"fields": {
+			"name": "Sousse Ville",
+			"governorate": 8,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 86,
+		"fields": {
+			"name": "Sousse Ryadh",
+			"governorate": 8,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 87,
+		"fields": {
+			"name": "Sousse Jawhara",
+			"governorate": 8,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 88,
+		"fields": {
+			"name": "Hammam sousse",
+			"governorate": 8,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 89,
+		"fields": {
+			"name": "Akouda",
+			"governorate": 8,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 90,
+		"fields": {
+			"name": "Kalâa Elkébira",
+			"governorate": 8,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 91,
+		"fields": {
+			"name": "Sidi Bouali",
+			"governorate": 8,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 92,
+		"fields": {
+			"name": "Hergla",
+			"governorate": 8,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 93,
+		"fields": {
+			"name": "Enfidha",
+			"governorate": 8,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 94,
+		"fields": {
+			"name": "Bouficha",
+			"governorate": 8,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 95,
+		"fields": {
+			"name": "Koundar",
+			"governorate": 8,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 96,
+		"fields": {
+			"name": "Sidi Elheni",
+			"governorate": 8,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 97,
+		"fields": {
+			"name": "Msaken",
+			"governorate": 8,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 98,
+		"fields": {
+			"name": "Kalâa Ességhira",
+			"governorate": 8,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 99,
+		"fields": {
+			"name": "Monastir",
+			"governorate": 9,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 100,
+		"fields": {
+			"name": "Ouerdanine",
+			"governorate": 9,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 101,
+		"fields": {
+			"name": "Sahline",
+			"governorate": 9,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 102,
+		"fields": {
+			"name": "Zéramdine",
+			"governorate": 9,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 103,
+		"fields": {
+			"name": "Béni Hassan",
+			"governorate": 9,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 104,
+		"fields": {
+			"name": "Jemmel",
+			"governorate": 9,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 105,
+		"fields": {
+			"name": "Benbla",
+			"governorate": 9,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 106,
+		"fields": {
+			"name": "Moknine",
+			"governorate": 9,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 107,
+		"fields": {
+			"name": "Bekalta",
+			"governorate": 9,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 108,
+		"fields": {
+			"name": "Teboulba",
+			"governorate": 9,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 109,
+		"fields": {
+			"name": "Ksar Helal",
+			"governorate": 9,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 110,
+		"fields": {
+			"name": "Ksibet Medyouni",
+			"governorate": 9,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 111,
+		"fields": {
+			"name": "Sayada Lamta Bouhjar",
+			"governorate": 9,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 112,
+		"fields": {
+			"name": "Mahdia",
+			"governorate": 10,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 113,
+		"fields": {
+			"name": "Boumerdes",
+			"governorate": 10,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 114,
+		"fields": {
+			"name": "Ouled Chamekh",
+			"governorate": 10,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 115,
+		"fields": {
+			"name": "Chorbane",
+			"governorate": 10,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 116,
+		"fields": {
+			"name": "Hbira",
+			"governorate": 10,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 117,
+		"fields": {
+			"name": "Souassi",
+			"governorate": 10,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 118,
+		"fields": {
+			"name": "Eljem",
+			"governorate": 10,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 119,
+		"fields": {
+			"name": "Chebba",
+			"governorate": 10,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 120,
+		"fields": {
+			"name": "Malloulech",
+			"governorate": 10,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 121,
+		"fields": {
+			"name": "Sidi Alouane",
+			"governorate": 10,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 122,
+		"fields": {
+			"name": "Ksour Essef",
+			"governorate": 10,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 123,
+		"fields": {
+			"name": "Sfax Ville",
+			"governorate": 11,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 124,
+		"fields": {
+			"name": "Sakiet Ezzit",
+			"governorate": 11,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 125,
+		"fields": {
+			"name": "Sakiet Eddaier",
+			"governorate": 11,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 126,
+		"fields": {
+			"name": "Sfax sud",
+			"governorate": 11,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 127,
+		"fields": {
+			"name": "Tina",
+			"governorate": 11,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 128,
+		"fields": {
+			"name": "Agareb",
+			"governorate": 11,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 129,
+		"fields": {
+			"name": "Jebeniana",
+			"governorate": 11,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 130,
+		"fields": {
+			"name": "El Amra",
+			"governorate": 11,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 131,
+		"fields": {
+			"name": "El Hencha",
+			"governorate": 11,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 132,
+		"fields": {
+			"name": "Menzel chaker",
+			"governorate": 11,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 133,
+		"fields": {
+			"name": "Ghraiba",
+			"governorate": 11,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 134,
+		"fields": {
+			"name": "Bir Ali Ben Khelifa",
+			"governorate": 11,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 135,
+		"fields": {
+			"name": "Sekhira",
+			"governorate": 11,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 136,
+		"fields": {
+			"name": "Mahrès",
+			"governorate": 11,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 137,
+		"fields": {
+			"name": "Kerkennah",
+			"governorate": 11,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 138,
+		"fields": {
+			"name": "Béja Nord",
+			"governorate": 12,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 139,
+		"fields": {
+			"name": "Béja Sud",
+			"governorate": 12,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 140,
+		"fields": {
+			"name": "Amdoun",
+			"governorate": 12,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 141,
+		"fields": {
+			"name": "Goubellat",
+			"governorate": 12,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 142,
+		"fields": {
+			"name": "Medjez el-Bab",
+			"governorate": 12,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 143,
+		"fields": {
+			"name": "Nefza",
+			"governorate": 12,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 144,
+		"fields": {
+			"name": "Téboursouk",
+			"governorate": 12,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 145,
+		"fields": {
+			"name": "Testour",
+			"governorate": 12,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 146,
+		"fields": {
+			"name": "Tibar",
+			"governorate": 12,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 147,
+		"fields": {
+			"name": "Jendouba",
+			"governorate": 13,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 148,
+		"fields": {
+			"name": "Jendouba Nord",
+			"governorate": 13,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 149,
+		"fields": {
+			"name": "Boussalem",
+			"governorate": 13,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 150,
+		"fields": {
+			"name": "Tabarka",
+			"governorate": 13,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 151,
+		"fields": {
+			"name": "Ain Drahem",
+			"governorate": 13,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 152,
+		"fields": {
+			"name": "Fernana",
+			"governorate": 13,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 153,
+		"fields": {
+			"name": "Ghardimaou",
+			"governorate": 13,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 154,
+		"fields": {
+			"name": "Oued Mliz",
+			"governorate": 13,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 155,
+		"fields": {
+			"name": "Balta Bouaouene",
+			"governorate": 13,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 156,
+		"fields": {
+			"name": "Siliana nord",
+			"governorate": 14,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 157,
+		"fields": {
+			"name": "Siliana sud",
+			"governorate": 14,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 158,
+		"fields": {
+			"name": "Bouarada",
+			"governorate": 14,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 159,
+		"fields": {
+			"name": "Gâafour",
+			"governorate": 14,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 160,
+		"fields": {
+			"name": "El Aroussa",
+			"governorate": 14,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 161,
+		"fields": {
+			"name": "Le Krib",
+			"governorate": 14,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 162,
+		"fields": {
+			"name": "Bourouis",
+			"governorate": 14,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 163,
+		"fields": {
+			"name": "Makther",
+			"governorate": 14,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 164,
+		"fields": {
+			"name": "Rouhia",
+			"governorate": 14,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 165,
+		"fields": {
+			"name": "Kesra",
+			"governorate": 14,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 166,
+		"fields": {
+			"name": "Bargou",
+			"governorate": 14,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 167,
+		"fields": {
+			"name": "Kef Ouest",
+			"governorate": 15,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 168,
+		"fields": {
+			"name": "Kef Est",
+			"governorate": 15,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 169,
+		"fields": {
+			"name": "Nebeur",
+			"governorate": 15,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 170,
+		"fields": {
+			"name": "Sakiet Sidi Youssef",
+			"governorate": 15,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 171,
+		"fields": {
+			"name": "Tejerouine",
+			"governorate": 15,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 172,
+		"fields": {
+			"name": "Kalâat sinane",
+			"governorate": 15,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 173,
+		"fields": {
+			"name": "Kalâa El khasba",
+			"governorate": 15,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 174,
+		"fields": {
+			"name": "Jerissa",
+			"governorate": 15,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 175,
+		"fields": {
+			"name": "Ksour",
+			"governorate": 15,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 176,
+		"fields": {
+			"name": "Dahmani",
+			"governorate": 15,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 177,
+		"fields": {
+			"name": "Le Sers",
+			"governorate": 15,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 178,
+		"fields": {
+			"name": "Kairouan Nord",
+			"governorate": 16,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 179,
+		"fields": {
+			"name": "Kairouan Sud",
+			"governorate": 16,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 180,
+		"fields": {
+			"name": "Chebika",
+			"governorate": 16,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 181,
+		"fields": {
+			"name": "Sebikha",
+			"governorate": 16,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 182,
+		"fields": {
+			"name": "Oueslatia",
+			"governorate": 16,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 183,
+		"fields": {
+			"name": "Haffouz",
+			"governorate": 16,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 184,
+		"fields": {
+			"name": "El Ala",
+			"governorate": 16,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 185,
+		"fields": {
+			"name": "Hajeb El Ayoun",
+			"governorate": 16,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 186,
+		"fields": {
+			"name": "Nasrallah",
+			"governorate": 16,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 187,
+		"fields": {
+			"name": "Cherarda",
+			"governorate": 16,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 188,
+		"fields": {
+			"name": "Bouhajla",
+			"governorate": 16,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 189,
+		"fields": {
+			"name": "Sidi Bouzid Ouest",
+			"governorate": 17,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 190,
+		"fields": {
+			"name": "Sidi Bouzid Est",
+			"governorate": 17,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 191,
+		"fields": {
+			"name": "Jelma",
+			"governorate": 17,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 192,
+		"fields": {
+			"name": "Sabbalet Ouled Askar",
+			"governorate": 17,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 193,
+		"fields": {
+			"name": "Bir Hfay",
+			"governorate": 17,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 194,
+		"fields": {
+			"name": "Sidi Ali Benôun",
+			"governorate": 17,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 195,
+		"fields": {
+			"name": "Menzel Bouzayane",
+			"governorate": 17,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 196,
+		"fields": {
+			"name": "Meknassi",
+			"governorate": 17,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 197,
+		"fields": {
+			"name": "Souk Jedid",
+			"governorate": 17,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 198,
+		"fields": {
+			"name": "Mezouna",
+			"governorate": 17,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 199,
+		"fields": {
+			"name": "Regueb",
+			"governorate": 17,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 200,
+		"fields": {
+			"name": "Ouled Haffouz",
+			"governorate": 17,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 201,
+		"fields": {
+			"name": "Kasserine Nord",
+			"governorate": 18,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 202,
+		"fields": {
+			"name": "Kasserine Sud",
+			"governorate": 18,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 203,
+		"fields": {
+			"name": "Azzouhour",
+			"governorate": 18,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 204,
+		"fields": {
+			"name": "Hassi ferid",
+			"governorate": 18,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 205,
+		"fields": {
+			"name": "Sbitla",
+			"governorate": 18,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 206,
+		"fields": {
+			"name": "Sbiba",
+			"governorate": 18,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 207,
+		"fields": {
+			"name": "Jedliane",
+			"governorate": 18,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 208,
+		"fields": {
+			"name": "El Ayoun",
+			"governorate": 18,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 209,
+		"fields": {
+			"name": "Tela",
+			"governorate": 18,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 210,
+		"fields": {
+			"name": "Hidra",
+			"governorate": 18,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 211,
+		"fields": {
+			"name": "Foussana",
+			"governorate": 18,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 212,
+		"fields": {
+			"name": "Feriana",
+			"governorate": 18,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 213,
+		"fields": {
+			"name": "Mejel Bel Abbes",
+			"governorate": 18,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 214,
+		"fields": {
+			"name": "Gabès MEDINA",
+			"governorate": 19,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 215,
+		"fields": {
+			"name": "Gabès Ouest",
+			"governorate": 19,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 216,
+		"fields": {
+			"name": "Gabès sud",
+			"governorate": 19,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 217,
+		"fields": {
+			"name": "Ghannouch",
+			"governorate": 19,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 218,
+		"fields": {
+			"name": "Metouia",
+			"governorate": 19,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 219,
+		"fields": {
+			"name": "Menzel habib",
+			"governorate": 19,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 220,
+		"fields": {
+			"name": "Hamma",
+			"governorate": 19,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 221,
+		"fields": {
+			"name": "Matmata",
+			"governorate": 19,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 222,
+		"fields": {
+			"name": "Matmata nouvelle",
+			"governorate": 19,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 223,
+		"fields": {
+			"name": "Mareth",
+			"governorate": 19,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 224,
+		"fields": {
+			"name": "Mednine Nord",
+			"governorate": 20,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 225,
+		"fields": {
+			"name": "Mednine Sud",
+			"governorate": 20,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 226,
+		"fields": {
+			"name": "Béni khedach",
+			"governorate": 20,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 227,
+		"fields": {
+			"name": "Ben Guerdene",
+			"governorate": 20,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 228,
+		"fields": {
+			"name": "Zazis",
+			"governorate": 20,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 229,
+		"fields": {
+			"name": "Jerba Houmet Souk",
+			"governorate": 20,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 230,
+		"fields": {
+			"name": "Jerba Midoun",
+			"governorate": 20,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 231,
+		"fields": {
+			"name": "Jerba Ajim",
+			"governorate": 20,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 232,
+		"fields": {
+			"name": "Sidi Makhlouf",
+			"governorate": 20,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 233,
+		"fields": {
+			"name": "Gafsa Nord",
+			"governorate": 21,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 234,
+		"fields": {
+			"name": "Sidi Aich",
+			"governorate": 21,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 235,
+		"fields": {
+			"name": "El Ksar",
+			"governorate": 21,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 236,
+		"fields": {
+			"name": "Gafsa Sud",
+			"governorate": 21,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 237,
+		"fields": {
+			"name": "Moulares",
+			"governorate": 21,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 238,
+		"fields": {
+			"name": "Redyef",
+			"governorate": 21,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 239,
+		"fields": {
+			"name": "Métlaoui",
+			"governorate": 21,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 240,
+		"fields": {
+			"name": "El Mdhilla",
+			"governorate": 21,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 241,
+		"fields": {
+			"name": "El Guettar",
+			"governorate": 21,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 242,
+		"fields": {
+			"name": "Belkhir",
+			"governorate": 21,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 243,
+		"fields": {
+			"name": "Sned",
+			"governorate": 21,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 244,
+		"fields": {
+			"name": "Tozeur",
+			"governorate": 22,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 245,
+		"fields": {
+			"name": "Degueche",
+			"governorate": 22,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 246,
+		"fields": {
+			"name": "Tameghza",
+			"governorate": 22,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 247,
+		"fields": {
+			"name": "Nefta",
+			"governorate": 22,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 248,
+		"fields": {
+			"name": "Hezoua",
+			"governorate": 22,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 249,
+		"fields": {
+			"name": "Tataouine Nord",
+			"governorate": 23,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 250,
+		"fields": {
+			"name": "Tataouine Sud",
+			"governorate": 23,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 251,
+		"fields": {
+			"name": "Smar",
+			"governorate": 23,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 252,
+		"fields": {
+			"name": "Bir Lahmer",
+			"governorate": 23,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 253,
+		"fields": {
+			"name": "Ghomrassen",
+			"governorate": 23,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 254,
+		"fields": {
+			"name": "Dhehiba",
+			"governorate": 23,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 255,
+		"fields": {
+			"name": "Remada",
+			"governorate": 23,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 256,
+		"fields": {
+			"name": "Kébili Sud",
+			"governorate": 24,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 257,
+		"fields": {
+			"name": "Kébili Nord",
+			"governorate": 24,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 258,
+		"fields": {
+			"name": "Souk El Ahad",
+			"governorate": 24,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 259,
+		"fields": {
+			"name": "Douz",
+			"governorate": 24,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	},
+	{
+		"model": "autoecole_api.city",
+		"pk": 260,
+		"fields": {
+			"name": "El Faouar",
+			"governorate": 24,
+			"created_at": "2024-08-15T22:01:49.043Z",
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"updated_by": null,
+			"is_deleted": false,
+			"deleted_by": null,
+			"deleted_at": null,
+			"restored_at": null,
+			"restored_by": null
+		}
+	}
+]

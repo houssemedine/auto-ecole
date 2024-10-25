@@ -130,3 +130,22 @@ class Notification_serializer_read(serializers.ModelSerializer):
     class Meta:
         model= Notification
         fields = '__all__'
+
+class Country_serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model= Country
+        fields = '__all__'
+
+class Governorate_serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model= Governorate
+        fields = '__all__'
+
+class City_serializer(serializers.ModelSerializer):
+
+    class Meta:
+        model= City
+        fields = '__all__'
+

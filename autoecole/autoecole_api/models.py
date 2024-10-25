@@ -76,9 +76,37 @@ class SoftDeleteModel(models.Model):
         # Django will not create a database table for this model
         abstract = True
 
+class Country(BaseModel, SoftDeleteModel):
+    name = models.CharField(max_length=50)
+    tel_code = models.CharField(max_length=10)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+class Governorate(BaseModel, SoftDeleteModel):
+    name = models.CharField(max_length=50)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+class City(BaseModel, SoftDeleteModel):
+    name = models.CharField(max_length=50)
+    governorate = models.ForeignKey(Governorate, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
 # Owner Model
-
-
 class Owner(BaseModel, SoftDeleteModel, User):
     roles = [
         ('Manager', 'Manager'),
@@ -118,10 +146,11 @@ class School(BaseModel, SoftDeleteModel):
 
 class Student(BaseModel, SoftDeleteModel, User):
     # name=models.CharField(max_length=100)
-    city = models.CharField(max_length=50)
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+    # governorate = models.CharField(max_length=50)
+    # country = models.CharField(max_length=50)
+    # city = models.CharField(max_length=50)
     cin=models.IntegerField(unique=True)
-    governorate = models.CharField(max_length=50)
-    country = models.CharField(max_length=50)
     tel = models.IntegerField(blank=True, null=True, unique=True)
     birthday = models.DateField()
     gender=models.CharField(max_length=50,default='male')

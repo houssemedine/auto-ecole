@@ -914,3 +914,34 @@ def payment_dossier(request,card_id):
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = Payments_serializer(payments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def countries(request):
+    if request.method == 'GET':
+        if not (countries := Country.undeleted_objects.all()):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = Country_serializer(countries, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def governorates(request, id):
+    if request.method == 'GET':
+        if not (governorates := Governorate.undeleted_objects.filter(country=id).all()):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = Governorate_serializer(governorates, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def cities(request, id):
+    if request.method == 'GET':
+        if not (cities := City.undeleted_objects.filter(governorate=id).all()):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = City_serializer(cities, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
