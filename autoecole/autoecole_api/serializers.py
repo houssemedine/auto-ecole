@@ -40,10 +40,19 @@ class Student_serializer_read(serializers.ModelSerializer):
         fields = '__all__'
 
 class Student_serializer(serializers.ModelSerializer):
+    # avatar = serializers.SerializerMethodField()
 
     class Meta:
         model=Student
         fields = '__all__'
+
+    # def get_avatar(self, obj):
+    #     request = self.context.get("request")
+    #     if obj.avatar and hasattr(obj.avatar, 'url'):
+    #         return request.build_absolute_uri(obj.avatar.url)
+    #     return None
+
+
 
 
 
@@ -138,6 +147,7 @@ class Session_serializer_read(serializers.ModelSerializer):
     card=Card_serializer_read()
     session_type = SessionTypes_serializer()
     employee = Employee_serializer()
+    car = Car_serializer()
 
     class Meta:
         model= Session

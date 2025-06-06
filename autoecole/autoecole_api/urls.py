@@ -33,6 +33,7 @@ urlpatterns = [
         # Card URL
                 # index and save
         path('school/<int:school_id>/cards/<str:progress_status>/',views.card,name='card'),
+        path('school/<int:school_id>/save_card_student/',views.save_card_and_student,name='card_and_student'),
                 # edit and delete
         path('cards/<int:id>/edit',views.card_edit,name='card_edit'),
 
@@ -114,5 +115,8 @@ urlpatterns = [
 
         #Cities
 	path('governorate/<int:id>/cities/', views.cities, name='cities'),
+
+        #Profile
+	path('profile/', views.profile, name='profile'),
 
 ]

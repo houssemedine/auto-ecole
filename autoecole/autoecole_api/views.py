@@ -2,7 +2,8 @@ from datetime import datetime
 from multiprocessing.dummy import Manager
 from autoecole_api.models import *
 from autoecole_api.serializers import *
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
@@ -34,7 +35,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         if user.fonction == 1:
             token['school']=0
 
-        # print(token)
         return token
 
 
@@ -104,15 +104,31 @@ def student(request,school_id):
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
         username_list=User.objects.values_list('username',flat=True)
-        data=request.data.copy()
-        data['created_by']=user.id
-        data['fonction']=5
-        data['school']=school_id
-        data['username']=generete_username(data['first_name'], data['last_name'], username_list)
-        data['password']='test'
-        serializer = Student_serializer(data=data)
-        if not serializer.is_valid(raise_exception=True):
-            return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+        new_data=dict(request.data['student'])
+
+        if 'avatar' in request.FILES:
+            new_data['avatar'] = request.FILES['avatar']
+
+        new_data['school']=student.school.id
+        new_data['is_active']=student.is_active
+
+        first_name=student.first_name
+        last_name=student.last_name
+        if 'first_name' in new_data:
+            first_name=new_data['first_name'][0]
+
+        if 'last_name' in new_data:
+            last_name=new_data['last_name'][0]
+
+        new_data['username']=generete_username(first_name, last_name, username_list)
+        new_data['password']=student.password
+        for key in new_data:
+            if isinstance(new_data[key], list) and len(new_data[key]) == 1:
+                new_data[key] = new_data[key][0]
+
+        serializer = Student_serializer(student, data=new_data, context={'request': request})
+        if not (serializer.is_valid()):
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         save_student=serializer.save()
 
         student=Student.undeleted_objects.filter(id=save_student.id).values_list('id',flat=True)
@@ -130,6 +146,7 @@ def student(request,school_id):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@parser_classes([MultiPartParser, FormParser])  # ✅ Pour gérer multipart/form-data
 # @permission_classes([IsAuthenticated])
 def student_edit(request, id):
     try:
@@ -144,11 +161,14 @@ def student_edit(request, id):
 
 
     if request.method == 'GET':
-        serializer = Student_serializer_read(student)
+        serializer = Student_serializer_read(student, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'PUT':
         username_list=User.objects.values_list('username',flat=True)
-        new_data=request.data.copy()
+        new_data=dict(request.data)
+
+        if 'avatar' in request.FILES:
+            new_data['avatar'] = request.FILES['avatar']
 
         new_data['school']=student.school.id
         new_data['is_active']=student.is_active
@@ -156,15 +176,18 @@ def student_edit(request, id):
         first_name=student.first_name
         last_name=student.last_name
         if 'first_name' in new_data:
-            first_name=new_data['first_name']
+            first_name=new_data['first_name'][0]
 
         if 'last_name' in new_data:
-            last_name=new_data['last_name']
+            last_name=new_data['last_name'][0]
 
         new_data['username']=generete_username(first_name, last_name, username_list)
         new_data['password']=student.password
-        print('new data',new_data)
-        serializer = Student_serializer(student, data=new_data)
+        for key in new_data:
+            if isinstance(new_data[key], list) and len(new_data[key]) == 1:
+                new_data[key] = new_data[key][0]
+
+        serializer = Student_serializer(student, data=new_data, context={'request': request})
         if not (serializer.is_valid()):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         save_student=serializer.save()
@@ -275,6 +298,100 @@ def card(request,school_id,progress_status):
                                 1)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['POST'])
+@parser_classes([MultiPartParser, FormParser])  # ✅ Pour gérer multipart/form-data
+def save_card_and_student(request, school_id):
+    if request.method == 'POST':
+        username_list=User.objects.values_list('username',flat=True)
+        data = request.data
+
+        # Séparer les champs student_ et dossier_
+        student_data = {}
+        dossier_data = {}
+
+        for key, value in data.items():
+            if key.startswith('dossier_'):
+                dossier_key = key.replace('dossier_', '')
+                dossier_data[dossier_key] = value
+            if key.startswith('student_'):
+                student_key = key.replace('student_', '')
+                student_data[student_key] = value
+
+        print(student_data)
+        if 'avatar' in request.FILES:
+            student_data['avatar'] = request.FILES['avatar']
+
+        student_data['school']=school_id
+        first_name=student_data['first_name'][0]
+        last_name=student_data['last_name'][0]
+        student_data['fonction'] = 5 #For student
+
+        student_data['username']=generete_username(first_name, last_name, username_list)
+        student_data['password']='test'
+        for key in student_data:
+            if isinstance(student_data[key], list) and len(student_data[key]) == 1:
+                student_data[key] = student_data[key][0]
+        serializer = Student_serializer(data=student_data, context={'request': request})
+        if not (serializer.is_valid()):
+            print('error student',serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        save_student=serializer.save()
+
+        student=Student.undeleted_objects.filter(id=save_student.id).values_list('id',flat=True)
+        employees=Employee.undeleted_objects.filter(school=school_id).values_list('id',flat=True)
+        owners=School.undeleted_objects.filter(id=school_id).values_list('owner',flat=True)
+        notification_users=list(employees) + list(owners) + list(student)
+
+        #Save Notif
+        save_notif=notification_db(notification_users,
+                                'student','Add new student',
+                                f'Student {save_student.first_name} {save_student.last_name} is added',
+                                1)
+
+        data_card = dossier_data
+        print('data_card', data_card)
+        data_card['student'] = save_student.id
+        data_card['manual_price'] = False
+        serializer = Card_serializer(data=data_card)
+        if not serializer.is_valid():
+            print('card errors', serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST,)
+        # if serializer.validated_data['manual_price']:
+        #     if not serializer.validated_data['price']:
+        #         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+        # else:
+        #     serializer.validated_data['price'] = (
+        #         serializer.validated_data['hours_number']*serializer.validated_data['hour_price']) * (1 - (serializer.validated_data['discount']/100))
+        obj=serializer.save()
+
+        history_data={
+                    'card':obj.id,
+                    'status':1,
+                    'date':datetime.now().date(),
+                    'created_by':request.user.id
+                    }
+        serializer_history=Card_status_serializer(data=history_data)
+
+        if not serializer_history.is_valid():
+            print('history errors', serializer_history.errors)
+            return Response(serializer_history.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer_history.save()
+
+        #Save Notif
+            #get users
+        employees=Employee.undeleted_objects.filter(school=school_id).values_list('id',flat=True)
+        owners=School.undeleted_objects.filter(id=school_id).values_list('owner',flat=True)
+        notification_users=list(employees) + list(owners)
+        notification_users.append(obj.student.id)
+
+        save_notif=notification_db(notification_users,
+                                'card','Add new card',
+                                f' new card for {obj.student.first_name} is added',
+                                1)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -456,7 +573,6 @@ def session(request, school_id):
 def card_session(request, card_id):
     if request.method == 'GET':
         if not (sessions := Session.undeleted_objects.filter(card=card_id).all()):
-            print(sessions)
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = Session_serializer_read(sessions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -478,8 +594,6 @@ def session_edit(request, id):
         start_at=request.data['start_at']
         end_at=request.data['end_at']
         day=request.data['day']
-        print('session start', str(session.start_at), start_at, )
-        print('session end', str(session.end_at), end_at)
         # Check the availability of the employee and the car for this session
         if (start_at != str(session.start_at)) or (end_at != str(session.end_at)):
             sessions=Session.undeleted_objects.filter(
@@ -944,5 +1058,48 @@ def cities(request, id):
         serializer = City_serializer(cities, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET','PUT'])
+def profile(request):
+    # (1, 'Guest'),
+    # (2, 'Admin'),
+    # (3, 'Owner'),
+    # (4, 'Trainer'),
+    # (5, 'Student'),
+    try:
+        user_fonction=request.user.fonction
+        user_id=request.user.id
+    except Exception:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if user_fonction in [1, 2]: #Guest and Admin
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if user_fonction == 3: #Owner
+        try:
+            profile=Owner.undeleted_objects.get(id=user_id)
+        except Exception:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        profile_serialzer=Owner_serializer(profile)
+
+    if user_fonction == 4: #Trainer
+        try:
+            profile=Employee.undeleted_objects.get(id=user_id)
+        except Exception:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        profile_serialzer=Employee_serializer_read(profile)
+
+    if user_fonction == 5: #Student
+        try:
+            profile=Student.undeleted_objects.get(id=user_id)
+        except Exception:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        profile_serialzer=Student_serializer_read(profile)
+
+    return Response(profile_serialzer.data, status=status.HTTP_200_OK)
 
 

@@ -2,8 +2,14 @@ from django.db import models
 # from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
+from uuid import uuid4
 
 # Create your models here.
+def avatar_upload_to(instance, filename):
+    ext = filename.split('.')[-1]
+    unique_name = uuid4().hex  # ex : '3fa85f64f7d24a15a96b0dbab207ac4e'
+    return f"avatars/{unique_name}.{ext}"
+
 class User(AbstractUser):
     USER_TYPE_CHOICES = (
     (1, 'Guest'),
@@ -19,7 +25,7 @@ class User(AbstractUser):
         )
     avatar = models.ImageField(
         verbose_name='photo de profile',
-        upload_to='media/avatars',
+        upload_to=avatar_upload_to,
         null=True,
         blank=True
         )
@@ -151,7 +157,7 @@ class Student(BaseModel, SoftDeleteModel, User):
     # country = models.CharField(max_length=50)
     # city = models.CharField(max_length=50)
     cin=models.IntegerField(unique=True)
-    tel = models.IntegerField(blank=True, null=True, unique=True)
+    tel = models.IntegerField(unique=True)
     birthday = models.DateField()
     gender=models.CharField(max_length=50,default='male')
     school = models.ForeignKey(School, on_delete=models.CASCADE)
@@ -204,7 +210,7 @@ class Card(BaseModel, SoftDeleteModel):
     student = models.ForeignKey(Student,related_name='student' ,on_delete=models.CASCADE)
     status = models.ForeignKey(Status,related_name='status',default=1, on_delete=models.CASCADE)
     # if True price will be an input, if false price will be calucle in proprety
-    manual_price = models.BooleanField(null=True, blank=True)
+    # manual_price = models.BooleanField(null=True, blank=True)
     price = models.DecimalField(
         max_digits=99999999, decimal_places=2, null=True, blank=True)
     hour_price = models.DecimalField(
@@ -241,6 +247,7 @@ class Payment(BaseModel, SoftDeleteModel):
     amount=models.DecimalField(max_digits=99999999, decimal_places=2)
     date=models.DateField()
     motive=models.CharField(max_length=50)
+    method=models.CharField(max_length=50, default='espéces')
     card=models.ForeignKey(Card, related_name='cardP' ,on_delete=models.CASCADE)
 
     class Meta:
