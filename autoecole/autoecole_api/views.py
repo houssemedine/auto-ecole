@@ -82,8 +82,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
 # School CRUD
-
-
 @api_view(['GET', 'POST'])
 # @permission_classes([IsAuthenticated, IsManager])
 def school(request):
@@ -855,7 +853,7 @@ def register(request):
         data = request.data.copy()
 
         #Format owner data
-        owner_data['fonction']=3
+        owner_data['fonction']=3  # For owner
         owner_data['first_name'] = data['first_name']
         owner_data['last_name'] = data['last_name']
         owner_data['tel'] = data['tel']
@@ -865,12 +863,13 @@ def register(request):
 
         #Save Owner Model
         if not owner_serializer.is_valid():
+            print('error owner',owner_serializer.errors)
             return Response(owner_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         owner_serializer.save()
 
         #Format school data
-        school_data['name']=data['name']
-        school_data['code']=data['code']
+        school_data['name']=data['school_name']
+        school_data['code']=data['school_code']
         school_data['owner']=owner_serializer.data['id']
         school_serializer = School_serializer(data=school_data)
         #Save School Model
