@@ -1,0 +1,252 @@
+[
+  {
+    "model": "autoecole_api.owner",
+    "pk": 1,
+    "fields": {
+      "username": "owner_alpha",
+      "password": "pbkdf2_sha256$600000$X700VvPTkkEne1YJSPT2CE$Wrx/0uzGG6vwKWF4z9t3GcvQeoMGMP6RcDkiuHRBBEc=",
+      "email": "alpha@owner.tn",
+      "fonction": 3,
+      "role": "Manager",
+      "tel": 11111111,
+      "birthday": "1980-01-01",
+      "created_at": "2024-01-01T08:00:00Z"
+    }
+  },
+  {
+    "model": "autoecole_api.owner",
+    "pk": 2,
+    "fields": {
+      "username": "owner_beta",
+      "password": "pbkdf2_sha256$600000$X700VvPTkkEne1YJSPT2CE$Wrx/0uzGG6vwKWF4z9t3GcvQeoMGMP6RcDkiuHRBBEc=",
+      "email": "beta@owner.tn",
+      "fonction": 3,
+      "role": "Manager",
+      "tel": 22222222,
+      "birthday": "1982-02-02",
+      "created_at": "2024-01-02T08:00:00Z"
+    }
+  },
+  {
+    "model": "autoecole_api.school",
+    "pk": 1,
+    "fields": {
+      "name": "École Alpha",
+      "code": "SCHOOL1",
+      "owner": 1,
+      "country": "Tunisie",
+      "governorate": "Tunis",
+      "city": "Tunis",
+      "adress": "123 Rue Alpha",
+      "speciality": "Permis B",
+      "email": "contact@alpha.tn",
+      "tel": 71111111,
+      "created_at": "2024-01-03T08:00:00Z"
+    }
+  },
+  {
+    "model": "autoecole_api.school",
+    "pk": 2,
+    "fields": {
+      "name": "École Beta",
+      "code": "SCHOOL2",
+      "owner": 2,
+      "country": "Tunisie",
+      "governorate": "Sfax",
+      "city": "Sfax",
+      "adress": "456 Rue Beta",
+      "speciality": "Permis C",
+      "email": "contact@beta.tn",
+      "tel": 72222222,
+      "created_at": "2024-01-04T08:00:00Z"
+    }
+  },
+  {
+    "model": "autoecole_api.car",
+    "pk": 1,
+    "fields": {
+      "serial_number": "CAR001",
+      "marque": "Peugeot",
+      "model": "208",
+      "purchase_date": "2022-01-10",
+      "fuel_type": "Petrol",
+      "school": 1,
+      "created_at": "2024-01-05T08:00:00Z"
+    }
+  },
+  {
+    "model": "autoecole_api.car",
+    "pk": 2,
+    "fields": {
+      "serial_number": "CAR002",
+      "marque": "Renault",
+      "model": "Clio",
+      "purchase_date": "2022-02-10",
+      "fuel_type": "Diesel",
+      "school": 1,
+      "created_at": "2024-01-06T08:00:00Z"
+    }
+  },
+  {
+    "model": "autoecole_api.car",
+    "pk": 3,
+    "fields": {
+      "serial_number": "CAR003",
+      "marque": "Volkswagen",
+      "model": "Polo",
+      "purchase_date": "2022-03-10",
+      "fuel_type": "Gaz",
+      "school": 2,
+      "created_at": "2024-01-07T08:00:00Z"
+    }
+  },
+  {
+    "model": "autoecole_api.car",
+    "pk": 4,
+    "fields": {
+      "serial_number": "CAR004",
+      "marque": "Hyundai",
+      "model": "i20",
+      "purchase_date": "2022-04-10",
+      "fuel_type": "Electric",
+      "school": 2,
+      "created_at": "2024-01-08T08:00:00Z"
+    }
+  },
+  {
+    "model": "autoecole_api.employee",
+    "pk": 1,
+    "fields": {
+      "username": "emp1_alpha",
+      "password": "pbkdf2_sha256$600000$X700VvPTkkEne1YJSPT2CE$Wrx/0uzGG6vwKWF4z9t3GcvQeoMGMP6RcDkiuHRBBEc=",
+      "email": "emp1@alpha.tn",
+      "fonction": 4,
+      "matricule": "EMP001",
+      "role": "Trainer",
+      "city": 1,
+      "tel": 90000001,
+      "birthday": "1990-01-01",
+      "school": 1,
+      "created_at": "2024-01-09T08:00:00Z"
+    }
+  },
+  {
+    "model": "autoecole_api.employee",
+    "pk": 2,
+    "fields": {
+      "username": "emp2_alpha",
+      "password": "pbkdf2_sha256$600000$X700VvPTkkEne1YJSPT2CE$Wrx/0uzGG6vwKWF4z9t3GcvQeoMGMP6RcDkiuHRBBEc=",
+      "email": "emp2@alpha.tn",
+      "fonction": 4,
+      "matricule": "EMP002",
+      "role": "Manager",
+      "city": 1,
+      "tel": 90000002,
+      "birthday": "1989-01-01",
+      "school": 1,
+      "created_at": "2024-01-10T08:00:00Z"
+    }
+  },
+  {
+    "model": "autoecole_api.employee",
+    "pk": 3,
+    "fields": {
+      "username": "emp1_beta",
+      "password": "pbkdf2_sha256$600000$X700VvPTkkEne1YJSPT2CE$Wrx/0uzGG6vwKWF4z9t3GcvQeoMGMP6RcDkiuHRBBEc=",
+      "email": "emp1@beta.tn",
+      "fonction": 4,
+      "matricule": "EMP003",
+      "role": "Trainer",
+      "city": 1,
+      "tel": 90000003,
+      "birthday": "1992-01-01",
+      "school": 2,
+      "created_at": "2024-01-11T08:00:00Z"
+    }
+  },
+  {
+    "model": "autoecole_api.employee",
+    "pk": 4,
+    "fields": {
+      "username": "emp2_beta",
+      "password": "pbkdf2_sha256$600000$X700VvPTkkEne1YJSPT2CE$Wrx/0uzGG6vwKWF4z9t3GcvQeoMGMP6RcDkiuHRBBEc=",
+      "email": "emp2@beta.tn",
+      "fonction": 4,
+      "matricule": "EMP004",
+      "role": "Manager",
+      "city": 1,
+      "tel": 90000004,
+      "birthday": "1991-01-01",
+      "school": 2,
+      "created_at": "2024-01-12T08:00:00Z"
+    }
+  },
+  {
+    "model": "autoecole_api.student",
+    "pk": 1,
+    "fields": {
+      "username": "student1_alpha",
+      "password": "pbkdf2_sha256$600000$X700VvPTkkEne1YJSPT2CE$Wrx/0uzGG6vwKWF4z9t3GcvQeoMGMP6RcDkiuHRBBEc=",
+      "email": "stu1@alpha.tn",
+      "fonction": 5,
+      "city": 1,
+      "cin": 12345678,
+      "tel": 95000001,
+      "birthday": "2000-01-01",
+      "gender": "male",
+      "school": 1,
+      "created_at": "2024-01-13T08:00:00Z"
+    }
+  },
+  {
+    "model": "autoecole_api.student",
+    "pk": 2,
+    "fields": {
+      "username": "student2_alpha",
+      "password": "pbkdf2_sha256$600000$X700VvPTkkEne1YJSPT2CE$Wrx/0uzGG6vwKWF4z9t3GcvQeoMGMP6RcDkiuHRBBEc=",
+      "email": "stu2@alpha.tn",
+      "fonction": 5,
+      "city": 1,
+      "cin": 12345679,
+      "tel": 95000002,
+      "birthday": "2001-01-01",
+      "gender": "female",
+      "school": 1,
+      "created_at": "2024-01-14T08:00:00Z"
+    }
+  },
+  {
+    "model": "autoecole_api.student",
+    "pk": 3,
+    "fields": {
+      "username": "student1_beta",
+      "password": "pbkdf2_sha256$600000$X700VvPTkkEne1YJSPT2CE$Wrx/0uzGG6vwKWF4z9t3GcvQeoMGMP6RcDkiuHRBBEc=",
+      "email": "stu1@beta.tn",
+      "fonction": 5,
+      "city": 1,
+      "cin": 12345680,
+      "tel": 95000003,
+      "birthday": "2000-05-01",
+      "gender": "male",
+      "school": 2,
+      "created_at": "2024-01-15T08:00:00Z"
+    }
+  },
+  {
+    "model": "autoecole_api.student",
+    "pk": 4,
+    "fields": {
+      "username": "student2_beta",
+      "password": "pbkdf2_sha256$600000$X700VvPTkkEne1YJSPT2CE$Wrx/0uzGG6vwKWF4z9t3GcvQeoMGMP6RcDkiuHRBBEc=",
+      "email": "stu2@beta.tn",
+      "fonction": 5,
+      "city": 1,
+      "cin": 12345681,
+      "tel": 95000004,
+      "birthday": "2001-06-01",
+      "gender": "female",
+      "school": 2,
+      "created_at": "2024-01-16T08:00:00Z"
+    }
+  }
+]

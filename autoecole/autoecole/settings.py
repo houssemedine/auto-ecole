@@ -55,9 +55,11 @@ REST_FRAMEWORK = {
     ),
     # By default DRF convert decimal to string, so we need this to keep it decimal
     'COERCE_DECIMAL_TO_STRING': False,
-
-
 }
+AUTHENTICATION_BACKENDS = [
+    'autoecole_api.authentication.TelBackend',  # Auth personnalisé pour le téléphone
+    'django.contrib.auth.backends.ModelBackend',  # Auth par défaut
+]
 
 # JWT Configuration
 SIMPLE_JWT = {

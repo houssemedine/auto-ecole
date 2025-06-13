@@ -29,6 +29,7 @@ class User(AbstractUser):
         null=True,
         blank=True
         )
+    tel = models.IntegerField(unique=True)
 
     def __str__(self):
         fonction = "Admin"
@@ -123,7 +124,6 @@ class Owner(BaseModel, SoftDeleteModel, User):
     # city = models.CharField(max_length=50)
     # governorate = models.CharField(max_length=50)
     # country = models.CharField(max_length=50)
-    tel = models.IntegerField(unique=True)
     birthday = models.DateField(blank=True, null=True)
 
 
@@ -157,7 +157,6 @@ class Student(BaseModel, SoftDeleteModel, User):
     # country = models.CharField(max_length=50)
     # city = models.CharField(max_length=50)
     cin=models.IntegerField(unique=True)
-    tel = models.IntegerField(unique=True)
     birthday = models.DateField()
     gender=models.CharField(max_length=50,default='male')
     school = models.ForeignKey(School, on_delete=models.CASCADE)
@@ -316,7 +315,6 @@ class Employee(BaseModel, SoftDeleteModel, User):
     matricule=models.CharField(max_length=50,unique=True)
     role = models.CharField(max_length=100, choices=roles, default='Trainer')
     city = models.ForeignKey(City, on_delete=models.CASCADE)
-    tel = models.IntegerField()
     birthday = models.DateField()
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     image=models.ImageField(blank=True,null=True)

@@ -12,28 +12,68 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from autoecole_api.permissions import IsManager
 from .tools import generete_username
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth import authenticate
 import pandas as pd
 from django.db.models import Q
 from django.apps import apps
 import json
 # Custom JWT to obtain more information
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    tel = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Supprime 'username' hérité
+        self.fields.pop('username', None)
+
+    def validate(self, attrs):
+        tel = attrs.get('tel')
+        password = attrs.get('password')
+
+        # Authentifier avec téléphone au lieu de username/email
+        user = authenticate(request=self.context.get('request'),
+                            tel=tel, password=password)
+
+        if not user:
+            raise serializers.ValidationError('Numéro de téléphone ou mot de passe incorrect.')
+
+        # Générer le token
+        refresh = self.get_token(user)
+
+        data = {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }
+
+        # Claims personnalisés
+        data['tel'] = user.tel
+        data['email'] = user.email
+        data['first_name'] = user.first_name
+        data['last_name'] = user.last_name
+        data['fonction'] = user.fonction
+
+        if user.fonction == 3:
+            school = School.undeleted_objects.filter(owner=user.id).all()
+            data['school'] = School_serializer(school, many=True).data
+        elif user.fonction == 1:
+            data['school'] = 0
+
+        return data
+
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-
-        # Add custom claims
-        token['username'] = user.username
+        token['tel'] = user.tel
         token['email'] = user.email
         token['first_name'] = user.first_name
         token['last_name'] = user.last_name
         token['fonction'] = user.fonction
-        if user.fonction == 3:
-            school=School.undeleted_objects.filter(owner=user.id).all()
-            token['school'] = School_serializer(school, many=True).data
 
-        if user.fonction == 1:
-            token['school']=0
+        if user.fonction == 3:
+            school = School.undeleted_objects.filter(owner=user.id).all()
+            token['school'] = School_serializer(school, many=True).data
+        elif user.fonction == 1:
+            token['school'] = 0
 
         return token
 
