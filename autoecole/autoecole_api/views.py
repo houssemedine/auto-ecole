@@ -356,7 +356,7 @@ def save_card_and_student(request, school_id):
                 student_key = key.replace('student_', '')
                 student_data[student_key] = value
 
-        print(student_data)
+
         if 'avatar' in request.FILES:
             student_data['avatar'] = request.FILES['avatar']
 
@@ -693,14 +693,24 @@ def employee(request,school_id):
     if request.method == 'POST':
         username_list=User.objects.values_list('username',flat=True)
         data=request.data.copy()
-        data['created_by']=user.id
-        data['school']=school_id
-        data['is_active']=True
-        data['username']=generete_username(data['first_name'], data['last_name'], username_list)
-        data['password']='test'
-        data['fonction'] = 4 #trainer
-        serializer = Employee_serializer(data=data)
+        employee_data = {}
+        for key, value in data.items():
+            if key.startswith('student_'):
+                student_key = key.replace('student_', '')
+                employee_data[student_key] = value
+
+        if 'avatar' in request.FILES:
+            employee_data['avatar'] = request.FILES['avatar']
+
+        employee_data['created_by']=user.id
+        employee_data['school']=school_id
+        employee_data['is_active']=True
+        employee_data['username']=generete_username(employee_data['first_name'][0], employee_data['last_name'][0], username_list)
+        employee_data['password']='test'
+        employee_data['fonction'] = 4 #trainer
+        serializer = Employee_serializer(data=employee_data)
         if not serializer.is_valid():
+            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -793,7 +803,9 @@ def car_edit(request, id):
         data=request.data.copy()
         data['school']=car.school.id
         serializer = Car_serializer(car, data=data)
+        print('data', data)
         if not (serializer.is_valid()):
+            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
 

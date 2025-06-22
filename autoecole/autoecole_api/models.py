@@ -31,6 +31,8 @@ class User(AbstractUser):
         )
     tel = models.IntegerField(unique=True)
 
+    full_name = models.CharField(max_length=100, blank=True, null=True)
+
     def __str__(self):
         fonction = "Admin"
         for loop in self.USER_TYPE_CHOICES:
@@ -317,7 +319,6 @@ class Employee(BaseModel, SoftDeleteModel, User):
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     birthday = models.DateField()
     school = models.ForeignKey(School, on_delete=models.CASCADE)
-    image=models.ImageField(blank=True,null=True)
 
 
     class Meta:
