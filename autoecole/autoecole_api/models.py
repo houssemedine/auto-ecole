@@ -158,7 +158,7 @@ class Student(BaseModel, SoftDeleteModel, User):
     # governorate = models.CharField(max_length=50)
     # country = models.CharField(max_length=50)
     # city = models.CharField(max_length=50)
-    cin=models.IntegerField(unique=True)
+    cin=models.CharField(max_length=50, unique=True)
     birthday = models.DateField()
     gender=models.CharField(max_length=50,default='male')
     school = models.ForeignKey(School, on_delete=models.CASCADE)

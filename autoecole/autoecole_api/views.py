@@ -645,6 +645,7 @@ def session_edit(request, id):
                 return Response({'error':'session conflict'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = Session_serializer_edit(session, data=request.data)
         if not (serializer.is_valid()):
+            print('session put error', serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         save_session = serializer.save()
 
