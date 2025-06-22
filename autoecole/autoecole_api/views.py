@@ -705,6 +705,11 @@ def employee(request,school_id):
         employee_data['created_by']=user.id
         employee_data['school']=school_id
         employee_data['is_active']=True
+        print(employee_data)
+        # Conversion en objet datetime
+        dt = datetime.strptime(employee_data['birthday'], "%Y-%m-%dT%H:%M:%S.%fZ")
+        employee_data['birthday'] = dt.strftime("%Y-%m-%d")
+        
         employee_data['username']=generete_username(employee_data['first_name'][0], employee_data['last_name'][0], username_list)
         employee_data['password']='test'
         employee_data['fonction'] = 4 #trainer
@@ -730,22 +735,26 @@ def employee_edit(request, id):
     if request.method == 'PUT':
         username_list=User.objects.values_list('username',flat=True)
         data=request.data.copy()
-        data['updated_by']=user.id
-        data['school']=employee.school.id
-        first_name=employee.first_name
-        last_name=employee.last_name
-        if 'first_name' in data:
-            first_name=data['first_name']
+        employee_data = {}
+        for key, value in data.items():
+            if key.startswith('student_'):
+                student_key = key.replace('student_', '')
+                employee_data[student_key] = value
 
-        if 'last_name' in data:
-            last_name=data['last_name']
+        if 'avatar' in request.FILES:
+            employee_data['avatar'] = request.FILES['avatar']
+        employee_data['updated_by']=user.id
+        employee_data['school']=employee.school.id
+        employee_data['username']=employee.username
+        employee_data['password']=employee.password
+        employee_data['is_active']=employee.is_active
+        dt = datetime.strptime(employee_data['birthday'], "%Y-%m-%dT%H:%M:%S.%fZ")
+        employee_data['birthday'] = dt.strftime("%Y-%m-%d")
+        print("employee_data", employee_data)
 
-        data['username']=generete_username(first_name, last_name, username_list)
-        data['password']=employee.password
-        data['is_active']=employee.is_active
-
-        serializer = Employee_serializer(employee, data=data)
+        serializer = Employee_serializer(employee, data=employee_data)
         if not (serializer.is_valid()):
+            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
