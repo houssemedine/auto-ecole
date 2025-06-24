@@ -638,10 +638,13 @@ def session_edit(request, id):
             card__student__school=session.card.student.school,
             day=day,
             ).filter(
-                Q(start_at__lt=end_at) & Q(end_at__gt=start_at)).filter(
-                    Q(employee=employee) | Q(car=car))
+                Q(start_at__lt=end_at) & Q(end_at__gt=start_at) & ~Q(id=session.id)).filter(
+                Q(employee=employee) | Q(car=car))
 
             if sessions.count() > 0:
+                print('session conflict')
+                print('session.id', session.id)
+                print('session_id', id)
                 return Response({'error':'session conflict'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = Session_serializer_edit(session, data=request.data)
         if not (serializer.is_valid()):
