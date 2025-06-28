@@ -39,7 +39,7 @@ class User(AbstractUser):
             if loop[0] == self.fonction:
                 fonction = loop[1]
                 break
-        return "{} : {}".format(self.username, fonction)
+        return "{} : {}".format(self.tel, fonction)
 
 # BasedModel
 class BaseModel(models.Model):
@@ -123,7 +123,7 @@ class Owner(BaseModel, SoftDeleteModel, User):
     ]
 
     role = models.CharField(max_length=100, choices=roles, default='Manager')
-    # city = models.CharField(max_length=50)
+    city = models.ForeignKey(City, on_delete=models.CASCADE, blank=True, null=True)
     # governorate = models.CharField(max_length=50)
     # country = models.CharField(max_length=50)
     birthday = models.DateField(blank=True, null=True)

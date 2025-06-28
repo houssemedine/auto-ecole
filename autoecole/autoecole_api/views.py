@@ -964,7 +964,7 @@ def delete_notification(request, id):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def notification(request):
     if request.method == 'GET':
         notifications = Notification.undeleted_objects.filter(user=request.user).all()
@@ -1125,7 +1125,9 @@ def cities(request, id):
 
 
 @api_view(['GET','PUT'])
+# @permission_classes([IsAuthenticated])
 def profile(request):
+    print('Profile', request.user)
     # (1, 'Guest'),
     # (2, 'Admin'),
     # (3, 'Owner'),
@@ -1134,36 +1136,106 @@ def profile(request):
     try:
         user_fonction=request.user.fonction
         user_id=request.user.id
+
+
+
     except Exception:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if user_fonction in [1, 2]: #Guest and Admin
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if user_fonction == 3: #Owner
-        try:
-            profile=Owner.undeleted_objects.get(id=user_id)
-        except Exception:
+    if request.method == 'GET':
+        if user_fonction in [1, 2]: #Guest and Admin
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        profile_serialzer=Owner_serializer(profile)
+        if user_fonction == 3: #Owner
+            try:
+                profile = Owner.undeleted_objects.get(id=user_id)
+            except Exception:
+                return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if user_fonction == 4: #Trainer
-        try:
-            profile=Employee.undeleted_objects.get(id=user_id)
-        except Exception:
+            profile_serialzer=Owner_serializer_read(profile)
+
+        if user_fonction == 4: #Trainer
+            try:
+                profile = Employee.undeleted_objects.get(id=user_id)
+            except Exception:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            profile_serialzer=Employee_serializer_read(profile)
+
+        if user_fonction == 5: #Student
+            try:
+                profile = Student.undeleted_objects.get(id=user_id)
+            except Exception:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            profile_serialzer=Student_serializer_read(profile)
+        return Response(profile_serialzer.data, status=status.HTTP_200_OK)
+    
+    if request.method == 'PUT':
+        if user_fonction in [1, 2]: #Guest and Admin
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        profile_serialzer=Employee_serializer_read(profile)
+        if user_fonction == 3: #Owner
+            try:
+                profile = Owner.undeleted_objects.get(id=user_id)
+            except Exception:
+                return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if user_fonction == 5: #Student
-        try:
-            profile=Student.undeleted_objects.get(id=user_id)
-        except Exception:
+            profile_serialzer=Owner_serializer(profile)
+
+        if user_fonction == 4: #Trainer
+            try:
+                profile = Employee.undeleted_objects.get(id=user_id)
+            except Exception:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            profile_serialzer=Employee_serializer(profile)
+
+        if user_fonction == 5: #Student
+            try:
+                profile = Student.undeleted_objects.get(id=user_id)
+            except Exception:
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
+            profile_serialzer=Student_serializer(profile)
+        data=request.data.copy()
+        print('request.user')
+        profile_data = {}
+        for key, value in data.items():
+            if key.startswith('student_'):
+                student_key = key.replace('student_', '')
+                profile_data[student_key] = value
+
+        if 'avatar' in request.FILES:
+            profile_data['avatar'] = request.FILES['avatar']
+
+        profile_data['updated_by']=user_id
+
+        if user_fonction not in [1,2,3]: # Admin Guest and Owner doesn't have school 
+            profile_data['school']=profile.school.id
+
+        profile_data['username']=profile.username
+        profile_data['password']=profile.password
+        profile_data['is_active']=profile.is_active
+        dt = datetime.strptime(profile_data['birthday'], "%Y-%m-%dT%H:%M:%S.%fZ")
+        profile_data['birthday'] = dt.strftime("%Y-%m-%d")
+
+        if user_fonction in [1, 2]: #Guest and Admin
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        profile_serialzer=Student_serializer_read(profile)
+        if user_fonction == 3: #Owner
+            serializer=Owner_serializer(profile, data=profile_data)
+        if user_fonction == 4: #Trainer)
+            serializer=Employee_serializer_read(profile, data=profile_data)
+        if user_fonction == 5: #Student
+            serializer=Student_serializer_read(profile, data=profile_data)
 
-    return Response(profile_serialzer.data, status=status.HTTP_200_OK)
+        if not (serializer.is_valid()):
+            print(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
 
 

@@ -125,6 +125,12 @@ class Employee_serializer(serializers.ModelSerializer):
         model=Employee
         fields = '__all__'
 
+class Owner_serializer_read(serializers.ModelSerializer):
+    city=City_serializer()
+    class Meta:
+        model=Owner
+        fields = '__all__'
+
 class Owner_serializer(serializers.ModelSerializer):
     class Meta:
         model=Owner
