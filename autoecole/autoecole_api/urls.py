@@ -102,9 +102,9 @@ urlpatterns = [
         #Session for one card
         path('card/<int:card_id>/sessions/',views.card_session,name='card_session'),
 
-        #Session for one card
+        #Notification
         path('notifications/',views.notification,name='notification'),
-        path('notification/<int:id>/read',views.read_notification,name='read_notification'),
+        path('notification/<int:id>/read',views.update_notification,name='update_notification'),
         path('notification/<int:id>/delete',views.delete_notification,name='delete_notification'),
 
         #Country

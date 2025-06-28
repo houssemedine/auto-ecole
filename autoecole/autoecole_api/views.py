@@ -937,7 +937,7 @@ def notification_db(users:list,module:str,title:str,text:str,notifcation_type:st
     return True
 
 @api_view(['PUT'])
-def read_notification(request, id):
+def update_notification(request, id):
     if request.method == 'PUT':
         try:
             notification = Notification.undeleted_objects.get(id=id)
@@ -967,7 +967,8 @@ def delete_notification(request, id):
 # @permission_classes([IsAuthenticated])
 def notification(request):
     if request.method == 'GET':
-        notifications = Notification.undeleted_objects.filter(user=request.user).all()
+        # notifications = Notification.undeleted_objects.filter(user=request.user).all()
+        notifications = Notification.undeleted_objects.all()
         serializer=Notification_serializer_read(notifications,many=True)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
