@@ -47,6 +47,7 @@ urlpatterns = [
         # Session URL
                 # index and save
         path('school/<int:school_id>/session/',views.session,name='session'),
+        path('school/<int:school_id>/week_session/',views.week_sessions,name='session'),
                 # edit and delete
         path('session/<int:id>/edit',views.session_edit,name='session_edit'),
 

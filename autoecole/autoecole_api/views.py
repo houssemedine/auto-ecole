@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date, timedelta
 from multiprocessing.dummy import Manager
 from autoecole_api.models import *
 from autoecole_api.serializers import *
@@ -606,6 +606,23 @@ def session(request, school_id):
                 f'new session start at {save_session.day} {save_session.start_at} for card number {save_session.card.id} is added',2)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+def week_sessions(request, school_id):
+
+    #Get Week start and end days
+    # Date d'aujourd'hui
+    today = date.today()
+    week_days = today.weekday()
+    week_first_day = today - timedelta(days=week_days)
+    week_last_day = week_first_day + timedelta(days=6)
+    if not (sessions := Session.undeleted_objects.filter(card__student__school=school_id).filter(day__gte=week_first_day, day__lte=week_last_day).all()):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+    serializer = Session_serializer_read(sessions, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 @api_view(['GET'])
 def card_session(request, card_id):
