@@ -1135,10 +1135,15 @@ def governorates(request, id):
 @api_view(['GET'])
 def cities(request, id):
     if request.method == 'GET':
-        if not (cities := City.undeleted_objects.filter(governorate=id).all()):
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        serializer = City_serializer(cities, many=True)
+        #if not (cities := City.undeleted_objects.filter(governorate=id).all()):
+            # return Response(status=status.HTTP_204_NO_CONTENT)
+        # serializer = City_serializer(cities, many=True)
 
+        #This is a temporary fix to get all governorates for country with id=1
+        if not (governorates := Governorate.undeleted_objects.filter(country=1).all()):
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = Governorate_serializer(governorates, many=True)
+    
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
