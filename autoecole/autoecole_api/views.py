@@ -282,7 +282,7 @@ def student_enable_disable_account(request, id):
 
 # Card CRUD
 @api_view(['GET', 'POST'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def card(request,school_id,progress_status):
     if request.method == 'GET':
         cards=None
@@ -609,6 +609,7 @@ def session(request, school_id):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def week_sessions(request, school_id):
 
     #Get Week start and end days
