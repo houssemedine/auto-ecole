@@ -566,44 +566,46 @@ def activity_edit(request, id):
 @api_view(['GET', 'POST'])
 def session(request, school_id):
     if request.method == 'GET':
-        if not (sessions := Session.undeleted_objects.filter(card__student__school=school_id).all()):
+        if not (sessions := Session.undeleted_objects.filter(employee__school=school_id).all()):
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = Session_serializer_read(sessions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
         serializer = Session_serializer_edit(data=request.data)
+        # print('request.data', request.data)
+        if request.data['event_type'] == 'session':
+            car=request.data['car']
+            employee=request.data['employee']
+            start_at=request.data['start_at']
+            end_at=request.data['end_at']
+            day=request.data['day']
 
-        car=request.data['car']
-        employee=request.data['employee']
-        start_at=request.data['start_at']
-        end_at=request.data['end_at']
-        day=request.data['day']
+            # Check the availability of the employee and the car for this session
+            sessions=Session.undeleted_objects.filter(
+                card__student__school=school_id,
+                day=day,
+                ).filter(
+                    Q(start_at__lt=end_at) & Q(end_at__gt=start_at)).filter(
+                        Q(employee=employee) | Q(car=car))
 
-        # Check the availability of the employee and the car for this session
-        sessions=Session.undeleted_objects.filter(
-            card__student__school=school_id,
-            day=day,
-            ).filter(
-                Q(start_at__lt=end_at) & Q(end_at__gt=start_at)).filter(
-                    Q(employee=employee) | Q(car=car))
-
-        if sessions.count() > 0:
-            return Response({'error':'session conflict'}, status=status.HTTP_400_BAD_REQUEST)
-
+            if sessions.count() > 0:
+                return Response({'error':'session conflict'}, status=status.HTTP_400_BAD_REQUEST)
         if not serializer.is_valid():
+            print('session post error', serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         save_session=serializer.save()
 
         #save notification
             #get users
-        owners=School.undeleted_objects.filter(id=save_session.card.student.school.id).values_list('owner',flat=True)
-        notification_users = list(owners)
-        notification_users.append(save_session.employee.id)
-        notification_users.append(save_session.card.student.id)
+        if request.data['event_type'] == 'session':
+            owners=School.undeleted_objects.filter(id=save_session.card.student.school.id).values_list('owner',flat=True)
+            notification_users = list(owners)
+            notification_users.append(save_session.employee.id)
+            notification_users.append(save_session.card.student.id)
 
-        save_notif=notification_db(notification_users,
-                'session','Add new session',
-                f'new session start at {save_session.day} {save_session.start_at} for card number {save_session.card.id} is added',2)
+            save_notif=notification_db(notification_users,
+                    'session','Add new session',
+                    f'new session start at {save_session.day} {save_session.start_at} for card number {save_session.card.id} is added',2)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -618,7 +620,7 @@ def week_sessions(request, school_id):
     week_days = today.weekday()
     week_first_day = today - timedelta(days=week_days)
     week_last_day = week_first_day + timedelta(days=6)
-    if not (sessions := Session.undeleted_objects.filter(card__student__school=school_id).filter(day__gte=week_first_day, day__lte=week_last_day).all()):
+    if not (sessions := Session.undeleted_objects.filter(employee__school=school_id).filter(day__gte=week_first_day, day__lte=week_last_day).all()):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
     serializer = Session_serializer_read(sessions, many=True)

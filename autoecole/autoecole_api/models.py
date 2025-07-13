@@ -364,15 +364,25 @@ class Session(BaseModel, SoftDeleteModel):
     day = models.DateField()
     start_at = models.TimeField()
     end_at = models.TimeField()
-    card = models.ForeignKey(Card,related_name='card' ,on_delete=models.CASCADE)
+    card = models.ForeignKey(Card,related_name='card' ,on_delete=models.CASCADE, null=True, blank=True)
     employee = models.ForeignKey(Employee,related_name='employee' ,on_delete=models.CASCADE, null=True, blank=True)
     car = models.ForeignKey(Car,related_name='car' ,on_delete=models.CASCADE,null=True, blank=True)
     note=models.CharField(max_length=100,null=True, blank=True)
-    session_type = models.ForeignKey(SessionType,related_name='session_type' ,on_delete=models.CASCADE)
-
+    session_type = models.ForeignKey(SessionType,related_name='session_type' ,on_delete=models.CASCADE, null=True, blank=True, default='4')
+    event_type = models.CharField(
+        max_length=50, choices=[('session', 'Session'), ('other', 'other')], default='session')
+    is_cancelled = models.BooleanField(default=False)
     price = models.DecimalField(
         max_digits=5, decimal_places=2, null=True, blank=True)
 
+    def clean(self):
+            super().clean()
+
+            if self.event_type == 'session':
+                if not self.card:
+                    raise ValidationError({'card': "Card is required for session type 'session'"})
+                if not self.session_type:
+                    raise ValidationError({'session_type': "Session type is required for event type 'session'"})
     class Meta:
         ordering = ['day']
 
