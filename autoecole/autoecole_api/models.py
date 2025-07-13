@@ -365,10 +365,10 @@ class Session(BaseModel, SoftDeleteModel):
     start_at = models.TimeField()
     end_at = models.TimeField()
     card = models.ForeignKey(Card,related_name='card' ,on_delete=models.CASCADE, null=True, blank=True)
-    employee = models.ForeignKey(Employee,related_name='employee' ,on_delete=models.CASCADE, null=True, blank=True)
+    employee = models.ForeignKey(Employee,related_name='employee' ,on_delete=models.CASCADE)
     car = models.ForeignKey(Car,related_name='car' ,on_delete=models.CASCADE,null=True, blank=True)
     note=models.CharField(max_length=100,null=True, blank=True)
-    session_type = models.ForeignKey(SessionType,related_name='session_type' ,on_delete=models.CASCADE, null=True, blank=True, default='4')
+    session_type = models.ForeignKey(SessionType,related_name='session_type' ,on_delete=models.CASCADE, default='4')
     event_type = models.CharField(
         max_length=50, choices=[('session', 'Session'), ('other', 'other')], default='session')
     is_cancelled = models.BooleanField(default=False)
