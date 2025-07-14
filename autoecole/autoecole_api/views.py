@@ -566,46 +566,69 @@ def activity_edit(request, id):
 @api_view(['GET', 'POST'])
 def session(request, school_id):
     if request.method == 'GET':
-        if not (sessions := Session.undeleted_objects.filter(employee__school=school_id).all()):
+        sessions = Session.undeleted_objects.filter(employee__school=school_id).all()
+        if not sessions:
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = Session_serializer_read(sessions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
     if request.method == 'POST':
         serializer = Session_serializer_edit(data=request.data)
-        # print('request.data', request.data)
-        if request.data['event_type'] == 'session':
-            car=request.data['car']
-            employee=request.data['employee']
-            start_at=request.data['start_at']
-            end_at=request.data['end_at']
-            day=request.data['day']
 
-            # Check the availability of the employee and the car for this session
-            sessions=Session.undeleted_objects.filter(
-                card__student__school=school_id,
-                day=day,
-                ).filter(
-                    Q(start_at__lt=end_at) & Q(end_at__gt=start_at)).filter(
-                        Q(employee=employee) | Q(car=car))
+        event_type = request.data.get('event_type')
+        car = request.data.get('car')
+        employee = request.data.get('employee')
+        card = request.data.get('card')  # facultatif selon le type d'événement
+        start_at = request.data.get('start_at')
+        end_at = request.data.get('end_at')
+        day = request.data.get('day')
 
-            if sessions.count() > 0:
-                return Response({'error':'session conflict'}, status=status.HTTP_400_BAD_REQUEST)
+        # Vérification des conflits si les champs de base sont présents
+        if start_at and end_at and day:
+            conflict_filter = Q(day=day) & Q(start_at__lt=end_at) & Q(end_at__gt=start_at)
+            resource_conflict = Q()
+
+            if employee:
+                resource_conflict |= Q(employee=employee)
+            if car:
+                resource_conflict |= Q(car=car)
+            if card:
+                resource_conflict |= Q(card=card)
+
+            if resource_conflict:  # On vérifie uniquement si au moins une ressource est fournie
+                conflicting_sessions = Session.undeleted_objects.filter(
+                    conflict_filter & resource_conflict
+                )
+                if conflicting_sessions.exists():
+                    print('event conflict')
+                    return Response(
+                        {'error': 'event conflict: at least one resource (employee, car, or student) is already booked at this time'},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+
         if not serializer.is_valid():
             print('session post error', serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        save_session=serializer.save()
 
-        #save notification
-            #get users
-        if request.data['event_type'] == 'session':
-            owners=School.undeleted_objects.filter(id=save_session.card.student.school.id).values_list('owner',flat=True)
+        save_session = serializer.save()
+
+        # Notifications uniquement pour les sessions
+        if event_type == 'session':
+            owners = School.undeleted_objects.filter(
+                id=save_session.card.student.school.id
+            ).values_list('owner', flat=True)
+
             notification_users = list(owners)
             notification_users.append(save_session.employee.id)
             notification_users.append(save_session.card.student.id)
 
-            save_notif=notification_db(notification_users,
-                    'session','Add new session',
-                    f'new session start at {save_session.day} {save_session.start_at} for card number {save_session.card.id} is added',2)
+            notification_db(
+                notification_users,
+                'session',
+                'Add new session',
+                f'New session starting at {save_session.day} {save_session.start_at} for card number {save_session.card.id} has been added',
+                2
+            )
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -647,43 +670,68 @@ def session_edit(request, id):
         serializer = Session_serializer_edit(session)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'PUT':
-        car=request.data['car']
-        employee=request.data['employee']
-        start_at=request.data['start_at']
-        end_at=request.data['end_at']
-        day=request.data['day']
-        # Check the availability of the employee and the car for this session
-        if (start_at != str(session.start_at)) or (end_at != str(session.end_at)):
-            sessions=Session.undeleted_objects.filter(
-            card__student__school=session.card.student.school,
-            day=day,
-            ).filter(
-                Q(start_at__lt=end_at) & Q(end_at__gt=start_at) & ~Q(id=session.id)).filter(
-                Q(employee=employee) | Q(car=car))
-
-            if sessions.count() > 0:
-                print('session conflict')
-                print('session.id', session.id)
-                print('session_id', id)
-                return Response({'error':'session conflict'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = Session_serializer_edit(session, data=request.data)
-        if not (serializer.is_valid()):
+
+        event_id = id  # ID de l'événement en cours d'édition (obligatoire pour exclure self)
+
+        event_type = request.data.get('event_type')
+        car = request.data.get('car')
+        employee = request.data.get('employee')
+        card = request.data.get('card')  # facultatif pour type "Autres"
+        start_at = request.data.get('start_at')
+        end_at = request.data.get('end_at')
+        day = request.data.get('day')
+
+        # Vérification des conflits uniquement si date/heure présentes
+        if start_at and end_at and day:
+            conflict_filter = Q(day=day) & Q(start_at__lt=end_at) & Q(end_at__gt=start_at)
+            resource_conflict = Q()
+
+            if employee:
+                resource_conflict |= Q(employee=employee)
+            if car:
+                resource_conflict |= Q(car=car)
+            if card:
+                resource_conflict |= Q(card=card)
+
+            if resource_conflict:
+                conflicting_sessions = Session.undeleted_objects.filter(
+                    conflict_filter & resource_conflict
+                ).exclude(id=event_id)  # exclure l'événement qu'on modifie
+
+                if conflicting_sessions.exists():
+                    print('event conflict')
+                    return Response(
+                        {'error': 'event conflict: at least one resource (employee, car, or student) is already booked at this time'},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+
+        if not serializer.is_valid():
             print('session put error', serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         save_session = serializer.save()
 
-        #save notification
-            #get users
-        owners=School.undeleted_objects.filter(id=save_session.card.student.school.id).values_list('owner',flat=True)
-        notification_users = list(owners)
-        notification_users.append(save_session.employee.id)
-        notification_users.append(save_session.card.student.id)
+        # Notification uniquement si c'est une session
+        if event_type == 'session':
+            owners = School.undeleted_objects.filter(
+                id=save_session.card.student.school.id
+            ).values_list('owner', flat=True)
 
-        save_notif=notification_db(notification_users,
-                'session','Edit session',
-                f'The session number {session.id} is updated',2)
+            notification_users = list(owners)
+            notification_users.append(save_session.employee.id)
+            notification_users.append(save_session.card.student.id)
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+            notification_db(
+                notification_users,
+                'session',
+                'Session updated',
+                f'Session updated for card number {save_session.card.id} on {save_session.day} at {save_session.start_at}',
+                2
+            )
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     if request.method == 'DELETE':
         session.is_deleted = True
         session.deleted_at = datetime.now()
