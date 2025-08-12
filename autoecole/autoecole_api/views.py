@@ -73,9 +73,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         elif user.fonction == 1:
             data['school'] = 0
         elif user.fonction == 5:
-            print('user is student')
             user = Student.undeleted_objects.get(id=user.id)
-            print('school', user.school)
             data['school'] = School_serializer(user.school).data
 
         return data
@@ -316,7 +314,6 @@ def card(request,school_id,progress_status):
         else:
             #Filter all cards with status Not equal to completed ( status id 99)
             cards = Card.undeleted_objects.filter(student__school=school_id).filter(~Q(status = 99)).all()
-        print('cards', cards)
 
         if request.user.fonction == 5:
             # If user is student, filter cards by student id
@@ -401,7 +398,6 @@ def save_card_and_student(request, school_id):
                 student_data[key] = student_data[key][0]
         serializer = Student_serializer(data=student_data, context={'request': request})
         if not (serializer.is_valid()):
-            print('error student',serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         save_student=serializer.save()
 
@@ -417,12 +413,10 @@ def save_card_and_student(request, school_id):
                                 1)
 
         data_card = dossier_data
-        print('data_card', data_card)
         data_card['student'] = save_student.id
         data_card['manual_price'] = False
         serializer = Card_serializer(data=data_card)
         if not serializer.is_valid():
-            print('card errors', serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST,)
         # if serializer.validated_data['manual_price']:
         #     if not serializer.validated_data['price']:
@@ -441,7 +435,6 @@ def save_card_and_student(request, school_id):
         serializer_history=Card_status_serializer(data=history_data)
 
         if not serializer_history.is_valid():
-            print('history errors', serializer_history.errors)
             return Response(serializer_history.errors, status=status.HTTP_400_BAD_REQUEST)
 
         serializer_history.save()
@@ -636,14 +629,12 @@ def session(request, school_id):
                     conflict_filter & resource_conflict
                 )
                 if conflicting_sessions.exists():
-                    print('event conflict')
                     return Response(
                         {'error': 'event conflict: at least one resource (employee, car, or student) is already booked at this time'},
                         status=status.HTTP_400_BAD_REQUEST
                     )
 
         if not serializer.is_valid():
-            print('session post error', serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         save_session = serializer.save()
@@ -686,7 +677,6 @@ def week_sessions(request, school_id):
     if not sessions:
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    print('week sessions', sessions)
     serializer = Session_serializer_read(sessions, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -743,14 +733,12 @@ def session_edit(request, id):
                 ).exclude(id=event_id)  # exclure l'événement qu'on modifie
 
                 if conflicting_sessions.exists():
-                    print('event conflict')
                     return Response(
                         {'error': 'event conflict: at least one resource (employee, car, or student) is already booked at this time'},
                         status=status.HTTP_400_BAD_REQUEST
                     )
 
         if not serializer.is_valid():
-            print('session put error', serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         save_session = serializer.save()
@@ -821,7 +809,6 @@ def employee(request,school_id):
         employee_data['created_by']=user.id
         employee_data['school']=school_id
         employee_data['is_active']=True
-        print(employee_data)
         # Conversion en objet datetime
         dt = datetime.strptime(employee_data['birthday'], "%Y-%m-%dT%H:%M:%S.%fZ")
         employee_data['birthday'] = dt.strftime("%Y-%m-%d")
@@ -831,7 +818,6 @@ def employee(request,school_id):
         employee_data['fonction'] = 4 #trainer
         serializer = Employee_serializer(data=employee_data)
         if not serializer.is_valid():
-            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -867,11 +853,9 @@ def employee_edit(request, id):
         employee_data['is_active']=employee.is_active
         dt = datetime.strptime(employee_data['birthday'], "%Y-%m-%dT%H:%M:%S.%fZ")
         employee_data['birthday'] = dt.strftime("%Y-%m-%d")
-        print("employee_data", employee_data)
 
         serializer = Employee_serializer(employee, data=employee_data)
         if not (serializer.is_valid()):
-            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -931,9 +915,7 @@ def car_edit(request, id):
         data=request.data.copy()
         data['school']=car.school.id
         serializer = Car_serializer(car, data=data)
-        print('data', data)
         if not (serializer.is_valid()):
-            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
 
@@ -1006,7 +988,6 @@ def register(request):
 
         #Save Owner Model
         if not owner_serializer.is_valid():
-            print('error owner',owner_serializer.errors)
             return Response(owner_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         owner_serializer.save()
 
@@ -1266,7 +1247,6 @@ def cities(request, id):
 @api_view(['GET','PUT'])
 @permission_classes([IsAuthenticated])
 def profile(request):
-    print('Profile', request.user)
     # (1, 'Guest'),
     # (2, 'Admin'),
     # (3, 'Owner'),
@@ -1338,7 +1318,6 @@ def profile(request):
 
             profile_serialzer=Student_serializer(profile)
         data=request.data.copy()
-        print('request.user')
         profile_data = {}
         for key, value in data.items():
             if key.startswith('student_'):
@@ -1370,7 +1349,6 @@ def profile(request):
             serializer=Student_serializer_read(profile, data=profile_data)
 
         if not (serializer.is_valid()):
-            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         serializer.save()
