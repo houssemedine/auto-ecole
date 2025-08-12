@@ -1255,6 +1255,7 @@ def profile(request):
     try:
         user_fonction=request.user.fonction
         user_id=request.user.id
+        print('user_fonction',user_fonction)
 
 
 
@@ -1286,8 +1287,9 @@ def profile(request):
                 profile = Student.undeleted_objects.get(id=user_id)
             except Exception:
                 return Response(status=status.HTTP_404_NOT_FOUND)
-
-        profile_serialzer=Student_serializer_read(profile)
+            profile_serialzer=Student_serializer_read(profile)
+            print('profile', profile_serialzer.data)
+        
         return Response(profile_serialzer.data, status=status.HTTP_200_OK)
     
     if request.method == 'PUT':
@@ -1346,9 +1348,10 @@ def profile(request):
         if user_fonction == 4: #Trainer)
             serializer=Employee_serializer_read(profile, data=profile_data)
         if user_fonction == 5: #Student
-            serializer=Student_serializer_read(profile, data=profile_data)
+            serializer=Student_serializer(profile, data=profile_data)
 
         if not (serializer.is_valid()):
+            print('error profile', serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         serializer.save()
