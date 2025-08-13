@@ -826,13 +826,9 @@ def employee(request,school_id):
     user=request.user
     if request.method == 'GET':
         employees = Employee.undeleted_objects.filter(school=school_id).all()
-        owners = School.undeleted_objects.filter(id=school_id).get().owner
-        staff= []
-        staff.extend([employee for employee in employees])
-        staff.append(owners)
-        if not staff:
+        if not employees:
             return Response(status=status.HTTP_204_NO_CONTENT)
-        serializer = StaffListSerializer(staff, many=True)
+        serializer = Employee_serializer_read(employees, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
         username_list=User.objects.values_list('username',flat=True)
