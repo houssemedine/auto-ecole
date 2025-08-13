@@ -171,6 +171,34 @@ class Notification_serializer(serializers.ModelSerializer):
         model= Notification
         fields = '__all__'
 
+class NotificationCreateSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+    notification_type_id = serializers.IntegerField()
+    module = serializers.CharField()
+    title = serializers.CharField(max_length=100)
+    message = serializers.CharField()
+    data = serializers.JSONField(required=False)
+    priority = serializers.ChoiceField(choices=[('normal','Normal'), ('high','High')], default='normal')
+    category = serializers.CharField(required=False, allow_blank=True)
+
+# Pour les devices (tokens FCM) :
+class DeviceRegisterSerializer(serializers.Serializer):
+    token = serializers.CharField(max_length=255)
+    platform = serializers.ChoiceField(choices=Device.PLATFORM_CHOICES)
+    provider = serializers.ChoiceField(choices=Device.PROVIDER_CHOICES, default="expo")  # ← NEW
+    app_version = serializers.CharField(max_length=50, required=False, allow_blank=True)
+    locale = serializers.CharField(max_length=10, required=False, allow_blank=True)
+
+
+class DeviceUnregisterSerializer(serializers.Serializer):
+    token = serializers.CharField(max_length=255)
+
+class DevicePingSerializer(serializers.Serializer):
+    app_version = serializers.CharField(max_length=50, required=False, allow_blank=True)
+    locale = serializers.CharField(max_length=10, required=False, allow_blank=True)
+
+class NotificationSendSerializer(serializers.Serializer):
+    notification_id = serializers.IntegerField()
 
 class Notification_serializer_read(serializers.ModelSerializer):
     user = User_serializer()

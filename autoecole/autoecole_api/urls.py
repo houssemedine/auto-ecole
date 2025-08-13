@@ -108,6 +108,11 @@ urlpatterns = [
         path('notification/<int:id>/read',views.update_notification,name='update_notification'),
         path('notification/<int:id>/delete',views.delete_notification,name='delete_notification'),
 
+        path("devices/register/", views.device_register, name="device-register"),
+        path("devices/unregister/", views.device_unregister, name="device-unregister"),
+        path("devices/ping/", views.device_ping, name="device-ping"),
+        path("notifications/create/", views.notification_create, name="notification-create"),
+        path("notifications/send/", views.notification_send, name="notification-send"),
         #Country
 	path('countries/', views.countries, name='countries'),
 

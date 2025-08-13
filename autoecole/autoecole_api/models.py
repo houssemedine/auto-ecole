@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from uuid import uuid4
+from django.conf import settings
 
 # Create your models here.
 def avatar_upload_to(instance, filename):
@@ -267,35 +268,94 @@ class Activity(BaseModel, SoftDeleteModel):
     def __str__(self):
         return self.name
 
-
-class NotificationType(models.Model,SoftDeleteManager):
-    name = models.CharField(max_length=100)
+class NotificationType(BaseModel, SoftDeleteManager):
+    title = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True)
     importance = models.CharField(max_length=50, choices=[('low', 'Low'), ('medium', 'Medium'), ('high', 'High')])
 
     class Meta:
-        ordering = ['name']
+        ordering = ['title']
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.title} ({self.importance})'
 
 class Notification(BaseModel, SoftDeleteModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    notification_type = models.ForeignKey(NotificationType, on_delete=models.CASCADE)
-    module=models.CharField(max_length=50, choices=[('car', 'Car'), ('session', 'Session'),
-                                                    ('payment', 'Payment'),('appointment','Appointment'),
-                                                    ('student','student'),
-                                                    ('card','card')])
-    title=models.CharField(max_length=100)
+    MODULE_CHOICES = [
+        ('car', 'Car'),
+        ('session', 'Session'),
+        ('payment', 'Payment'),
+        ('appointment', 'Appointment'),
+        ('student', 'Student'),
+        ('card', 'Card'),
+    ]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notifications")
+    notification_type = models.ForeignKey('NotificationType', on_delete=models.CASCADE)
+    module = models.CharField(max_length=50, choices=MODULE_CHOICES, db_index=True)
+    title = models.CharField(max_length=100)
     message = models.TextField()
-    date_sent = models.DateTimeField(auto_now_add=True)
-    is_read = models.BooleanField(default=False)
+    data = models.JSONField(default=dict, blank=True)  # <- payload pour deep link, ids, etc.
+    priority = models.CharField(max_length=10, choices=[('normal','Normal'),('high','High')], default='normal')
+    category = models.CharField(max_length=50, blank=True)  # <- utile côté iOS (facultatif)
+    date_sent = models.DateTimeField(auto_now_add=True, db_index=True)
+    is_read = models.BooleanField(default=False, db_index=True)
 
     class Meta:
-        ordering = ['-date_sent','user']
+        ordering = ['-date_sent', 'user']
+        indexes = [
+            models.Index(fields=['user', 'is_read']),
+            models.Index(fields=['module', 'date_sent']),
+        ]
 
     def __str__(self):
-        return f'{self.user}'
+        return f'{self.title} → {self.user}'
+
+class Device(models.Model):
+    ANDROID = "android"
+    IOS = "ios"
+    WEB = "web"
+    PLATFORM_CHOICES = [(ANDROID, "Android"), (IOS, "iOS"), (WEB, "Web")]
+
+    # 🔹 NEW : on distingue le fournisseur de push (Expo ou FCM)
+    PROVIDER_CHOICES = [("expo", "Expo"), ("fcm", "FCM")]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name="devices")
+    provider = models.CharField(max_length=10, choices=PROVIDER_CHOICES, default="expo", db_index=True)  # 👈 NEW (par défaut Expo)
+    token = models.CharField(max_length=255, unique=True)
+    platform = models.CharField(max_length=10, choices=PLATFORM_CHOICES, db_index=True)
+    app_version = models.CharField(max_length=50, blank=True)
+    locale = models.CharField(max_length=10, blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_seen = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user} - {self.platform} - {self.provider}"
+
+class NotificationDelivery(models.Model):
+    PENDING = 'pending'
+    SENT = 'sent'
+    FAILED = 'failed'
+    STATUS_CHOICES = [(PENDING, 'Pending'), (SENT, 'Sent'), (FAILED, 'Failed')]
+
+    notification = models.ForeignKey('Notification', on_delete=models.CASCADE, related_name='deliveries')
+    device = models.ForeignKey('Device', on_delete=models.CASCADE, related_name='deliveries')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=PENDING, db_index=True)
+    fcm_message_id = models.CharField(max_length=200, blank=True)  # renvoyé par FCM
+    error_code = models.CharField(max_length=100, blank=True)
+    error_detail = models.TextField(blank=True)
+    sent_at = models.DateTimeField(null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = [('notification', 'device')]  # 1 trace par device
+        indexes = [
+            models.Index(fields=['status', 'updated_at']),
+        ]
+
+    def __str__(self):
+        return f'{self.notification_id} → {self.device_id} [{self.status}]'
+
 
 class UserNotificationPreference(BaseModel, SoftDeleteModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

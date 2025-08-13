@@ -16,7 +16,11 @@ from django.contrib.auth import authenticate
 import pandas as pd
 from django.db.models import Q
 from django.apps import apps
-import json
+from django.utils import timezone
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
+from .services import create_notification_with_deliveries
+from .notifications.dispatcher import send_pending_deliveries_for_notification
 # Custom JWT to obtain more information
 
 def get_user_role(number):
@@ -149,8 +153,6 @@ def school_edit(request, id):
         return Response(status=status.HTTP_201_CREATED)
 
 # Student CRUD
-
-
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def student(request,school_id):
@@ -248,13 +250,22 @@ def student_edit(request, id):
         serializer = Student_serializer(student, data=new_data, context={'request': request})
         if not (serializer.is_valid()):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        save_student=serializer.save()
+        obj=serializer.save()
 
-        #Save Notif
-        save_notif=notification_db(notification_users,
-                                'student','Edit student',
-                                f'Student {save_student.first_name} {save_student.last_name} edited',
-                                1)
+        #Save nofications
+        #get users
+        student = obj
+        audiance = []
+        if id != request.user.id:
+            audiance.append(student)
+        print('audiance', audiance)
+        push_notification_to_users(
+            audiance,
+            'Générique',
+            'student',
+            'Profil modifié 📝',
+            f'Des informations ont été modifiées pour votre profil',
+        )
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     if request.method == 'DELETE':
@@ -348,17 +359,22 @@ def card(request,school_id,progress_status):
 
         serializer_history.save()
 
-        #Save Notif
-            #get users
-        employees=Employee.undeleted_objects.filter(school=school_id).values_list('id',flat=True)
-        owners=School.undeleted_objects.filter(id=school_id).values_list('owner',flat=True)
-        notification_users=list(employees) + list(owners)
-        notification_users.append(obj.student.id)
+        #Save nofications
+        #get users
+        student = obj.student
+        owner = obj.student.school.owner
+        audiance = []
+        audiance.append(student)
+        if owner.id != request.user.id:
+            audiance.append(owner)
 
-        save_notif=notification_db(notification_users,
-                                'card','Add new card',
-                                f' new card for {obj.student.first_name} is added',
-                                1)
+        push_notification_to_users(
+            audiance,
+            'Générique',
+            'card',
+            'Nouveau dossier créé 🗂️',
+            f'Un nouveau dossier a été créé pour {obj.student.first_name} {obj.student.last_name}',
+        )
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -401,17 +417,6 @@ def save_card_and_student(request, school_id):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         save_student=serializer.save()
 
-        student=Student.undeleted_objects.filter(id=save_student.id).values_list('id',flat=True)
-        employees=Employee.undeleted_objects.filter(school=school_id).values_list('id',flat=True)
-        owners=School.undeleted_objects.filter(id=school_id).values_list('owner',flat=True)
-        notification_users=list(employees) + list(owners) + list(student)
-
-        #Save Notif
-        save_notif=notification_db(notification_users,
-                                'student','Add new student',
-                                f'Student {save_student.first_name} {save_student.last_name} is added',
-                                1)
-
         data_card = dossier_data
         data_card['student'] = save_student.id
         data_card['manual_price'] = False
@@ -439,17 +444,22 @@ def save_card_and_student(request, school_id):
 
         serializer_history.save()
 
-        #Save Notif
-            #get users
-        employees=Employee.undeleted_objects.filter(school=school_id).values_list('id',flat=True)
-        owners=School.undeleted_objects.filter(id=school_id).values_list('owner',flat=True)
-        notification_users=list(employees) + list(owners)
-        notification_users.append(obj.student.id)
+        #Save nofications
+        #get users
+        student = obj.student
+        owner = obj.student.school.owner
+        audiance = []
+        audiance.append(student)
+        if owner.id != request.user.id:
+            audiance.append(owner)
 
-        save_notif=notification_db(notification_users,
-                                'card','Add new card',
-                                f' new card for {obj.student.first_name} is added',
-                                1)
+        push_notification_to_users(
+            audiance,
+            'Générique',
+            'card',
+            'Nouveau dossier créé 🗂️',
+            f'Un nouveau dossier a été créé pour {obj.student.first_name} {obj.student.last_name}',
+        )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -481,7 +491,7 @@ def card_edit(request, id):
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        save_card=serializer.save()
+        obj=serializer.save()
 
         #Save History
         try:
@@ -514,11 +524,22 @@ def card_edit(request, id):
 
             serializer_history.save()
 
-        #Save notif
-        save_notif=notification_db(notification_users,
-                        'card','Update card',
-                        f' Update card {save_card.student.first_name} number {save_card.id}',
-                        1)
+        #Save nofications
+        #get users
+        student = obj.student
+        owner = obj.student.school.owner
+        audiance = []
+        audiance.append(student)
+        if owner.id != request.user.id:
+            audiance.append(owner)
+
+        push_notification_to_users(
+            audiance,
+            'Générique',
+            'card',
+            'Dossier modifié 🗂',
+            f'Le dossier numéro {card.id} de {obj.student.first_name} {obj.student.last_name} a été modifié',
+        )
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     if request.method == 'DELETE':
@@ -527,11 +548,22 @@ def card_edit(request, id):
         card.save()
         serializer = Card_serializer(card)
 
-        #Save notif
-        save_notif=notification_db(notification_users,
-                'card','Delete card',
-                f' Delete card {card.student.first_name} number {card.id}',
-                1)
+        #Save nofications
+        #get users
+        student = card.student
+        owner = card.student.school.owner
+        audiance = []
+        audiance.append(student)
+        if owner.id != request.user.id:
+            audiance.append(owner)
+
+        push_notification_to_users(
+            audiance,
+            'Générique',
+            'card',
+            'Dossier supprimé 🚮',
+            f'Le dossier numéro {card.id} de {card.student.first_name} {card.student.last_name} a été supprimé',
+        )
 
         return Response(status=status.HTTP_201_CREATED)
 
@@ -1035,6 +1067,28 @@ def notification_db(users:list,module:str,title:str,text:str,notifcation_type:st
 
     return True
 
+
+def push_notification_to_users(audiance, notification_type,module, title, message):
+
+    try:
+        notification_type = NotificationType.objects.get(title=notification_type)
+        for user in audiance:
+            notification = create_notification_with_deliveries(
+                user=user,
+                notification_type=notification_type,
+                module=module,
+                title=title,
+                message=message
+            )
+
+            send_pending_deliveries_for_notification(notification)
+
+        return True
+
+    except Exception as e:
+        print(f"Error sending notification: {e}")
+        return False
+
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def update_notification(request, id):
@@ -1136,16 +1190,21 @@ def payment(request,school_id):
         save_payement=serializer.save()
 
         #Save nofications
-        owners=School.undeleted_objects.filter(id=save_payement.card.student.school.id).values_list('owner',flat=True)
-        notification_users= list(owners)
-        notification_users.append(save_payement.card.student.id)
+        student = save_payement.card.student
+        owner = save_payement.card.student.school.owner
+        audiance = []
+        audiance.append(student)
+        if owner.id != request.user.id:
+            audiance.append(owner)
 
-        #Save Notif
-        save_notif=notification_db(notification_users,
-                                'payment','Add new payment',
-                                f'Add {save_payement.amount} for card number {save_payement.card.id}',
-                                2)
-
+        print('audiance',set(audiance))
+        push_notification_to_users(
+            audiance,
+            'Générique',
+            'payment',
+            'Nouveau Payment 💰',
+            f'Un payement de {save_payement.amount} a été effectué pour la carte {save_payement.card.id}.'
+        )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(['GET','PUT','DELETE'])
@@ -1166,15 +1225,20 @@ def payment_edit(request,id):
         save_payement=serializer.save()
 
         #Save nofications
-        owners=School.undeleted_objects.filter(id=save_payement.card.student.school.id).values_list('owner',flat=True)
-        notification_users= list(owners)
-        notification_users.append(save_payement.card.student.id)
-
-        #Save Notif
-        save_notif=notification_db(notification_users,
-                                'payment','Edit payment',
-                                f'Edit payment number {save_payement.id} for card number {save_payement.card.id}',
-                                1)
+        # Prepare notification data
+        student = save_payement.card.student
+        owner = save_payement.card.student.school.owner
+        audiance = []
+        audiance.append(student)
+        if owner.id != request.user.id:
+            audiance.append(owner)
+        push_notification_to_users(
+            audiance,
+            'Générique',
+            'payment',
+            'Payment modifié 💰',
+            f'le payement de {save_payement.amount} a été modifié pour la carte {save_payement.card.id}.'
+        )
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     if request.method == 'DELETE':
@@ -1184,20 +1248,30 @@ def payment_edit(request,id):
         serializer = Payments_serializer(payment)
 
         #Save nofications
-        owners=School.undeleted_objects.filter(id=payment.card.student.school.id).values_list('owner',flat=True)
-        notification_users= list(owners)
-        notification_users.append(payment.card.student.id)
-
-        #Save Notif
-        save_notif=notification_db(notification_users,
-                                'payment','Delete payment',
-                                f'delete payment number {payment.id}  for card number {payment.card.id}',
-                                2)
+        # Prepare notification data
+        save_payement = (Payment.undeleted_objects
+                        .select_related(
+                            "card__student__user_ptr",
+                        )
+                        .get(pk=id))
+        student = save_payement.card.student
+        owner = save_payement.card.student.school.owner
+        audiance = []
+        audiance.append(student)
+        if owner.id != request.user.id:
+            audiance.append(owner)
+        push_notification_to_users(
+            audiance,
+            'Générique',
+            'payment',
+            'Payment supprimé 🚮',
+            f'le payement de {save_payement.amount} a été supprimé pour la carte {save_payement.card.id}.'
+        )
         return Response(status=status.HTTP_201_CREATED)
 
 
 # Payment CRUD
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def payment_dossier(request,card_id):
     if request.method == 'GET':
@@ -1359,3 +1433,96 @@ def profile(request):
     
 
 
+#Notification PUSH
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def device_register(request):
+    ser = DeviceRegisterSerializer(data=request.data)
+    ser.is_valid(raise_exception=True)
+    d = ser.validated_data
+    _, created = Device.objects.update_or_create(
+        token=d["token"],
+        defaults={
+            "user": request.user,
+            "provider": d.get("provider", "expo"),  # ← NEW (par défaut Expo)
+            "platform": d["platform"],
+            "app_version": d.get("app_version", ""),
+            "locale": d.get("locale", ""),
+            "is_active": True,
+        },
+    )
+    return Response({"created": created}, status=status.HTTP_200_OK)
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def device_unregister(request):
+    ser = DeviceUnregisterSerializer(data=request.data)
+    ser.is_valid(raise_exception=True)
+    token = ser.validated_data["token"]
+
+    # On désactive seulement le device de l’utilisateur courant
+    updated = Device.objects.filter(user=request.user, token=token).update(is_active=False)
+    if updated == 0:
+        # rien trouvé (token inconnu ou appartient à un autre user)
+        return Response({"detail": "Token introuvable pour cet utilisateur."}, status=status.HTTP_404_NOT_FOUND)
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(["PATCH"])
+@permission_classes([IsAuthenticated])
+def device_ping(request):
+    ser = DevicePingSerializer(data=request.data)
+    ser.is_valid(raise_exception=True)
+    d = ser.validated_data
+
+    qs = Device.objects.filter(user=request.user, is_active=True)
+    if "token" in d and d["token"]:
+        qs = qs.filter(token=d["token"])
+
+    if not qs.exists():
+        return Response({"detail": "Aucun device correspondant."}, status=status.HTTP_404_NOT_FOUND)
+
+    updates = {"last_seen": timezone.now()}
+    if "app_version" in d:
+        updates["app_version"] = d["app_version"]
+    if "locale" in d:
+        updates["locale"] = d["locale"]
+
+    qs.update(**updates)  # update() met bien à jour last_seen ici
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+User = get_user_model()
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])  # adapte si besoin
+def notification_create(request):
+    ser = NotificationCreateSerializer(data=request.data)
+    ser.is_valid(raise_exception=True)
+    v = ser.validated_data
+
+    user = get_object_or_404(User, pk=v["user_id"])
+    ntype = get_object_or_404(NotificationType, pk=v["notification_type_id"])
+
+    notif = create_notification_with_deliveries(
+        user=user,
+        notification_type=ntype,
+        module=v["module"],
+        title=v["title"],
+        message=v["message"],
+        data=v.get("data"),
+        priority=v.get("priority", "normal"),
+        category=v.get("category", ""),
+    )
+    return Response(Notification_serializer(notif).data, status=status.HTTP_201_CREATED)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def notification_send(request):
+    ser = NotificationSendSerializer(data=request.data)
+    ser.is_valid(raise_exception=True)
+    notif_id = ser.validated_data["notification_id"]
+
+    # Vérifie que la notif existe (et appartient bien à quelqu'un)
+    get_object_or_404(Notification, pk=notif_id)
+
+    stats = send_pending_deliveries_for_notification(notif_id)
+    return Response({"notification_id": notif_id, "stats": stats}, status=status.HTTP_200_OK)
