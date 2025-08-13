@@ -30,9 +30,9 @@ class User(AbstractUser):
         null=True,
         blank=True
         )
-    tel = models.IntegerField(unique=True)
-
+    tel = models.IntegerField(unique=True, null=True, blank=True)
     full_name = models.CharField(max_length=100, blank=True, null=True)
+    birthday = models.DateField(null=True, blank=True)
 
     def __str__(self):
         fonction = "Admin"
@@ -116,21 +116,6 @@ class City(BaseModel, SoftDeleteModel):
     def __str__(self):
         return self.name
 
-# Owner Model
-class Owner(BaseModel, SoftDeleteModel, User):
-    roles = [
-        ('Manager', 'Manager'),
-        ('Trainer', 'Trainer'),
-    ]
-
-    role = models.CharField(max_length=100, choices=roles, default='Manager')
-    city = models.ForeignKey(City, on_delete=models.CASCADE, blank=True, null=True)
-    # governorate = models.CharField(max_length=50)
-    # country = models.CharField(max_length=50)
-    birthday = models.DateField(blank=True, null=True)
-
-
-# School model
 class School(BaseModel, SoftDeleteModel):
     name = models.CharField(max_length=100)
     code=models.CharField(max_length=50,unique=True)
@@ -142,9 +127,6 @@ class School(BaseModel, SoftDeleteModel):
     email = models.EmailField(blank=True, null=True)
     tel = models.IntegerField(blank=True, null=True)
     logo = models.ImageField(blank=True, null=True)
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-
-    # users=models.ManyToManyField(User)
 
     class Meta:
         ordering = ['name']
@@ -154,16 +136,10 @@ class School(BaseModel, SoftDeleteModel):
 
 
 class Student(BaseModel, SoftDeleteModel, User):
-    # name=models.CharField(max_length=100)
     city = models.ForeignKey(City, on_delete=models.CASCADE)
-    # governorate = models.CharField(max_length=50)
-    # country = models.CharField(max_length=50)
-    # city = models.CharField(max_length=50)
     cin=models.CharField(max_length=50, unique=True)
-    birthday = models.DateField()
     gender=models.CharField(max_length=50,default='male')
     school = models.ForeignKey(School, on_delete=models.CASCADE)
-    # user=models.ForeignKey(User,on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['username']
@@ -181,7 +157,6 @@ class LicenceType(BaseModel, SoftDeleteModel):
     def __str__(self):
         return f'Permis: {self.name}'
 
-
 class Status(BaseModel, SoftDeleteModel):
     name=models.CharField(max_length=50, unique=True)
 
@@ -190,15 +165,6 @@ class Status(BaseModel, SoftDeleteModel):
 
     def __str__(self):
         return f'{self.name}'
-
-# class Progress(BaseModel, SoftDeleteModel):
-#     name=models.CharField(max_length=50, unique=True)
-
-#     class Meta:
-#         ordering = ['id']
-
-#     def __str__(self):
-#         return f'{self.name}'
 
 class Card(BaseModel, SoftDeleteModel):
     # status = [
@@ -370,22 +336,14 @@ class UserNotificationPreference(BaseModel, SoftDeleteModel):
         return f'{self.user}'
 
 class Employee(BaseModel, SoftDeleteModel, User):
-    roles = [
-        ('Manager', 'Manager'),
-        ('Trainer', 'Trainer'),
-    ]
-    matricule=models.CharField(max_length=50,unique=True)
-    role = models.CharField(max_length=100, choices=roles, default='Trainer')
-    city = models.ForeignKey(City, on_delete=models.CASCADE)
-    birthday = models.DateField()
+    city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
 
-
     class Meta:
-        ordering = ['username']
+        ordering = ['first_name', 'last_name']
 
     def __str__(self):
-        return self.username
+        return self.first_name
 
 
 class Car(BaseModel, SoftDeleteModel):

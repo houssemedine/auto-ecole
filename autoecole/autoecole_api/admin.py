@@ -2,7 +2,6 @@ from django.contrib import admin
 from autoecole_api.models import *
 # Register your models here.
 admin.site.register(User)
-admin.site.register(Owner)
 admin.site.register(School)
 admin.site.register(Student)
 admin.site.register(Card)

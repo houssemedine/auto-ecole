@@ -7,6 +7,7 @@ class User_serializer(serializers.ModelSerializer):
     class Meta:
         model=User
         fields = '__all__'
+
 class Country_serializer(serializers.ModelSerializer):
 
     class Meta:
@@ -52,10 +53,6 @@ class Student_serializer(serializers.ModelSerializer):
     #         return request.build_absolute_uri(obj.avatar.url)
     #     return None
 
-
-
-
-
 class Card_serializer(serializers.ModelSerializer):
     class Meta:
         model=Card
@@ -68,8 +65,6 @@ class Card_status_serializer(serializers.ModelSerializer):
         fields = '__all__'
         # fields =('student', 'licence_type')
 
-
-
 class Activity_serializer(serializers.ModelSerializer):
     class Meta:
         model= Activity
@@ -79,7 +74,6 @@ class Licence_serializer(serializers.ModelSerializer):
     class Meta:
         model= LicenceType
         fields = '__all__'
-
 
 class Status_serializer(serializers.ModelSerializer):
     class Meta:
@@ -125,29 +119,15 @@ class Employee_serializer(serializers.ModelSerializer):
         model=Employee
         fields = '__all__'
 
-class Owner_serializer_read(serializers.ModelSerializer):
-    city=City_serializer()
-    class Meta:
-        model=Owner
-        fields = '__all__'
-
-class Owner_serializer(serializers.ModelSerializer):
-    class Meta:
-        model=Owner
-        fields = '__all__'
-
-
 class Car_serializer(serializers.ModelSerializer):
     class Meta:
         model=Car
         fields = '__all__'
 
-
 class SessionTypes_serializer(serializers.ModelSerializer):
     class Meta:
         model=SessionType
         fields = '__all__'
-
 
 class Session_serializer_read(serializers.ModelSerializer):
     card=Card_serializer_read()
@@ -165,7 +145,6 @@ class NotificationType_serializer(serializers.ModelSerializer):
         model= NotificationType
         fields = '__all__'
 
-
 class Notification_serializer(serializers.ModelSerializer):
     class Meta:
         model= Notification
@@ -181,14 +160,12 @@ class NotificationCreateSerializer(serializers.Serializer):
     priority = serializers.ChoiceField(choices=[('normal','Normal'), ('high','High')], default='normal')
     category = serializers.CharField(required=False, allow_blank=True)
 
-# Pour les devices (tokens FCM) :
 class DeviceRegisterSerializer(serializers.Serializer):
     token = serializers.CharField(max_length=255)
     platform = serializers.ChoiceField(choices=Device.PLATFORM_CHOICES)
     provider = serializers.ChoiceField(choices=Device.PROVIDER_CHOICES, default="expo")  # ← NEW
     app_version = serializers.CharField(max_length=50, required=False, allow_blank=True)
     locale = serializers.CharField(max_length=10, required=False, allow_blank=True)
-
 
 class DeviceUnregisterSerializer(serializers.Serializer):
     token = serializers.CharField(max_length=255)

@@ -21,6 +21,8 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from .services import create_notification_with_deliveries
 from .notifications.dispatcher import send_pending_deliveries_for_notification
+from itertools import chain
+
 # Custom JWT to obtain more information
 
 def get_user_role(number):
@@ -70,13 +72,13 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['last_name'] = user.last_name
         data['fonction'] = user.fonction
         data['role'] = get_user_role(user.fonction)
-
-        if user.fonction == 3:
-            school = School.undeleted_objects.get(owner=user.id)
+        print('user', user)
+        if user.fonction in [3, 4]: # Owner or Trainer
+            school = Employee.undeleted_objects.get(id=user.id).school
             data['school'] = School_serializer(school).data
-        elif user.fonction == 1:
+        elif user.fonction == 1:    # Guest
             data['school'] = 0
-        elif user.fonction == 5:
+        elif user.fonction == 5:    # Student
             user = Student.undeleted_objects.get(id=user.id)
             data['school'] = School_serializer(user.school).data
 
@@ -92,9 +94,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['fonction'] = user.fonction
         token['role'] = get_user_role(user.fonction)
 
-        if user.fonction == 3:
-            school = School.undeleted_objects.filter(owner=user.id).all()
-            token['school'] = School_serializer(school, many=True).data
+        if user.fonction in [3, 4]:  # Owner or Trainer
+            school = Employee.undeleted_objects.get(id=user.id).school
+            token['school'] = School_serializer(school).data
         elif user.fonction == 1:
             token['school'] = 0
 
@@ -667,6 +669,7 @@ def session(request, school_id):
                     )
 
         if not serializer.is_valid():
+            print('error', serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         save_session = serializer.save()
@@ -822,9 +825,14 @@ def session_edit(request, id):
 def employee(request,school_id):
     user=request.user
     if request.method == 'GET':
-        if not (employees := Employee.undeleted_objects.filter(school=school_id).all()):
+        employees = Employee.undeleted_objects.filter(school=school_id).all()
+        owners = School.undeleted_objects.filter(id=school_id).get().owner
+        staff= []
+        staff.extend([employee for employee in employees])
+        staff.append(owners)
+        if not staff:
             return Response(status=status.HTTP_204_NO_CONTENT)
-        serializer = Employee_serializer_read(employees, many=True)
+        serializer = StaffListSerializer(staff, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
         username_list=User.objects.values_list('username',flat=True)
@@ -1006,36 +1014,39 @@ def register(request):
     if request.method == 'POST':
         owner_data = dict()
         school_data = dict()
-        username_list = User.objects.values_list('username',flat=True)
         data = request.data.copy()
-
-        #Format owner data
-        owner_data['fonction']=3  # For owner
-        owner_data['first_name'] = data['first_name']
-        owner_data['last_name'] = data['last_name']
-        owner_data['tel'] = data['tel']
-        owner_data['password'] =  make_password(data['password'])
-        owner_data['username'] = generete_username(owner_data['first_name'], owner_data['last_name'],username_list)
-        owner_serializer = Owner_serializer(data=owner_data)
-
-        #Save Owner Model
-        if not owner_serializer.is_valid():
-            return Response(owner_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        owner_serializer.save()
+        print('data', data)
 
         #Format school data
         school_data['name']=data['school_name']
         school_data['code']=data['school_code']
-        school_data['owner']=owner_serializer.data['id']
         school_serializer = School_serializer(data=school_data)
         #Save School Model
         if not school_serializer.is_valid():
-            Owner.objects.filter(id=owner_serializer.data['id']).delete()
+            print('error school_serializer', school_serializer.errors)
             return Response(school_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
         school_serializer.save()
 
+        # #Format owner data
+        owner_data['fonction']=3  # For owner
+        owner_data['first_name'] = data['first_name']
+        owner_data['last_name'] = data['last_name']
+        owner_data['tel'] = data['tel']
+        owner_data['school'] = school_serializer.data['id']
+        owner_data['password'] =  make_password(data['password'])
+        owner_data['username'] =  ''.join([data['first_name'], data['last_name']]).lower()
+        owner_serializer = Employee_serializer(data=owner_data)
+
+        # #Save Owner Model
+        if not owner_serializer.is_valid():
+            print('error owner_serializer', owner_serializer.errors)
+            School.undeleted_objects.filter(id=school_serializer.data['id']).delete()
+            return Response(owner_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        owner_serializer.save()
+
     return Response(owner_serializer.data, status=status.HTTP_200_OK)
+
 
 
 def notification_db(users:list,module:str,title:str,text:str,notifcation_type:str)->bool:
