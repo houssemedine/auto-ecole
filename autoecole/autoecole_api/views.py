@@ -1028,9 +1028,10 @@ def register(request):
         owner_data['first_name'] = data['first_name']
         owner_data['last_name'] = data['last_name']
         owner_data['tel'] = data['tel']
+        owner_data['city'] = data['city']
         owner_data['school'] = school_serializer.data['id']
         owner_data['password'] =  make_password(data['password'])
-        owner_data['username'] =  ''.join([data['first_name'], data['last_name']]).lower()
+        owner_data['username'] =  ''.join([data['first_name'], data['last_name']]).lower().replace(' ', '')
         owner_serializer = Employee_serializer(data=owner_data)
 
         # #Save Owner Model
@@ -1289,7 +1290,7 @@ def payment_dossier(request,card_id):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def countries(request):
     if request.method == 'GET':
         if not (countries := Country.undeleted_objects.all()):
@@ -1300,7 +1301,7 @@ def countries(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def governorates(request, id):
     if request.method == 'GET':
         if not (governorates := Governorate.undeleted_objects.filter(country=id).all()):
@@ -1310,7 +1311,7 @@ def governorates(request, id):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def cities(request, id):
     if request.method == 'GET':
         #if not (cities := City.undeleted_objects.filter(governorate=id).all()):
@@ -1328,34 +1329,30 @@ def cities(request, id):
 @api_view(['GET','PUT'])
 @permission_classes([IsAuthenticated])
 def profile(request):
+    print('profile request', request.data)
     # (1, 'Guest'),
     # (2, 'Admin'),
     # (3, 'Owner'),
     # (4, 'Trainer'),
     # (5, 'Student'),
-    try:
-        user_fonction=request.user.fonction
-        user_id=request.user.id
-        print('user_fonction',user_fonction)
-
-
-
-    except Exception:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    user_fonction=request.user.fonction
+    user_fonction = get_user_role(user_fonction)
+    user_id=request.user.id
+    #     return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        if user_fonction in [1, 2]: #Guest and Admin
+        if user_fonction in ['Guest', 'Admin']: #Guest and Admin
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        if user_fonction == 3: #Owner
+        if user_fonction == 'Owner': #Owner
             try:
-                profile = Owner.undeleted_objects.get(id=user_id)
+                profile = Employee.undeleted_objects.get(id=user_id)
             except Exception:
                 return Response(status=status.HTTP_404_NOT_FOUND)
 
-            profile_serialzer=Owner_serializer_read(profile)
+            profile_serialzer= Employee_serializer_read(profile)
 
-        if user_fonction == 4: #Trainer
+        if user_fonction == 'Trainer': #Trainer
             try:
                 profile = Employee.undeleted_objects.get(id=user_id)
             except Exception:
@@ -1363,7 +1360,7 @@ def profile(request):
 
             profile_serialzer=Employee_serializer_read(profile)
 
-        if user_fonction == 5: #Student
+        if user_fonction == 'Student': #Student
             try:
                 profile = Student.undeleted_objects.get(id=user_id)
             except Exception:
