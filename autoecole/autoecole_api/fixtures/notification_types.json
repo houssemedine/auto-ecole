@@ -3,8 +3,11 @@
 		"model": "autoecole_api.notificationType",
 		"pk": 1,
 		"fields": {
-			"name": "Activity",
+			"title": "Activity",
 			"description": null,
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"created_at": "2024-08-15T22:01:49.043Z",
 			"importance": "medium"
 		}
 	},
@@ -12,8 +15,11 @@
 		"model": "autoecole_api.notificationType",
 		"pk": 2,
 		"fields": {
-			"name": "System",
+			"title": "System",
 			"description": null,
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"created_at": "2024-08-15T22:01:49.043Z",
 			"importance": "high"
 		}
 	},
@@ -21,8 +27,11 @@
 		"model": "autoecole_api.notificationType",
 		"pk": 3,
 		"fields": {
-			"name": "Marketing",
+			"title": "Marketing",
 			"description": null,
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"created_at": "2024-08-15T22:01:49.043Z",
 			"importance": "medium"
 		}
 	},
@@ -30,8 +39,11 @@
 		"model": "autoecole_api.notificationType",
 		"pk": 4,
 		"fields": {
-			"name": "Alert",
+			"title": "Alert",
 			"description": null,
+			"updated_at": "2024-08-15T22:01:49.043Z",
+			"created_by": null,
+			"created_at": "2024-08-15T22:01:49.043Z",
 			"importance": "medium"
 		}
 	}

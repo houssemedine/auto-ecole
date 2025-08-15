@@ -247,7 +247,7 @@ def student_edit(request, id):
         print('audiance', audiance)
         push_notification_to_users(
             audiance,
-            'Générique',
+            'Activity',
             'student',
             'Profil modifié 📝',
             f'Des informations ont été modifiées pour votre profil',
@@ -325,12 +325,6 @@ def card(request,school_id,progress_status):
         if not serializer.is_valid():
             print('error', serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST,)
-        # if serializer.validated_data['manual_price']:
-        #     if not serializer.validated_data['price']:
-        #         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
-        # else:
-        #     serializer.validated_data['price'] = (
-        #         serializer.validated_data['hours_number']*serializer.validated_data['hour_price']) * (1 - (serializer.validated_data['discount']/100))
         obj=serializer.save()
         print('serializer', request.data)
 
@@ -350,12 +344,15 @@ def card(request,school_id,progress_status):
         #Save nofications
         #get users
         student = obj.student
+        owner = Employee.undeleted_objects.filter(school=student.school.id, fonction=3).first()  # Get the owner of the school
         audiance = []
         audiance.append(student)
+        if owner and owner != request.user:
+            audiance.append(owner)
 
         push_notification_to_users(
             audiance,
-            'Générique',
+            'Activity',
             'card',
             'Nouveau dossier créé 🗂️',
             f'Un nouveau dossier a été créé pour {obj.student.first_name} {obj.student.last_name}',
@@ -438,12 +435,15 @@ def save_card_and_student(request, school_id):
         #Save nofications
         #get users
         student = save_card.student
+        owner = Employee.undeleted_objects.filter(school=student.school.id, fonction=3).first()  # Get the owner of the school
         audiance = []
         audiance.append(student)
+        if owner and owner != request.user:
+            audiance.append(owner)
 
         push_notification_to_users(
             audiance,
-            'Générique',
+            'Activity',
             'card',
             'Nouveau dossier créé 🗂️',
             f'Un nouveau dossier a été créé pour {save_card.student.first_name} {save_card.student.last_name}',
@@ -508,12 +508,15 @@ def card_edit(request, id):
         #Save nofications
         #get users
         student = obj.student
+        owner = Employee.undeleted_objects.filter(school=student.school.id, fonction=3).first()  # Get the owner of the school
         audiance = []
         audiance.append(student)
+        if owner and owner != request.user:
+            audiance.append(owner)
 
         push_notification_to_users(
             audiance,
-            'Générique',
+            'Activity',
             'card',
             'Dossier modifié 🗂',
             f'Le dossier numéro {card.id} de {obj.student.first_name} {obj.student.last_name} a été modifié',
@@ -529,12 +532,15 @@ def card_edit(request, id):
         #Save nofications
         #get users
         student = card.student
+        owner = Employee.undeleted_objects.filter(school=student.school.id, fonction=3).first()  # Get the owner of the school
         audiance = []
         audiance.append(student)
+        if owner and owner != request.user:
+            audiance.append(owner)
 
         push_notification_to_users(
             audiance,
-            'Générique',
+            'Activity',
             'card',
             'Dossier supprimé 🚮',
             f'Le dossier numéro {card.id} de {card.student.first_name} {card.student.last_name} a été supprimé',
@@ -647,6 +653,22 @@ def session(request, school_id):
 
         save_session = serializer.save()
 
+        #Save nofications
+        #get users
+        student = save_session.card.student
+        trainer = save_session.employee
+        audiance = []
+        audiance.append(student)
+        if trainer and trainer != request.user:
+            audiance.append(trainer)
+
+        push_notification_to_users(
+            audiance,
+            'Activity',
+            'card',
+            'Nouveau session créé ⏰',
+            f'Un nouveau dossier a été créé pour {student.first_name} {student.last_name}',
+        )
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -733,7 +755,22 @@ def session_edit(request, id):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         save_session = serializer.save()
+        #Save nofications
+        #get users
+        student = save_session.card.student
+        trainer = save_session.employee
+        audiance = []
+        audiance.append(student)
+        if trainer and trainer != request.user:
+            audiance.append(trainer)
 
+        push_notification_to_users(
+            audiance,
+            'Activity',
+            'card',
+            'Session modifié ⏰',
+            f'Une session a été modifiée pour {student.first_name} {student.last_name}',
+        )
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     if request.method == 'DELETE':
@@ -741,7 +778,22 @@ def session_edit(request, id):
         session.deleted_at = datetime.now()
         session.save()
         serializer = Session_serializer_edit(session)
+        #Save nofications
+        #get users
+        student = session.card.student
+        trainer = session.employee
+        audiance = []
+        audiance.append(student)
+        if trainer and trainer != request.user:
+            audiance.append(trainer)
 
+        push_notification_to_users(
+            audiance,
+            'Activity',
+            'card',
+            'Session supprimé 🚮',
+            f'Une session a été supprimée pour {student.first_name} {student.last_name}',
+        )
         return Response(status=status.HTTP_201_CREATED)
 
 # Employee CRUD
@@ -1104,13 +1156,15 @@ def payment(request,school_id):
 
         #Save nofications
         student = save_payement.card.student
+        owner = Employee.undeleted_objects.filter(school=student.school.id, fonction=3).first()  # Get the owner of the school
         audiance = []
         audiance.append(student)
+        if owner and owner != request.user:
+            audiance.append(owner)
 
-        print('audiance',set(audiance))
         push_notification_to_users(
             audiance,
-            'Générique',
+            'Activity',
             'payment',
             'Nouveau Payment 💰',
             f'Un payement de {save_payement.amount} a été effectué pour la carte {save_payement.card.id}.'
@@ -1137,12 +1191,15 @@ def payment_edit(request,id):
         #Save nofications
         # Prepare notification data
         student = save_payement.card.student
+        owner = Employee.undeleted_objects.filter(school=student.school.id, fonction=3).first()  # Get the owner of the school
         audiance = []
         audiance.append(student)
+        if owner and owner != request.user:
+            audiance.append(owner)
 
         push_notification_to_users(
             audiance,
-            'Générique',
+            'Activity',
             'payment',
             'Payment modifié 💰',
             f'le payement de {save_payement.amount} a été modifié pour la carte {save_payement.card.id}.'
@@ -1163,12 +1220,15 @@ def payment_edit(request,id):
                         )
                         .get(pk=id))
         student = save_payement.card.student
+        owner = Employee.undeleted_objects.filter(school=student.school.id, fonction=3).first()
         audiance = []
         audiance.append(student)
+        if owner and owner != request.user:
+            audiance.append(owner)
 
         push_notification_to_users(
             audiance,
-            'Générique',
+            'Activity',
             'payment',
             'Payment supprimé 🚮',
             f'le payement de {save_payement.amount} a été supprimé pour la carte {save_payement.card.id}.'
