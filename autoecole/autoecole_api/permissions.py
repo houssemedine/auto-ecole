@@ -1,5 +1,7 @@
 from rest_framework import permissions
-from autoecole_api.models import Employee
+from autoecole_api.models import Employee, SchoolPayment, Student
+from .tools import get_user_role, user_has_valid_payment
+from datetime import datetime
 
 
 class IsManager(permissions.BasePermission):
@@ -26,3 +28,14 @@ class IsManager(permissions.BasePermission):
         #     return True
 
         return False
+    
+
+class IsPaymentDone(permissions.BasePermission):
+    """
+    Autorise uniquement si l'utilisateur a un paiement valide.
+    """
+    def has_permission(self, request, view):
+        user = getattr(request, "user", None)
+        if not user or not user.is_authenticated:
+            return False
+        return user_has_valid_payment(user)

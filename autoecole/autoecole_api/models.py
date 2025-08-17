@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from uuid import uuid4
 from django.conf import settings
+from dateutil.relativedelta import relativedelta
 
 # Create your models here.
 def avatar_upload_to(instance, filename):
@@ -127,13 +128,37 @@ class School(BaseModel, SoftDeleteModel):
     email = models.EmailField(blank=True, null=True)
     tel = models.IntegerField(blank=True, null=True)
     logo = models.ImageField(blank=True, null=True)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['name']
 
     def __str__(self):
-        return self.name
+        return f'{self.name} - {self.code}- {self.is_active}'
 
+class SchoolPayment(BaseModel, SoftDeleteModel):
+    school = models.ForeignKey(School, on_delete=models.DO_NOTHING)
+    amount = models.DecimalField(max_digits=99999999, decimal_places=2)
+    date = models.DateField()
+    duration = models.IntegerField()  # in months
+    method = models.CharField(max_length=50, choices=[
+        ('cash', 'Cash'),
+        ('bank_transfer', 'Bank Transfer'),
+        ('credit_card', 'Credit Card'),
+        ('other', 'Other')
+    ], default='cash')
+    comment = models.TextField(blank=True, null=True)
+
+    class Meta:
+        ordering = ['school', '-date']
+
+    @property
+    def valid_until(self):
+        # relativedelta gère correctement les fins de mois (ex: 31/01 + 1 mois -> 28/02)
+        return self.date + relativedelta(months=self.duration)
+
+    def __str__(self):
+        return f'school: {self.school} - date: {self.date} - duration: {self.duration} mois'
 
 class Student(BaseModel, SoftDeleteModel, User):
     city = models.ForeignKey(City, on_delete=models.CASCADE)
