@@ -1,3 +1,6 @@
+import random
+import string
+
 def generete_username(first_name, last_name, username_list):
     username = f"{first_name[0].replace(' ','').lower()}{last_name.replace(' ','').lower()}"
 
@@ -11,3 +14,12 @@ def generete_username(first_name, last_name, username_list):
         username = f"{username}{suffixe}"
 
     return username
+
+
+def generete_password():
+
+    length = 6
+    characters = string.ascii_letters + string.digits
+    password = ''.join(random.choice(characters) for i in range(length))
+
+    return password

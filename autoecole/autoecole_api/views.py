@@ -10,7 +10,7 @@ from rest_framework import status
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from autoecole_api.permissions import IsManager
-from .tools import generete_username
+from .tools import generete_username, generete_password
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate
 import pandas as pd
@@ -184,6 +184,7 @@ def student(request,school_id):
 
         new_data['username']=generete_username(first_name, last_name, username_list)
         new_data['password']=student.password
+        
         for key in new_data:
             if isinstance(new_data[key], list) and len(new_data[key]) == 1:
                 new_data[key] = new_data[key][0]
@@ -390,7 +391,9 @@ def save_card_and_student(request, school_id):
         last_name=student_data['last_name'][0]
         student_data['fonction'] = 5 #For student
         student_data['username']=generete_username(first_name, last_name, username_list)
-        student_data['password']='test'
+        password = generete_password()
+        print('student password', password)
+        student_data['password']=make_password(password)
 
         for key in student_data:
             if isinstance(student_data[key], list) and len(student_data[key]) == 1:
@@ -829,7 +832,9 @@ def employee(request,school_id):
         employee_data['birthday'] = dt.strftime("%Y-%m-%d")
         
         employee_data['username']=generete_username(employee_data['first_name'][0], employee_data['last_name'][0], username_list)
-        employee_data['password']='test'
+        password = generete_password()
+        print('employee password', password)
+        employee_data['password']=make_password(password)
         employee_data['fonction'] = 4 #trainer
         serializer = Employee_serializer(data=employee_data)
         if not serializer.is_valid():
