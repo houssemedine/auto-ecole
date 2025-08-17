@@ -1377,6 +1377,23 @@ def profile(request):
     
 
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def change_password(request):
+    if request.method == 'PUT':
+        data = request.data.copy()
+        old_password = data.get('old_password')
+        new_password = data.get('new_password')
+
+        user = User.objects.get(id=request.user.id)
+        if not user.check_password(old_password):
+            return Response({"detail": "Ancien mot de passe incorrect."}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(new_password)
+        user.save()
+
+        return Response({"detail": "Mot de passe modifié avec succès."}, status=status.HTTP_200_OK)
+
 #Notification PUSH
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
