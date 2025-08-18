@@ -644,10 +644,21 @@ def session(request, school_id):
 
         #Save nofications
         #get users
-        student = save_session.card.student
-        trainer = save_session.employee
         audiance = []
-        audiance.append(student)
+
+        try:
+            student = save_session.card.student
+            msg = f'Un nouveau session a été créé pour {student.first_name} {student.last_name}'
+        except AttributeError:
+            student = None
+        
+        if student:
+            audiance.append(student)
+        else:
+            msg = 'Un nouveau session a été créé'
+
+        trainer = save_session.employee
+
         if trainer and trainer != request.user:
             audiance.append(trainer)
 
@@ -656,7 +667,7 @@ def session(request, school_id):
             'Activity',
             'card',
             'Nouveau session créé ⏰',
-            f'Un nouveau dossier a été créé pour {student.first_name} {student.last_name}',
+            msg,
         )
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -746,10 +757,21 @@ def session_edit(request, id):
         save_session = serializer.save()
         #Save nofications
         #get users
-        student = save_session.card.student
-        trainer = save_session.employee
         audiance = []
-        audiance.append(student)
+
+        try:
+            student = save_session.card.student
+            msg = f'Une session a été modifiée pour {student.first_name} {student.last_name}'
+        except AttributeError:
+            student = None
+        
+        if student:
+            audiance.append(student)
+        else:
+            msg = 'Une session a été modifiée'
+
+        trainer = save_session.employee
+
         if trainer and trainer != request.user:
             audiance.append(trainer)
 
@@ -758,7 +780,7 @@ def session_edit(request, id):
             'Activity',
             'card',
             'Session modifié ⏰',
-            f'Une session a été modifiée pour {student.first_name} {student.last_name}',
+            msg,
         )
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -769,9 +791,19 @@ def session_edit(request, id):
         serializer = Session_serializer_edit(session)
         #Save nofications
         #get users
-        student = session.card.student
-        trainer = session.employee
         audiance = []
+        try:
+            student = session.card.student
+        except AttributeError:
+            student = None
+
+        if student:
+            audiance
+            msg = f'Une session a été supprimée pour {student.first_name} {student.last_name}'
+        else:
+            msg = 'Une session a été supprimée'
+
+        trainer = session.employee
         audiance.append(student)
         if trainer and trainer != request.user:
             audiance.append(trainer)
@@ -781,7 +813,7 @@ def session_edit(request, id):
             'Activity',
             'card',
             'Session supprimé 🚮',
-            f'Une session a été supprimée pour {student.first_name} {student.last_name}',
+            msg,
         )
         return Response(status=status.HTTP_201_CREATED)
 
