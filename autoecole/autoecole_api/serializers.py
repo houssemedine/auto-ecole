@@ -34,17 +34,17 @@ class School_serializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class Student_serializer_read(serializers.ModelSerializer):
-    city = City_serializer()
+    governorate = Governorate_serializer()
 
     class Meta:
-        model=Student
+        model=User
         fields = '__all__'
 
 class Student_serializer(serializers.ModelSerializer):
     # avatar = serializers.SerializerMethodField()
 
     class Meta:
-        model=Student
+        model=User
         fields = '__all__'
 
     # def get_avatar(self, obj):
@@ -108,15 +108,15 @@ class Session_serializer_edit(serializers.ModelSerializer):
         fields = '__all__'
         # fields = ('day','start_at','end_at','activity','price','duration')
 
-class Employee_serializer_read(serializers.ModelSerializer):
-    city=City_serializer()
+class User_serializer_read(serializers.ModelSerializer):
+    governorate = Governorate_serializer()
     class Meta:
-        model=Employee
+        model=User
         fields = '__all__'
 
-class Employee_serializer(serializers.ModelSerializer):
+class User_serializer(serializers.ModelSerializer):
     class Meta:
-        model=Employee
+        model=User
         fields = '__all__'
 
 class Car_serializer(serializers.ModelSerializer):
@@ -132,7 +132,7 @@ class SessionTypes_serializer(serializers.ModelSerializer):
 class Session_serializer_read(serializers.ModelSerializer):
     card=Card_serializer_read()
     session_type = SessionTypes_serializer()
-    employee = Employee_serializer()
+    employee = User_serializer()
     car = Car_serializer()
 
     class Meta:

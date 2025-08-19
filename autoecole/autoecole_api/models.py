@@ -12,37 +12,6 @@ def avatar_upload_to(instance, filename):
     unique_name = uuid4().hex  # ex : '3fa85f64f7d24a15a96b0dbab207ac4e'
     return f"avatars/{unique_name}.{ext}"
 
-class User(AbstractUser):
-    USER_TYPE_CHOICES = (
-    (1, 'Guest'),
-    (2, 'Admin'),
-    (3, 'Owner'),
-    (4, 'Trainer'),
-    (5, 'Student'),
-    )
-
-    fonction = models.PositiveSmallIntegerField(
-        choices=USER_TYPE_CHOICES,
-        default=1
-        )
-    avatar = models.ImageField(
-        verbose_name='photo de profile',
-        upload_to=avatar_upload_to,
-        null=True,
-        blank=True
-        )
-    tel = models.IntegerField(unique=True, null=True, blank=True)
-    full_name = models.CharField(max_length=100, blank=True, null=True)
-    birthday = models.DateField(null=True, blank=True)
-
-    def __str__(self):
-        fonction = "Admin"
-        for loop in self.USER_TYPE_CHOICES:
-            if loop[0] == self.fonction:
-                fonction = loop[1]
-                break
-        return "{} : {}".format(self.tel, fonction)
-
 # BasedModel
 class BaseModel(models.Model):
     # created_at = models.DateTimeField(auto_now=True)
@@ -86,6 +55,66 @@ class SoftDeleteModel(models.Model):
     class Meta:
         # Django will not create a database table for this model
         abstract = True
+
+class User(AbstractUser, SoftDeleteModel):
+    USER_TYPE_CHOICES = (
+    (1, 'Guest'),
+    (2, 'Admin'),
+    (3, 'Owner'),
+    (4, 'Trainer'),
+    (5, 'Student'),
+    )
+
+    GENDER = (
+    (1, 'Male'),
+    (2, 'Female'),
+    )
+
+    role = models.PositiveSmallIntegerField(
+        choices=USER_TYPE_CHOICES,
+        default=1
+        )
+    avatar = models.ImageField(
+        verbose_name='photo de profile',
+        upload_to=avatar_upload_to,
+        null=True,
+        blank=True
+        )
+
+    school = models.ForeignKey(
+        'School',
+        on_delete=models.SET_NULL,  # évite d'effacer l'utilisateur si l'école est supprimée
+        null=True,
+        blank=True,
+        related_name='users'
+    )
+    phone = models.IntegerField(unique=False, null=True, blank=True)
+    full_name = models.CharField(max_length=100, blank=True, null=True)
+    birthday = models.DateField(null=True, blank=True)
+    cin = models.CharField(max_length=50, unique=True, null=True, blank=True)
+    gender = models.PositiveSmallIntegerField(null=True, blank=True, choices=GENDER)
+    governorate = models.ForeignKey(
+        'Governorate',
+        on_delete=models.SET_NULL,  # évite d'effacer l'utilisateur si la ville est supprimée
+        null=True,
+        blank=True,
+        related_name='users',
+    )
+
+    class Meta:
+        constraints = [
+            # 3) Unicité par (école, téléphone) = “clé composée” logique
+            models.UniqueConstraint(fields=['school', 'phone'], name='uniq_user_school_phone'),
+        ]
+
+    def __str__(self):
+        role = "Admin"
+        for loop in self.USER_TYPE_CHOICES:
+            if loop[0] == self.role:
+                role = loop[1]
+                break
+        return "School: {} - Phone: {} - Role: {}".format(self.school, self.phone, role)
+
 
 class Country(BaseModel, SoftDeleteModel):
     name = models.CharField(max_length=50)
@@ -160,18 +189,6 @@ class SchoolPayment(BaseModel, SoftDeleteModel):
     def __str__(self):
         return f'school: {self.school} - date: {self.date} - duration: {self.duration} mois'
 
-class Student(BaseModel, SoftDeleteModel, User):
-    city = models.ForeignKey(City, on_delete=models.CASCADE)
-    cin=models.CharField(max_length=50, unique=True)
-    gender=models.CharField(max_length=50,default='male')
-    school = models.ForeignKey(School, on_delete=models.CASCADE)
-
-    class Meta:
-        ordering = ['username']
-
-    def __str__(self):
-        return self.username
-
 class LicenceType(BaseModel, SoftDeleteModel):
     name=models.CharField(max_length=50)
     comment= models.DateField(null=True, blank=True)
@@ -197,11 +214,12 @@ class Card(BaseModel, SoftDeleteModel):
     #     ('2', 'Completed'),
     #     ('3', 'Canceled'),
     # ]
-    licence_type = models.ForeignKey(LicenceType,related_name='licence_type' ,on_delete=models.CASCADE)
+    school = models.ForeignKey(School,related_name='school_card' ,on_delete=models.CASCADE)
+    licence_type = models.ForeignKey(LicenceType,related_name='licence_type' ,on_delete=models.DO_NOTHING)
     start_at = models.DateField()
     end_at = models.DateField(null=True, blank=True)
-    student = models.ForeignKey(Student,related_name='student' ,on_delete=models.CASCADE)
-    status = models.ForeignKey(Status,related_name='status',default=1, on_delete=models.CASCADE)
+    student = models.ForeignKey(User,related_name='student' ,on_delete=models.CASCADE)
+    status = models.ForeignKey(Status,related_name='status',default=1, on_delete=models.DO_NOTHING)
     # if True price will be an input, if false price will be calucle in proprety
     # manual_price = models.BooleanField(null=True, blank=True)
     price = models.DecimalField(
@@ -347,7 +365,6 @@ class NotificationDelivery(models.Model):
     def __str__(self):
         return f'{self.notification_id} → {self.device_id} [{self.status}]'
 
-
 class UserNotificationPreference(BaseModel, SoftDeleteModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email_notifications = models.BooleanField(default=True)
@@ -359,16 +376,6 @@ class UserNotificationPreference(BaseModel, SoftDeleteModel):
 
     def __str__(self):
         return f'{self.user}'
-
-class Employee(BaseModel, SoftDeleteModel, User):
-    city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
-    school = models.ForeignKey(School, on_delete=models.CASCADE)
-
-    class Meta:
-        ordering = ['first_name', 'last_name']
-
-    def __str__(self):
-        return self.first_name
 
 
 class Car(BaseModel, SoftDeleteModel):
@@ -408,10 +415,10 @@ class Session(BaseModel, SoftDeleteModel):
     start_at = models.TimeField()
     end_at = models.TimeField()
     card = models.ForeignKey(Card,related_name='card' ,on_delete=models.CASCADE, null=True, blank=True)
-    employee = models.ForeignKey(Employee,related_name='employee' ,on_delete=models.CASCADE)
-    car = models.ForeignKey(Car,related_name='car' ,on_delete=models.CASCADE,null=True, blank=True)
+    employee = models.ForeignKey(User,related_name='employee' ,on_delete=models.CASCADE)
+    car = models.ForeignKey(Car,related_name='car' ,on_delete=models.DO_NOTHING,null=True, blank=True)
     note=models.CharField(max_length=100,null=True, blank=True)
-    session_type = models.ForeignKey(SessionType,related_name='session_type' ,on_delete=models.CASCADE, default='4')
+    session_type = models.ForeignKey(SessionType,related_name='session_type' ,on_delete=models.DO_NOTHING, default='4')
     event_type = models.CharField(
         max_length=50, choices=[('session', 'Session'), ('other', 'other')], default='session')
     is_cancelled = models.BooleanField(default=False)

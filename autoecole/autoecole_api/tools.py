@@ -1,7 +1,7 @@
 import random
 import string
 from django.utils import timezone
-from .models import Employee, Student, SchoolPayment
+from .models import User, SchoolPayment
 
 
 def get_user_role(number):
@@ -46,18 +46,7 @@ def user_has_valid_payment(user) -> bool:
     """
     Retourne True si l'utilisateur (via son école) a un paiement en cours de validité.
     """
-    role = get_user_role(getattr(user, "fonction", None))
-
-    # Récupère l'objet Employee/Student pour atteindre l'école
-    owner_or_trainer = role in ["Owner", "Trainer"]
-    if owner_or_trainer:
-        holder = Employee.objects.filter(id=user.id).select_related("school").first()
-    elif role == "Student":
-        holder = Student.objects.filter(id=user.id).select_related("school").first()
-    else:
-        holder = None
-
-    school = getattr(holder, "school", None)
+    school = User.objects.get(id=user.id).school
     if not school:
         return False
 

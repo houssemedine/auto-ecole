@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from autoecole_api.models import Employee, SchoolPayment, Student
+from autoecole_api.models import User, SchoolPayment
 from .tools import get_user_role, user_has_valid_payment
 from datetime import datetime
 
@@ -10,7 +10,7 @@ class IsManager(permissions.BasePermission):
 
     def has_permission(self, request, view):
         #Get User Role
-        if user_role:=Employee.objects.filter(id=request.user.id).values():
+        if user_role:=User.objects.filter(id=request.user.id).values():
             if (request.user.is_authenticated) and (user_role[0]['role'] == 'Manager'):
                 return True
 

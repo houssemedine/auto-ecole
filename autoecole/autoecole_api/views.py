@@ -25,7 +25,7 @@ from itertools import chain
 
 # Custom JWT to obtain more information
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    tel = serializers.CharField()
+    phone = serializers.CharField()
     password = serializers.CharField(write_only=True)
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -33,13 +33,12 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         self.fields.pop('username', None)
 
     def validate(self, attrs):
-        tel = attrs.get('tel')
+        phone = attrs.get('phone')
         password = attrs.get('password')
 
         # Authentifier avec téléphone au lieu de username/email
         user = authenticate(request=self.context.get('request'),
-                            tel=tel, password=password)
-
+                            phone=phone, password=password)
         if not user:
             raise serializers.ValidationError('Numéro de téléphone ou mot de passe incorrect.')
 
@@ -52,39 +51,35 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         }
 
         # Claims personnalisés
-        data['tel'] = user.tel
+        data['phone'] = user.phone
         data['email'] = user.email
         data['first_name'] = user.first_name
         data['last_name'] = user.last_name
-        data['fonction'] = user.fonction
-        data['role'] = get_user_role(user.fonction)
-        print('user', user)
-        if user.fonction in [3, 4]: # Owner or Trainer
-            school = Employee.undeleted_objects.get(id=user.id).school
-            data['school'] = School_serializer(school).data
-        elif user.fonction == 1:    # Guest
-            data['school'] = 0
-        elif user.fonction == 5:    # Student
-            user = Student.undeleted_objects.get(id=user.id)
-            data['school'] = School_serializer(user.school).data
+        data['role'] = get_user_role(user.role)
+        school = User.undeleted_objects.get(id=user.id).school
+        data['school'] = School_serializer(school).data
+
+        # if user.role in [3, 4]: # Owner or Trainer
+        #     school = User.undeleted_objects.get(id=user.id).school
+        #     data['school'] = School_serializer(school).data
+        # elif user.role == 1:    # Guest
+        #     data['school'] = 0
+        # elif user.role == 5:    # Student
+        #     user = User.undeleted_objects.get(id=user.id)
+        #     data['school'] = School_serializer(user.school).data
 
         return data
 
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        token['tel'] = user.tel
+        token['phone'] = user.phone
         token['email'] = user.email
         token['first_name'] = user.first_name
         token['last_name'] = user.last_name
-        token['fonction'] = user.fonction
-        token['role'] = get_user_role(user.fonction)
-
-        if user.fonction in [3, 4]:  # Owner or Trainer
-            school = Employee.undeleted_objects.get(id=user.id).school
-            token['school'] = School_serializer(school).data
-        elif user.fonction == 1:
-            token['school'] = 0
+        token['role'] = get_user_role(user.role)
+        school = User.undeleted_objects.get(id=user.id).school
+        token['school'] = School_serializer(school).data
 
         return token
 
@@ -102,8 +97,8 @@ def school(request):
         # Get connected User
         user = request.user
         # Get list of school for connected user
-        # school_id = Employee.undeleted_objects.filter(id=user.id).values('school_id')
-        # if not (schools := Employee.undeleted_objects.filter(id=user.id).values('school_id')):
+        # school_id = User.undeleted_objects.filter(id=user.id).values('school_id')
+        # if not (schools := User.undeleted_objects.filter(id=user.id).values('school_id')):
         if not (schools := School.undeleted_objects.all()):
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = School_serializer(schools, many=True)
@@ -146,9 +141,9 @@ def school_edit(request, id):
 def student(request,school_id):
     user = request.user
     if request.method == 'GET':
-        if not (students := Student.undeleted_objects.filter(school=school_id)).all():
+        if not (students := User.undeleted_objects.filter(school=school_id, role=5)).all():
             return Response(status=status.HTTP_204_NO_CONTENT)
-        serializer = Student_serializer_read(students, many=True)
+        serializer = User_serializer_read(students, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
         username_list=User.objects.values_list('username',flat=True)
@@ -175,7 +170,7 @@ def student(request,school_id):
             if isinstance(new_data[key], list) and len(new_data[key]) == 1:
                 new_data[key] = new_data[key][0]
 
-        serializer = Student_serializer(student, data=new_data, context={'request': request})
+        serializer = User_serializer(student, data=new_data, context={'request': request})
         if not (serializer.is_valid()):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         save_student=serializer.save()
@@ -188,13 +183,13 @@ def student(request,school_id):
 @permission_classes([IsAuthenticated, IsPaymentDone])
 def student_edit(request, id):
     try:
-        student = Student.undeleted_objects.get(id=id)
+        student = User.undeleted_objects.get(id=id)
     except Exception:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
     if request.method == 'GET':
-        serializer = Student_serializer_read(student, context={'request': request})
+        serializer = User_serializer_read(student, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'PUT':
         username_list=User.objects.values_list('username',flat=True)
@@ -220,7 +215,7 @@ def student_edit(request, id):
             if isinstance(new_data[key], list) and len(new_data[key]) == 1:
                 new_data[key] = new_data[key][0]
 
-        serializer = Student_serializer(student, data=new_data, context={'request': request})
+        serializer = User_serializer(student, data=new_data, context={'request': request})
         if not (serializer.is_valid()):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         obj=serializer.save()
@@ -245,7 +240,7 @@ def student_edit(request, id):
         student.is_deleted = True
         student.deleted_at = datetime.now()
         student.save()
-        serializer = Student_serializer(student)
+        serializer = User_serializer(student)
         cards=Card.undeleted_objects.filter(student=id).all()
         for card in cards:
             card.is_deleted= True
@@ -267,7 +262,7 @@ def student_reset_password(request, id):
         return Response(status=status.HTTP_404_NOT_FOUND)
     if request.method == 'PUT':
         ##Send mail to student
-        serializer = Student_serializer(student)
+        serializer = User_serializer(student)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(['PUT'])
@@ -282,7 +277,7 @@ def student_enable_disable_account(request, id):
         student.is_active= not account_status
         student.save()
 
-        serializer = Student_serializer(student)
+        serializer = User_serializer(student)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -294,12 +289,12 @@ def card(request,school_id,progress_status):
         cards=None
         if progress_status == 'completed':
             #Filter all cards with status equal to completed ( status id 99)
-            cards = Card.undeleted_objects.filter(student__school=school_id).filter(status=99).all()
+            cards = Card.undeleted_objects.filter(school=school_id).filter(status=99).all()
         else:
             #Filter all cards with status Not equal to completed ( status id 99)
-            cards = Card.undeleted_objects.filter(student__school=school_id).filter(~Q(status = 99)).all()
+            cards = Card.undeleted_objects.filter(school=school_id).filter(~Q(status = 99)).all()
 
-        if request.user.fonction == 5:
+        if get_user_role(request.user.role) == 'Student':
             # If user is student, filter cards by student id
             cards = cards.filter(student=request.user.id)
 
@@ -308,12 +303,13 @@ def card(request,school_id,progress_status):
         serializer = Card_serializer_read(cards, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
-        serializer = Card_serializer(data=request.data)
+        data = request.data.copy()
+        data['school'] = school_id
+        serializer = Card_serializer(data=data)
         if not serializer.is_valid():
             print('error', serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST,)
         obj=serializer.save()
-        print('serializer', request.data)
 
         history_data={
                     'card':obj.id,
@@ -331,7 +327,7 @@ def card(request,school_id,progress_status):
         #Save nofications
         #get users
         student = obj.student
-        owner = Employee.undeleted_objects.filter(school=student.school.id, fonction=3).first()  # Get the owner of the school
+        owner = User.undeleted_objects.filter(school=student.school.id, role=3).first()  # Get the owner of the school
         audiance = []
         audiance.append(student)
         if owner and owner != request.user:
@@ -375,7 +371,7 @@ def save_card_and_student(request, school_id):
         student_data['school']=school_id
         first_name=student_data['first_name'][0]
         last_name=student_data['last_name'][0]
-        student_data['fonction'] = 5 #For student
+        student_data['role'] = 5 #For student
         student_data['username']=generete_username(first_name, last_name, username_list)
         password = generete_password()
         print('student password', password)
@@ -385,24 +381,23 @@ def save_card_and_student(request, school_id):
             if isinstance(student_data[key], list) and len(student_data[key]) == 1:
                 student_data[key] = student_data[key][0]
 
-        serializer = Student_serializer(data=student_data, context={'request': request})
+        serializer = User_serializer(data=student_data, context={'request': request})
         if not (serializer.is_valid()):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
         save_student=serializer.save()
-        print('save student')
+
         # Save Card Model
         data_card = dossier_data
         data_card['student'] = save_student.id
         data_card['manual_price'] = False
+        data_card['school'] = school_id
         serializer = Card_serializer(data=data_card)
-        print('data_card', data_card)
         if not serializer.is_valid():
             print('error card serializer', serializer.errors)
-            Student.undeleted_objects.filter(id=save_student.data['id']).delete()
+            User.undeleted_objects.filter(id=save_student.id).delete()
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST,)
         save_card=serializer.save()
-        print('save card')
 
         # Save Card Status History
         history_data={
@@ -419,12 +414,11 @@ def save_card_and_student(request, school_id):
             return Response(serializer_history.errors, status=status.HTTP_400_BAD_REQUEST)
 
         serializer_history.save()
-        print('save card')
 
         #Save nofications
         #get users
         student = save_card.student
-        owner = Employee.undeleted_objects.filter(school=student.school.id, fonction=3).first()  # Get the owner of the school
+        owner = User.undeleted_objects.filter(school=student.school.id, role=3).first()  # Get the owner of the school
         audiance = []
         audiance.append(student)
         if owner and owner != request.user:
@@ -456,6 +450,7 @@ def card_edit(request, id):
         data=request.data.copy()
         if data['status'] != 99:
             data['end_at']=None
+        data['school'] = card.school.id
         serializer = Card_serializer(card, data=data)
 
         if not serializer.is_valid():
@@ -497,7 +492,7 @@ def card_edit(request, id):
         #Save nofications
         #get users
         student = obj.student
-        owner = Employee.undeleted_objects.filter(school=student.school.id, fonction=3).first()  # Get the owner of the school
+        owner = User.undeleted_objects.filter(school=student.school.id, role=3).first()  # Get the owner of the school
         audiance = []
         audiance.append(student)
         if owner and owner != request.user:
@@ -521,7 +516,7 @@ def card_edit(request, id):
         #Save nofications
         #get users
         student = card.student
-        owner = Employee.undeleted_objects.filter(school=student.school.id, fonction=3).first()  # Get the owner of the school
+        owner = User.undeleted_objects.filter(school=student.school.id, role=3).first()  # Get the owner of the school
         audiance = []
         audiance.append(student)
         if owner and owner != request.user:
@@ -594,8 +589,8 @@ def activity_edit(request, id):
 @permission_classes([IsAuthenticated, IsPaymentDone])
 def session(request, school_id):
     if request.method == 'GET':
-        sessions = Session.undeleted_objects.filter(employee__school=school_id).all()
-        if get_user_role(request.user.fonction) == 'Student':
+        sessions = Session.undeleted_objects.filter(card__school=school_id).all()
+        if get_user_role(request.user.role) == 'Student':
             # If user is student, filter sessions by student id
             sessions = sessions.filter(card__student=request.user.id)
         if not sessions:
@@ -684,7 +679,7 @@ def week_sessions(request, school_id):
     week_first_day = today - timedelta(days=week_days)
     week_last_day = week_first_day + timedelta(days=6)
     sessions = Session.undeleted_objects.filter(employee__school=school_id).filter(day__gte=week_first_day, day__lte=week_last_day).all()
-    if get_user_role(request.user.fonction) == 'Student':
+    if get_user_role(request.user.role) == 'Student':
         # If user is student, filter sessions by student id
         sessions = sessions.filter(card__student=request.user.id)
     if not sessions:
@@ -825,10 +820,10 @@ def session_edit(request, id):
 def employee(request,school_id):
     user=request.user
     if request.method == 'GET':
-        employees = Employee.undeleted_objects.filter(school=school_id).all()
+        employees = User.undeleted_objects.filter(school=school_id, role__in = [3,4]).all() # 3 for owner, 4 for trainer
         if not employees:
             return Response(status=status.HTTP_204_NO_CONTENT)
-        serializer = Employee_serializer_read(employees, many=True)
+        serializer = User_serializer_read(employees, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
         username_list=User.objects.values_list('username',flat=True)
@@ -853,8 +848,8 @@ def employee(request,school_id):
         password = generete_password()
         print('employee password', password)
         employee_data['password']=make_password(password)
-        employee_data['fonction'] = 4 #trainer
-        serializer = Employee_serializer(data=employee_data)
+        employee_data['role'] = 4 #trainer
+        serializer = User_serializer(data=employee_data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
@@ -866,12 +861,12 @@ def employee(request,school_id):
 def employee_edit(request, id):
     user=request.user
     try:
-        employee = Employee.undeleted_objects.get(id=id)
+        employee = User.undeleted_objects.get(id=id)
     except Exception:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = Employee_serializer_read(employee)
+        serializer = User_serializer_read(employee)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'PUT':
         username_list=User.objects.values_list('username',flat=True)
@@ -892,16 +887,16 @@ def employee_edit(request, id):
         dt = datetime.strptime(employee_data['birthday'], "%Y-%m-%dT%H:%M:%S.%fZ")
         employee_data['birthday'] = dt.strftime("%Y-%m-%d")
 
-        serializer = Employee_serializer(employee, data=employee_data)
+        serializer = User_serializer(employee, data=employee_data)
         if not (serializer.is_valid()):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     if request.method == 'DELETE':
-        employee.is_deleted = True
-        employee.deleted_at = datetime.now()
-        employee.save()
-        serializer = Employee_serializer(employee)
+        User.is_deleted = True
+        User.deleted_at = datetime.now()
+        User.save()
+        serializer = User_serializer(employee)
         return Response(status=status.HTTP_201_CREATED)
 
 
@@ -994,6 +989,22 @@ def register(request):
         school_data = dict()
         data = request.data.copy()
         print('data', data)
+        # #Format owner data
+        owner_data['role'] = 3  # For owner
+        owner_data['first_name'] = data['first_name']
+        owner_data['last_name'] = data['last_name']
+        owner_data['phone'] = data['phone']
+        owner_data['governorate'] = data['governorate']
+        owner_data['school'] = None
+        owner_data['password'] =  make_password(data['password'])
+        owner_data['username'] =  ''.join([data['first_name'], data['last_name']]).lower().replace(' ', '')
+        owner_serializer = User_serializer(data=owner_data)
+
+        # #Save Owner Model
+        if not owner_serializer.is_valid():
+            return Response(owner_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        owner_serializer.save()
 
         #Format school data
         school_data['name']=data['school_name']
@@ -1001,27 +1012,13 @@ def register(request):
         school_serializer = School_serializer(data=school_data)
         #Save School Model
         if not school_serializer.is_valid():
+            User.undeleted_objects.filter(id=owner_serializer.data['id']).delete()
             return Response(school_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         school_serializer.save()
 
-        # #Format owner data
-        owner_data['fonction']=3  # For owner
-        owner_data['first_name'] = data['first_name']
-        owner_data['last_name'] = data['last_name']
-        owner_data['tel'] = data['tel']
-        owner_data['city'] = data['city']
-        owner_data['school'] = school_serializer.data['id']
-        owner_data['password'] =  make_password(data['password'])
-        owner_data['username'] =  ''.join([data['first_name'], data['last_name']]).lower().replace(' ', '')
-        owner_serializer = Employee_serializer(data=owner_data)
-
-        # #Save Owner Model
-        if not owner_serializer.is_valid():
-            School.undeleted_objects.filter(id=school_serializer.data['id']).delete()
-            return Response(owner_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        owner_serializer.save()
-
+        #Save Owner School Relation
+        User.undeleted_objects.filter(id=owner_serializer.data['id']).update(school=school_serializer.data['id'])
+        owner_serializer = User_serializer_read(User.undeleted_objects.get(id=owner_serializer.data['id']))
     return Response(owner_serializer.data, status=status.HTTP_200_OK)
 
 
@@ -1112,7 +1109,7 @@ def notification(request):
     if request.method == 'GET':
         # notifications = Notification.undeleted_objects.filter(user=request.user).all()
         notifications = Notification.undeleted_objects.all()
-        if get_user_role(request.user.fonction) == 'Student':
+        if get_user_role(request.user.role) == 'Student':
             # If user is student, filter notifications by student id
             notifications = notifications.filter(user=request.user.id)
 
@@ -1179,7 +1176,7 @@ def payment(request,school_id):
 
         #Save nofications
         student = save_payement.card.student
-        owner = Employee.undeleted_objects.filter(school=student.school.id, fonction=3).first()  # Get the owner of the school
+        owner = User.undeleted_objects.filter(school=student.school.id, role=3).first()  # Get the owner of the school
         audiance = []
         audiance.append(student)
         if owner and owner != request.user:
@@ -1214,7 +1211,7 @@ def payment_edit(request,id):
         #Save nofications
         # Prepare notification data
         student = save_payement.card.student
-        owner = Employee.undeleted_objects.filter(school=student.school.id, fonction=3).first()  # Get the owner of the school
+        owner = User.undeleted_objects.filter(school=student.school.id, role=3).first()  # Get the owner of the school
         audiance = []
         audiance.append(student)
         if owner and owner != request.user:
@@ -1243,7 +1240,7 @@ def payment_edit(request,id):
                         )
                         .get(pk=id))
         student = save_payement.card.student
-        owner = Employee.undeleted_objects.filter(school=student.school.id, fonction=3).first()
+        owner = User.undeleted_objects.filter(school=student.school.id, role=3).first()
         audiance = []
         audiance.append(student)
         if owner and owner != request.user:
@@ -1310,52 +1307,52 @@ def cities(request, id):
 @api_view(['GET','PUT'])
 @permission_classes([IsAuthenticated, IsPaymentDone])
 def profile(request):
-    user_fonction=request.user.fonction
-    user_fonction = get_user_role(user_fonction)
+    user_role=request.user.role
+    user_role = get_user_role(user_role)
     user_id=request.user.id
     #     return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        if user_fonction in ['Guest', 'Admin']: #Guest and Admin
+        if user_role in ['Guest', 'Admin']: #Guest and Admin
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        if user_fonction in ['Owner', 'Trainer']: #Owner and Trainer
+        if user_role in ['Owner', 'Trainer']: #Owner and Trainer
             try:
-                profile = Employee.undeleted_objects.get(id=user_id)
+                profile = User.undeleted_objects.get(id=user_id)
             except Exception:
                 return Response(status=status.HTTP_404_NOT_FOUND)
 
-            profile_serialzer= Employee_serializer_read(profile)
+            profile_serialzer= User_serializer_read(profile)
 
-        if user_fonction == 'Student': #Student
+        if user_role == 'Student': #Student
             try:
                 profile = Student.undeleted_objects.get(id=user_id)
             except Exception:
                 return Response(status=status.HTTP_404_NOT_FOUND)
-            profile_serialzer=Student_serializer_read(profile)
+            profile_serialzer=User_serializer_read(profile)
             print('profile', profile_serialzer.data)
         
         return Response(profile_serialzer.data, status=status.HTTP_200_OK)
     
     if request.method == 'PUT':
-        if user_fonction in [1, 2]: #Guest and Admin
+        if user_role in [1, 2]: #Guest and Admin
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        if user_fonction in ['Trainer', 'Owner']: #Trainer and Owner
+        if user_role in ['Trainer', 'Owner']: #Trainer and Owner
             try:
-                profile = Employee.undeleted_objects.get(id=user_id)
+                profile = User.undeleted_objects.get(id=user_id)
             except Exception:
                 return Response(status=status.HTTP_404_NOT_FOUND)
 
-            profile_serialzer=Employee_serializer(profile)
+            profile_serialzer=User_serializer(profile)
 
-        if user_fonction == 'Student': #Student
+        if user_role == 'Student': #Student
             try:
                 profile = Student.undeleted_objects.get(id=user_id)
             except Exception:
                 return Response(status=status.HTTP_404_NOT_FOUND)
 
-            profile_serialzer=Student_serializer(profile)
+            profile_serialzer=User_serializer(profile)
         
         data=request.data.copy()
         profile_data = {}
@@ -1369,7 +1366,7 @@ def profile(request):
 
         profile_data['updated_by']=user_id
 
-        if user_fonction not in ['Admin', 'Guest']: # Admin Guest and Owner doesn't have school 
+        if user_role not in ['Admin', 'Guest']: # Admin Guest and Owner doesn't have school 
             profile_data['school']=profile.school.id
 
         profile_data['username']=profile.username
@@ -1378,13 +1375,13 @@ def profile(request):
         dt = datetime.strptime(profile_data['birthday'], "%Y-%m-%dT%H:%M:%S.%fZ")
         profile_data['birthday'] = dt.strftime("%Y-%m-%d")
 
-        if user_fonction in ['Admin', 'Guest']: #Guest and Admin
+        if user_role in ['Admin', 'Guest']: #Guest and Admin
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        if user_fonction in ['Owner', 'Trainer']: #Owner and Trainer
-            serializer=Employee_serializer_read(profile, data=profile_data)
-        if user_fonction == 5: #Student
-            serializer=Student_serializer(profile, data=profile_data)
+        if user_role in ['Owner', 'Trainer']: #Owner and Trainer
+            serializer=User_serializer_read(profile, data=profile_data)
+        if user_role == 5: #Student
+            serializer=User_serializer(profile, data=profile_data)
 
         if not (serializer.is_valid()):
             print('error profile', serializer.errors)
