@@ -56,17 +56,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['first_name'] = user.first_name
         data['last_name'] = user.last_name
         data['role'] = get_user_role(user.role)
-        school = User.undeleted_objects.get(id=user.id).school
+        # school = User.undeleted_objects.get(id=user.id).school
+        school = UserPreference.undeleted_objects.get(user=user.id).school
         data['school'] = School_serializer(school).data
-
-        # if user.role in [3, 4]: # Owner or Trainer
-        #     school = User.undeleted_objects.get(id=user.id).school
-        #     data['school'] = School_serializer(school).data
-        # elif user.role == 1:    # Guest
-        #     data['school'] = 0
-        # elif user.role == 5:    # Student
-        #     user = User.undeleted_objects.get(id=user.id)
-        #     data['school'] = School_serializer(user.school).data
 
         return data
 
@@ -78,7 +70,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['first_name'] = user.first_name
         token['last_name'] = user.last_name
         token['role'] = get_user_role(user.role)
-        school = User.undeleted_objects.get(id=user.id).school
+        school = UserPreference.undeleted_objects.get(user=user.id).school
         token['school'] = School_serializer(school).data
 
         return token
@@ -86,6 +78,29 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated, IsPaymentDone])
+def user(request, school_id):
+    if request.method == 'GET':
+        users = User.undeleted_objects.filter(school = school_id).all()
+        if not users:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        serializer = User_serializer_read(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated, IsPaymentDone])
+def user_preference(request):
+    if request.method == 'GET':
+        preferences = UserPreference.undeleted_objects.filter(user=request.user.id).first()
+        if not preferences:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = User_Preference_serializer_read(preferences)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 # School CRUD
 @api_view(['GET', 'POST'])
@@ -852,7 +867,19 @@ def employee(request,school_id):
         serializer = User_serializer(data=employee_data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
+        obj = serializer.save()
+
+        #Save user preference
+        user_preference = {}
+        user_preference['user'] = obj.id
+        user_preference['school'] = school_id
+        serializer_preference = User_Preference_serializer(data = user_preference)
+        if not serializer_preference.is_valid():
+            User.undeleted_objects.filter(id = obj.id).delete()
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer_preference.save()
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -1019,9 +1046,19 @@ def register(request):
         #Save Owner School Relation
         User.undeleted_objects.filter(id=owner_serializer.data['id']).update(school=school_serializer.data['id'])
         owner_serializer = User_serializer_read(User.undeleted_objects.get(id=owner_serializer.data['id']))
+    
+        #Save User preferences school relation
+        preference = {}
+        preference['user'] = owner_serializer.data['id']
+        preference['school'] = school_serializer.data['id']
+        preference_serializer = User_Preference_serializer(data=preference)
+
+        if not preference_serializer.is_valid():
+            User.undeleted_objects.filter(id=owner_serializer.data['id']).delete()
+            School.undeleted_objects.filter(id=school_serializer.data['id']).delete()
+            return Response(preference_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        preference_serializer.save()
     return Response(owner_serializer.data, status=status.HTTP_200_OK)
-
-
 
 def notification_db(users:list,module:str,title:str,text:str,notifcation_type:str)->bool:
     """Save notification to DB

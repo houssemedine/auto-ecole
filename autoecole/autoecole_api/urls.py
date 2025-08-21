@@ -16,6 +16,9 @@ urlpatterns = [
                 #Refresh Token
         path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
+        #User Prefences URL
+        path('user_preference/', views.user_preference, name='user_preference'),
+        path('school/<int:school_id>/users/', views.user, name='user'),
         # School URL
                 # index and save
         path('school/<int:id>',views.school,name='school'),

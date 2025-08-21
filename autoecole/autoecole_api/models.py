@@ -115,6 +115,40 @@ class User(AbstractUser, SoftDeleteModel):
                 break
         return "School: {} - Phone: {} - Role: {}".format(self.school, self.phone, role)
 
+class School(BaseModel, SoftDeleteModel):
+    name = models.CharField(max_length=100)
+    code=models.CharField(max_length=50,unique=True)
+    adress = models.TextField(max_length=150,blank=True, null=True)
+    city = models.CharField(max_length=50,blank=True, null=True)
+    governorate = models.CharField(max_length=50,blank=True, null=True)
+    country = models.CharField(max_length=50,blank=True, null=True)
+    speciality = models.CharField(max_length=50,blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    tel = models.IntegerField(blank=True, null=True)
+    logo = models.ImageField(blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return f'{self.name} - {self.code}- {self.is_active}'
+
+class UserPreference(BaseModel, SoftDeleteModel):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    school = models.ForeignKey(
+        'School',
+        on_delete=models.CASCADE,
+    )
+    language = models.CharField(max_length=10, default='en')
+    notifications_enabled = models.BooleanField(default=True)
+    dark_mode = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['user']
+
+    def __str__(self):
+        return f'User: {self.user} - School: {self.school}'
 
 class Country(BaseModel, SoftDeleteModel):
     name = models.CharField(max_length=50)
@@ -146,24 +180,6 @@ class City(BaseModel, SoftDeleteModel):
     def __str__(self):
         return self.name
 
-class School(BaseModel, SoftDeleteModel):
-    name = models.CharField(max_length=100)
-    code=models.CharField(max_length=50,unique=True)
-    adress = models.TextField(max_length=150,blank=True, null=True)
-    city = models.CharField(max_length=50,blank=True, null=True)
-    governorate = models.CharField(max_length=50,blank=True, null=True)
-    country = models.CharField(max_length=50,blank=True, null=True)
-    speciality = models.CharField(max_length=50,blank=True, null=True)
-    email = models.EmailField(blank=True, null=True)
-    tel = models.IntegerField(blank=True, null=True)
-    logo = models.ImageField(blank=True, null=True)
-    is_active = models.BooleanField(default=True)
-
-    class Meta:
-        ordering = ['name']
-
-    def __str__(self):
-        return f'{self.name} - {self.code}- {self.is_active}'
 
 class SchoolPayment(BaseModel, SoftDeleteModel):
     school = models.ForeignKey(School, on_delete=models.DO_NOTHING)

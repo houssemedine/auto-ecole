@@ -53,6 +53,18 @@ class Student_serializer(serializers.ModelSerializer):
     #         return request.build_absolute_uri(obj.avatar.url)
     #     return None
 
+class User_Preference_serializer(serializers.ModelSerializer):
+    class Meta:
+        model=UserPreference
+        fields = '__all__'
+
+class User_Preference_serializer_read(serializers.ModelSerializer):
+    user = User_serializer()
+    school = School_serializer()
+    class Meta:
+        model=UserPreference
+        fields = '__all__'
+
 class Card_serializer(serializers.ModelSerializer):
     class Meta:
         model=Card
