@@ -21,7 +21,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from .services import create_notification_with_deliveries
 from .notifications.dispatcher import send_pending_deliveries_for_notification
-from itertools import chain
+from django.db.models import F
 
 # Custom JWT to obtain more information
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -92,15 +92,47 @@ def user(request, school_id):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated, IsPaymentDone])
 def user_preference(request):
-    if request.method == 'GET':
+    try:
         preferences = UserPreference.undeleted_objects.filter(user=request.user.id).first()
+    except Exception:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
         if not preferences:
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = User_Preference_serializer_read(preferences)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    if request.method == 'PUT':
+        print('data', request.data)
+        data = request.data.copy()
+        data['user'] = request.user.id
+        serializer = User_Preference_serializer(preferences, data=data)
+        if not (serializer.is_valid()):
+            print("errors", serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated, IsPaymentDone])
+def school_preference(request):
+    # schools = User.undeleted_objects.filter(phone=request.user.phone).all()
+    schools = (
+    User.undeleted_objects
+        .filter(phone=request.user.phone)
+        .values("school__id", "school__name")
+    )
+    if not schools:
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    return Response(list(schools), status=status.HTTP_200_OK)
 
 # School CRUD
 @api_view(['GET', 'POST'])
@@ -828,8 +860,6 @@ def session_edit(request, id):
         return Response(status=status.HTTP_201_CREATED)
 
 # Employee CRUD
-
-
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated, IsPaymentDone])
 def employee(request,school_id):
@@ -896,7 +926,6 @@ def employee_edit(request, id):
         serializer = User_serializer_read(employee)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'PUT':
-        username_list=User.objects.values_list('username',flat=True)
         data=request.data.copy()
         employee_data = {}
         for key, value in data.items():
@@ -932,7 +961,7 @@ def employee_edit(request, id):
 @permission_classes([IsAuthenticated, IsPaymentDone])
 def car(request,school_id):
     user=request.user
-
+    print('school id', school_id)
     if request.method == 'GET':
         if not (cars := Car.undeleted_objects.filter(school=school_id).all()):
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -1344,81 +1373,44 @@ def cities(request, id):
 @api_view(['GET','PUT'])
 @permission_classes([IsAuthenticated, IsPaymentDone])
 def profile(request):
-    user_role=request.user.role
-    user_role = get_user_role(user_role)
     user_id=request.user.id
-    #     return Response(status=status.HTTP_404_NOT_FOUND)
+
+    try:
+        profile = User.undeleted_objects.get(id=user_id)
+    except Exception:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        if user_role in ['Guest', 'Admin']: #Guest and Admin
-            return Response(status=status.HTTP_404_NOT_FOUND)
 
-        if user_role in ['Owner', 'Trainer']: #Owner and Trainer
-            try:
-                profile = User.undeleted_objects.get(id=user_id)
-            except Exception:
-                return Response(status=status.HTTP_404_NOT_FOUND)
-
-            profile_serialzer= User_serializer_read(profile)
-
-        if user_role == 'Student': #Student
-            try:
-                profile = Student.undeleted_objects.get(id=user_id)
-            except Exception:
-                return Response(status=status.HTTP_404_NOT_FOUND)
-            profile_serialzer=User_serializer_read(profile)
-            print('profile', profile_serialzer.data)
+        profile_serialzer= User_serializer_read(profile)
         
         return Response(profile_serialzer.data, status=status.HTTP_200_OK)
     
     if request.method == 'PUT':
-        if user_role in [1, 2]: #Guest and Admin
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        if user_role in ['Trainer', 'Owner']: #Trainer and Owner
-            try:
-                profile = User.undeleted_objects.get(id=user_id)
-            except Exception:
-                return Response(status=status.HTTP_404_NOT_FOUND)
-
-            profile_serialzer=User_serializer(profile)
-
-        if user_role == 'Student': #Student
-            try:
-                profile = Student.undeleted_objects.get(id=user_id)
-            except Exception:
-                return Response(status=status.HTTP_404_NOT_FOUND)
-
-            profile_serialzer=User_serializer(profile)
-        
-        data=request.data.copy()
-        profile_data = {}
-        for key, value in data.items():
-            if key.startswith('student_'):
-                student_key = key.replace('student_', '')
-                profile_data[student_key] = value
-
+        # data=request.data.copy()
+        profile_data = dict(request.data)
+        # profile_data = {}
+        # for key, value in data.items():
+        #     if key.startswith('parts_'):
+        #         profile_key = key.replace('parts_', '')
+        #         profile_data[profile_key] = value
+        print('profile_data', profile_data)
         if 'avatar' in request.FILES:
             profile_data['avatar'] = request.FILES['avatar']
+        for key in profile_data:
+            if isinstance(profile_data[key], list) and len(profile_data[key]) == 1:
+                profile_data[key] = profile_data[key][0]
 
         profile_data['updated_by']=user_id
-
-        if user_role not in ['Admin', 'Guest']: # Admin Guest and Owner doesn't have school 
-            profile_data['school']=profile.school.id
-
         profile_data['username']=profile.username
-        profile_data['password']=profile.password
+        profile_data['school']=profile.school.id
         profile_data['is_active']=profile.is_active
+        profile_data['phone']=profile.phone
         dt = datetime.strptime(profile_data['birthday'], "%Y-%m-%dT%H:%M:%S.%fZ")
         profile_data['birthday'] = dt.strftime("%Y-%m-%d")
+        print('data', profile_data)
 
-        if user_role in ['Admin', 'Guest']: #Guest and Admin
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        if user_role in ['Owner', 'Trainer']: #Owner and Trainer
-            serializer=User_serializer_read(profile, data=profile_data)
-        if user_role == 5: #Student
-            serializer=User_serializer(profile, data=profile_data)
+        serializer=User_serializer(profile, data=profile_data, context={'request': request})
 
         if not (serializer.is_valid()):
             print('error profile', serializer.errors)

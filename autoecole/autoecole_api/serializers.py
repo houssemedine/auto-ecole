@@ -124,12 +124,13 @@ class User_serializer_read(serializers.ModelSerializer):
     governorate = Governorate_serializer()
     class Meta:
         model=User
-        fields = '__all__'
+        exclude = ('password', )
+
 
 class User_serializer(serializers.ModelSerializer):
     class Meta:
         model=User
-        fields = '__all__'
+        exclude = ('password', )
 
 class Car_serializer(serializers.ModelSerializer):
     class Meta:

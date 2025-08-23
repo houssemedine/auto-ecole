@@ -6,9 +6,6 @@ from rest_framework_simplejwt.views import (
 
 # from autoecole_api.views import MyTokenObtainPairView
 
-
-
-
 urlpatterns = [
         #JWT URL
                 #Acces Token
@@ -18,6 +15,8 @@ urlpatterns = [
 
         #User Prefences URL
         path('user_preference/', views.user_preference, name='user_preference'),
+        path('school_preference/', views.school_preference, name='school_preference'),
+
         path('school/<int:school_id>/users/', views.user, name='user'),
         # School URL
                 # index and save
