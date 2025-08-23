@@ -39,6 +39,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Authentifier avec téléphone au lieu de username/email
         user = authenticate(request=self.context.get('request'),
                             phone=phone, password=password)
+
         if not user:
             raise serializers.ValidationError('Numéro de téléphone ou mot de passe incorrect.')
 
@@ -59,7 +60,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # school = User.undeleted_objects.get(id=user.id).school
         school = UserPreference.undeleted_objects.get(user=user.id).school
         data['school'] = School_serializer(school).data
-
         return data
 
     @classmethod
@@ -314,17 +314,32 @@ def student_reset_password(request, id):
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated, IsPaymentDone])
-def student_enable_disable_account(request, id):
+def enable_disable_account(request, id):
     try:
-        student = Student.undeleted_objects.get(id=id)
+        user = User.undeleted_objects.get(id=id)
     except Exception:
         return Response(status=status.HTTP_404_NOT_FOUND)
     if request.method == 'PUT':
-        account_status=student.is_active
-        student.is_active= not account_status
-        student.save()
+        account_status=user.is_active
+        user.is_active= not account_status
+        user.save()
 
-        serializer = User_serializer(student)
+        serializer = User_serializer_read(user)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+    
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated, IsPaymentDone])
+def enable_disable_car(request, id):
+    try:
+        car = Car.undeleted_objects.get(id=id)
+    except Exception:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'PUT':
+        car_status=car.is_active
+        car.is_active= not car_status
+        car.save()
+
+        serializer = Card_serializer_read(car)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -949,9 +964,8 @@ def employee_edit(request, id):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     if request.method == 'DELETE':
-        User.is_deleted = True
-        User.deleted_at = datetime.now()
-        User.save()
+        employee.is_active = False
+        employee.save()
         serializer = User_serializer(employee)
         return Response(status=status.HTTP_201_CREATED)
 
@@ -997,8 +1011,6 @@ def car_edit(request, id):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
 
-        #save notif
-        save_notif=notification_db(notification_users,'car','edit car',f'Car {car.marque} {car.model} edited', 1)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     if request.method == 'DELETE':
         car.is_deleted = True
@@ -1006,8 +1018,6 @@ def car_edit(request, id):
         car.save()
         serializer = Car_serializer(car)
 
-        #save notif
-        save_notif=notification_db(notification_users,'car','Delete car',f'Car {car.marque} {car.model} deleted', 1)
         return Response(status=status.HTTP_201_CREATED)
 
 
@@ -1054,7 +1064,7 @@ def register(request):
         owner_data['school'] = None
         owner_data['password'] =  make_password(data['password'])
         owner_data['username'] =  ''.join([data['first_name'], data['last_name']]).lower().replace(' ', '')
-        owner_serializer = User_serializer(data=owner_data)
+        owner_serializer = User_serializer_register(data=owner_data)
 
         # #Save Owner Model
         if not owner_serializer.is_valid():

@@ -407,6 +407,7 @@ class Car(BaseModel, SoftDeleteModel):
     purchase_date = models.DateField(null=True, blank=True)
     fuel_type = models.CharField(max_length=50, choices=fuel, blank=True)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['marque']

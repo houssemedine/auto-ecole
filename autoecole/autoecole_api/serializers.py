@@ -132,6 +132,11 @@ class User_serializer(serializers.ModelSerializer):
         model=User
         exclude = ('password', )
 
+class User_serializer_register(serializers.ModelSerializer):
+    class Meta:
+        model=User
+        fields = '__all__'
+
 class Car_serializer(serializers.ModelSerializer):
     class Meta:
         model=Car

@@ -30,7 +30,8 @@ urlpatterns = [
                 # edit and delete
         path('student/<int:id>/edit',views.student_edit,name='student_edit'),
         path('student/<int:id>/resetPassword',views.student_reset_password,name='student_reset_password'),
-        path('student/<int:id>/enableDisableAccount',views.student_enable_disable_account,name='student_enable_disable_account'),
+        path('user/<int:id>/enableDisableAccount',views.enable_disable_account,name='enable_disable_account'),
+        path('car/<int:id>/enableDisableCar',views.enable_disable_car,name='enable_disable_car'),
 
         # Card URL
                 # index and save
