@@ -338,8 +338,7 @@ def enable_disable_car(request, id):
         car_status=car.is_active
         car.is_active= not car_status
         car.save()
-
-        serializer = Card_serializer_read(car)
+        serializer = Car_serializer(car)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -448,6 +447,15 @@ def save_card_and_student(request, school_id):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
         save_student=serializer.save()
+
+        #Save user preference
+        user_preference = {}
+        user_preference['user'] = save_student.id
+        user_preference['school'] = school_id
+        serializer_preference = User_Preference_serializer(data = user_preference)
+        if not serializer_preference.is_valid():
+            User.undeleted_objects.filter(id = obj.id).delete()
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         # Save Card Model
         data_card = dossier_data
