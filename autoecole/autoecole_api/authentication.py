@@ -8,7 +8,7 @@ class TelBackend(ModelBackend):
     def authenticate(self, request, phone=None, password=None, **kwargs):
         # try:
         print('phone', phone)
-        user = User.objects.get(phone=phone)
+        user = User.objects.filter(phone=phone).first()
         print(user)
         # except User.DoesNotExist:
         #     return None

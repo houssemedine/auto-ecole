@@ -10,7 +10,7 @@ from rest_framework import status
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from autoecole_api.permissions import IsManager, IsPaymentDone
-from .tools import generete_username, generete_password, get_user_role
+from .tools import generete_username, generete_password, get_user_role, generete_username
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate
 import pandas as pd
@@ -659,7 +659,8 @@ def activity_edit(request, id):
 @permission_classes([IsAuthenticated, IsPaymentDone])
 def session(request, school_id):
     if request.method == 'GET':
-        sessions = Session.undeleted_objects.filter(card__school=school_id).all()
+        print('school id', school_id)
+        sessions = Session.undeleted_objects.filter(school=school_id).all()
         if get_user_role(request.user.role) == 'Student':
             # If user is student, filter sessions by student id
             sessions = sessions.filter(card__student=request.user.id)
@@ -669,7 +670,6 @@ def session(request, school_id):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     if request.method == 'POST':
-        serializer = Session_serializer_edit(data=request.data)
 
         event_type = request.data.get('event_type')
         car = request.data.get('car')
@@ -700,7 +700,10 @@ def session(request, school_id):
                         {'error': 'event conflict: at least one resource (employee, car, or student) is already booked at this time'},
                         status=status.HTTP_400_BAD_REQUEST
                     )
-
+        
+        data = request.data.copy()
+        data['school'] = school_id
+        serializer = Session_serializer_edit(data=data)
         if not serializer.is_valid():
             print('error', serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -781,7 +784,6 @@ def session_edit(request, id):
         serializer = Session_serializer_edit(session)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'PUT':
-        serializer = Session_serializer_edit(session, data=request.data)
 
         event_id = id  # ID de l'événement en cours d'édition (obligatoire pour exclure self)
 
@@ -816,7 +818,12 @@ def session_edit(request, id):
                         status=status.HTTP_400_BAD_REQUEST
                     )
 
+        data = request.data.copy()
+        data['school'] = session.school.id
+        serializer = Session_serializer_edit(session, data=data)
+
         if not serializer.is_valid():
+            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         save_session = serializer.save()
@@ -894,7 +901,6 @@ def employee(request,school_id):
         serializer = User_serializer_read(employees, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
-        username_list=User.objects.values_list('username',flat=True)
         data=request.data.copy()
         employee_data = {}
         for key, value in data.items():
@@ -912,26 +918,43 @@ def employee(request,school_id):
         dt = datetime.strptime(employee_data['birthday'], "%Y-%m-%dT%H:%M:%S.%fZ")
         employee_data['birthday'] = dt.strftime("%Y-%m-%d")
         
-        employee_data['username']=generete_username(employee_data['first_name'][0], employee_data['last_name'][0], username_list)
-        password = generete_password()
-        print('employee password', password)
-        employee_data['password']=make_password(password)
+        #Check if already a employee is in the base
+        exist_employee = User.undeleted_objects.filter(phone = employee_data['phone']).first()
+        employee_data['username']=generete_username(employee_data['first_name'][0])
+        if exist_employee:
+            print('User already exist')
+            employee_data['password'] = exist_employee.password
+        else:
+            password = generete_password()
+            employee_data['password']=make_password(password)
+
         employee_data['role'] = 4 #trainer
         serializer = User_serializer(data=employee_data)
         if not serializer.is_valid():
+            print('serializer error', serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         obj = serializer.save()
 
-        #Save user preference
-        user_preference = {}
-        user_preference['user'] = obj.id
-        user_preference['school'] = school_id
-        serializer_preference = User_Preference_serializer(data = user_preference)
-        if not serializer_preference.is_valid():
-            User.undeleted_objects.filter(id = obj.id).delete()
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # #Save user preference
+        #Update User School Preference is usera already exist
+        if exist_employee:
+            print('new preference school id', school_id)
+            print('user id', exist_employee.id)
+            # print('user', UserPreference.undeleted_objects.filter(user = obj.id).get())      
+            UserPreference.undeleted_objects.filter(user = exist_employee.id).update(school=school_id)
+        
+        #Else create new Preference
+        else:
+            user_preference = {}
+            user_preference['user'] = obj.id
+            user_preference['school'] = school_id
+            serializer_preference = User_Preference_serializer(data = user_preference)
+            if not serializer_preference.is_valid():
+                print('serializer_preference error', serializer_preference.errors)
+                User.undeleted_objects.filter(id = obj.id).delete()
+                return Response(serializer_preference.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer_preference.save()
+            serializer_preference.save()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

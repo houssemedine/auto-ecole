@@ -130,7 +130,7 @@ class User_serializer_read(serializers.ModelSerializer):
 class User_serializer(serializers.ModelSerializer):
     class Meta:
         model=User
-        exclude = ('password', )
+        fields = '__all__'
 
 class User_serializer_register(serializers.ModelSerializer):
     class Meta:

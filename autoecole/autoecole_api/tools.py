@@ -40,6 +40,14 @@ def generete_password():
 
     return password
 
+def generete_username(first_name):
+
+    length = 6
+    characters = string.ascii_letters + string.digits
+    random_num = ''.join(random.choice(characters) for i in range(length))
+    username = first_name + random_num
+    return username
+
 
 
 def user_has_valid_payment(user) -> bool:

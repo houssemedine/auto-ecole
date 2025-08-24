@@ -433,6 +433,7 @@ class Session(BaseModel, SoftDeleteModel):
     end_at = models.TimeField()
     card = models.ForeignKey(Card,related_name='card' ,on_delete=models.CASCADE, null=True, blank=True)
     employee = models.ForeignKey(User,related_name='employee' ,on_delete=models.CASCADE)
+    school = models.ForeignKey(School,related_name='school' ,on_delete=models.CASCADE)
     car = models.ForeignKey(Car,related_name='car' ,on_delete=models.DO_NOTHING,null=True, blank=True)
     note=models.CharField(max_length=100,null=True, blank=True)
     session_type = models.ForeignKey(SessionType,related_name='session_type' ,on_delete=models.DO_NOTHING, default='4')
