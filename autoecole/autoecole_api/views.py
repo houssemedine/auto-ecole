@@ -669,11 +669,10 @@ def activity_edit(request, id):
 @permission_classes([IsAuthenticated, IsPaymentDone])
 def session(request, school_id):
     if request.method == 'GET':
-        print('school id', school_id)
         sessions = Session.undeleted_objects.filter(school=school_id).all()
         if get_user_role(request.user.role) == 'Student':
             # If user is student, filter sessions by student id
-            sessions = sessions.filter(card__student=request.user.id)
+            sessions = Session.undeleted_objects.filter(school=school_id, card__student__phone=request.user.phone).all()
         if not sessions:
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = Session_serializer_read(sessions, many=True)
