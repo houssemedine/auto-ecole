@@ -866,10 +866,11 @@ def session_edit(request, id):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     if request.method == 'DELETE':
-        session.is_deleted = True
-        session.deleted_at = datetime.now()
-        session.save()
-        serializer = Session_serializer_edit(session)
+        session.delete()
+        # session.is_deleted = True
+        # session.deleted_at = datetime.now()
+        # session.save()
+        # serializer = Session_serializer_edit(session)
         #Save nofications
         #get users
         audiance = []
@@ -1343,20 +1344,16 @@ def payment_edit(request,id):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     if request.method == 'DELETE':
-        payment.is_deleted = True
-        payment.deleted_at = datetime.now()
-        payment.save()
-        serializer = Payments_serializer(payment)
-
+        payment.delete()
         #Save nofications
         # Prepare notification data
-        save_payement = (Payment.undeleted_objects
-                        .select_related(
-                            "card__student__user_ptr",
-                        )
-                        .get(pk=id))
-        student = save_payement.card.student
-        owner = User.undeleted_objects.filter(school=student.school.id, role=3).first()
+        # save_payement = (Payment.undeleted_objects
+        #                 .select_related(
+        #                     "card__student__user",
+        #                 )
+        #                 .get(pk=id))
+        student = payment.card.student
+        owner = User.undeleted_objects.filter(school=payment.card.school.id, role=3).first()
         audiance = []
         audiance.append(student)
         if owner and owner != request.user:
@@ -1367,7 +1364,7 @@ def payment_edit(request,id):
             'Activity',
             'payment',
             'Payment supprimé 🚮',
-            f'le payement de {save_payement.amount} a été supprimé pour la carte {save_payement.card.id}.'
+            f'le payement de {payment.amount} a été supprimé pour la carte {payment.card.id}.'
         )
         return Response(status=status.HTTP_201_CREATED)
 
