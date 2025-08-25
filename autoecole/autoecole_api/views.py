@@ -357,7 +357,7 @@ def card(request,school_id,progress_status):
 
         if get_user_role(request.user.role) == 'Student':
             # If user is student, filter cards by student id
-            cards = cards.filter(student=request.user.id)
+            cards = cards.filter(student__phone=request.user.phone)
 
         if not cards:
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -409,9 +409,7 @@ def card(request,school_id,progress_status):
 @permission_classes([IsAuthenticated, IsPaymentDone])
 def save_card_and_student(request, school_id):
     if request.method == 'POST':
-        username_list=User.objects.values_list('username',flat=True)
         data = request.data
-        print('data', data)
         #Préparer les données
         # Séparer les champs student_ et dossier_
         student_data = {}
@@ -431,16 +429,22 @@ def save_card_and_student(request, school_id):
         #Save student
         student_data['school']=school_id
         first_name=student_data['first_name'][0]
-        last_name=student_data['last_name'][0]
         student_data['role'] = 5 #For student
-        student_data['username']=generete_username(first_name, last_name, username_list)
+        student_data['username']=generete_username(first_name)
         password = generete_password()
-        print('student password', password)
-        student_data['password']=make_password(password)
+
 
         for key in student_data:
             if isinstance(student_data[key], list) and len(student_data[key]) == 1:
                 student_data[key] = student_data[key][0]
+
+        exist_student = User.undeleted_objects.filter(phone = student_data['phone']).first()
+        if exist_student:
+            student_data['password'] = exist_student.password
+        else:
+            student_data['password']=make_password(password)
+        
+        print('student password', student_data['password'])
 
         serializer = User_serializer(data=student_data, context={'request': request})
         if not (serializer.is_valid()):
@@ -448,14 +452,20 @@ def save_card_and_student(request, school_id):
         
         save_student=serializer.save()
 
-        #Save user preference
-        user_preference = {}
-        user_preference['user'] = save_student.id
-        user_preference['school'] = school_id
-        serializer_preference = User_Preference_serializer(data = user_preference)
-        if not serializer_preference.is_valid():
-            User.undeleted_objects.filter(id = obj.id).delete()
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        #Save student preference
+        if exist_student:   
+            UserPreference.undeleted_objects.filter(user = exist_student.id).update(school=school_id)
+        else:
+            #Save user preference
+            user_preference = {}
+            user_preference['user'] = save_student.id
+            user_preference['school'] = school_id
+            serializer_preference = User_Preference_serializer(data = user_preference)
+            
+            if not serializer_preference.is_valid():
+                User.undeleted_objects.filter(id = save_student.id).delete()
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serializer_preference.save()
 
         # Save Card Model
         data_card = dossier_data
