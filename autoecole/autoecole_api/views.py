@@ -21,7 +21,10 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from .services import create_notification_with_deliveries
 from .notifications.dispatcher import send_pending_deliveries_for_notification
-from django.db.models import F
+from django.db.models import (
+    Sum, Count, F, Value, DecimalField, Case, When, ExpressionWrapper
+)
+from django.db.models.functions import Coalesce
 
 # Custom JWT to obtain more information
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -1236,40 +1239,37 @@ def notification(request):
 
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-# Employee CRUD
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsPaymentDone])
-def stats(request, school_id):
-    stats=dict()
-    card_stat=dict()
-    students_stat=dict()
-    cards=Card.undeleted_objects.filter(student__school=school_id).values()
-    df_card=pd.DataFrame(cards)
-    if df_card.size > 0:
-        df_cards_inprogress=df_card[df_card["status_id"] == 1]
-        df_cards_completed=df_card[df_card["status_id"] == 2]
-        df_cards_canceled=df_card[df_card["status_id"] == 3]
-        card_stat["cards_count"]=len(df_card)
-        card_stat["count_cards_inprogress"]=len(df_cards_inprogress)
-        card_stat["count_cards_completed"]=len(df_cards_completed)
-        card_stat["count_cards_canceled"]=len(df_cards_canceled)
-
-    else:
-        card_stat["cards_count"]=0
-        card_stat["count_cards_inprogress"]=0
-        card_stat["count_cards_completed"]=0
-        card_stat["count_cards_canceled"]=0
-
-    students=Student.undeleted_objects.filter(school=school_id).values()
-    df_students=pd.DataFrame(students)
-    students_stat['students_count']=len(df_students)
-
-
-    stats.update(card_stat)
-    stats.update(students_stat)
-
-
-    return Response(stats,status=status.HTTP_200_OK)
+def stats_fianance(request, school_id):
+    try:
+        cards = Card.undeleted_objects.filter(school=school_id).filter(~Q(status = 99)).all()
+        # 2) Types Decimal pour Coalesce/Value
+        ZERO_DEC = Value(0, output_field=DecimalField(max_digits=10, decimal_places=2))
+        agg = (
+            cards
+            .annotate(
+                total_paid=Coalesce(Sum('cardP__amount'), ZERO_DEC),     # ou 'payments__amount'
+                total_due=Coalesce(F('price'), ZERO_DEC),
+            )
+            .annotate(
+                remaining=ExpressionWrapper(F('total_due') - F('total_paid'),
+                                            output_field=DecimalField(max_digits=10, decimal_places=2)),
+                remaining_pos=Case(
+                    When(remaining__gt=0, then=F('remaining')),
+                    default=ZERO_DEC,
+                    output_field=DecimalField(max_digits=10, decimal_places=2),
+                ),
+            )
+            .aggregate(
+                nb_cards_en_cours=Count('id', distinct=True),
+                total_paye=Coalesce(Sum('total_paid'), ZERO_DEC),
+                total_restant=Coalesce(Sum('remaining_pos'), ZERO_DEC),
+            )
+        )
+        return Response(agg,status=status.HTTP_200_OK)
+    except Exception:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 # Payment CRUD

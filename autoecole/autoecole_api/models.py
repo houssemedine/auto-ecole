@@ -225,11 +225,6 @@ class Status(BaseModel, SoftDeleteModel):
         return f'{self.name}'
 
 class Card(BaseModel, SoftDeleteModel):
-    # status = [
-    #     ('1', 'In progress'),
-    #     ('2', 'Completed'),
-    #     ('3', 'Canceled'),
-    # ]
     school = models.ForeignKey(School,related_name='school_card' ,on_delete=models.CASCADE)
     licence_type = models.ForeignKey(LicenceType,related_name='licence_type' ,on_delete=models.DO_NOTHING)
     start_at = models.DateField()
@@ -273,7 +268,7 @@ class CardStatusHistory(BaseModel, SoftDeleteModel):
 class Payment(BaseModel, SoftDeleteModel):
     amount=models.DecimalField(max_digits=99999999, decimal_places=2)
     date=models.DateField()
-    motive=models.CharField(max_length=50)
+    motive=models.CharField(max_length=50, null=True, blank=True)
     method=models.CharField(max_length=50, default='espéces')
     card=models.ForeignKey(Card, related_name='cardP' ,on_delete=models.CASCADE)
 
