@@ -1241,7 +1241,7 @@ def notification(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsPaymentDone])
-def stats_fianance(request, school_id):
+def stats_finance(request, school_id):
     try:
         cards = Card.undeleted_objects.filter(school=school_id).filter(~Q(status = 99)).all()
         # 2) Types Decimal pour Coalesce/Value
@@ -1262,9 +1262,9 @@ def stats_fianance(request, school_id):
                 ),
             )
             .aggregate(
-                nb_cards_en_cours=Count('id', distinct=True),
-                total_paye=Coalesce(Sum('total_paid'), ZERO_DEC),
-                total_restant=Coalesce(Sum('remaining_pos'), ZERO_DEC),
+                nb_cards_in_progress=Count('id', distinct=True),
+                total_payed=Coalesce(Sum('total_paid'), ZERO_DEC),
+                total_remain=Coalesce(Sum('remaining_pos'), ZERO_DEC),
             )
         )
         return Response(agg,status=status.HTTP_200_OK)
