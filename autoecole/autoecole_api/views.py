@@ -25,6 +25,7 @@ from django.db.models import (
     Sum, Count, F, Value, DecimalField, Case, When, ExpressionWrapper
 )
 from django.db.models.functions import Coalesce
+import time
 
 # Custom JWT to obtain more information
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -1268,6 +1269,31 @@ def stats_finance(request, school_id):
             )
         )
         return Response(agg,status=status.HTTP_200_OK)
+    except Exception:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsPaymentDone])
+def stats_sessions(request, school_id, dateRange:str):
+    # dateRange Format 20258 years month
+    # format attendu:{
+    # "Conduite": 1,
+    # "Code": 1,
+    # "nb_inscription": 2
+    # }
+    year= dateRange[:4]
+    month= dateRange[4:]
+
+    try:
+        #Get sessions count
+        sessions = Session.undeleted_objects.filter(school=school_id , day__year=year, day__month=month).values("session_type__name").annotate(total=Count("id")).order_by("-total")
+        #Get nb of inscription
+        inscription = Card.undeleted_objects.filter(school=school_id, start_at__year=year, start_at__month=month ).annotate(total=Count("id")).order_by("-total")
+        #add session count and nb of inscription to result
+        data = {item["session_type__name"]: item["total"] for item in sessions}
+        data['nb_inscription'] = inscription.count()
+
+        return Response(data,status=status.HTTP_200_OK)
     except Exception:
         return Response(status=status.HTTP_404_NOT_FOUND)
 

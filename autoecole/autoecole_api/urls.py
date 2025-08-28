@@ -84,7 +84,8 @@ urlpatterns = [
 
         # stats URL
                 # index
-        path('school/<int:school_id>/stats_finance/',views.stats_finance,name='stats'),
+        path('school/<int:school_id>/stats_finance/',views.stats_finance,name='stats_finance'),
+        path('school/<int:school_id>/stats_sessions/<str:dateRange>/',views.stats_sessions,name='stats_sessions'),
 
         # Payment URL
                 # index and save
