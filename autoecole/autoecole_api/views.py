@@ -764,10 +764,10 @@ def week_sessions(request, school_id):
     week_days = today.weekday()
     week_first_day = today - timedelta(days=week_days)
     week_last_day = week_first_day + timedelta(days=6)
-    sessions = Session.undeleted_objects.filter(employee__school=school_id).filter(day__gte=week_first_day, day__lte=week_last_day).all()
+    sessions = Session.undeleted_objects.filter(school=school_id).filter(day__gte=week_first_day, day__lte=week_last_day).all()
     if get_user_role(request.user.role) == 'Student':
         # If user is student, filter sessions by student id
-        sessions = sessions.filter(card__student=request.user.id)
+        sessions = sessions.filter(card__student__phone=request.user.phone)
     if not sessions:
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -1285,10 +1285,18 @@ def stats_sessions(request, school_id, dateRange:str):
     month= dateRange[4:]
 
     try:
-        #Get sessions count
-        sessions = Session.undeleted_objects.filter(school=school_id , day__year=year, day__month=month).values("session_type__name").annotate(total=Count("id")).order_by("-total")
-        #Get nb of inscription
-        inscription = Card.undeleted_objects.filter(school=school_id, start_at__year=year, start_at__month=month ).annotate(total=Count("id")).order_by("-total")
+        user_role = get_user_role(request.user.role)
+        if user_role == 'Student':
+            user_phone = request.user.phone
+            #Get sessions count
+            sessions = Session.undeleted_objects.filter(school=school_id,card__student__phone=user_phone, day__year=year, day__month=month).values("session_type__name").annotate(total=Count("id")).order_by("-total")
+            #Get nb of inscription
+            inscription = Card.undeleted_objects.filter(school=school_id,student__phone=user_phone, start_at__year=year, start_at__month=month ).annotate(total=Count("id")).order_by("-total")
+        else:
+            sessions = Session.undeleted_objects.filter(school=school_id , day__year=year, day__month=month).values("session_type__name").annotate(total=Count("id")).order_by("-total")
+            #Get nb of inscription
+            inscription = Card.undeleted_objects.filter(school=school_id, start_at__year=year, start_at__month=month ).annotate(total=Count("id")).order_by("-total")
+
         #add session count and nb of inscription to result
         data = {item["session_type__name"]: item["total"] for item in sessions}
         data['nb_inscription'] = inscription.count()
