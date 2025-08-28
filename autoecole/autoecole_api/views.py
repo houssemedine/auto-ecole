@@ -1244,7 +1244,13 @@ def notification(request):
 @permission_classes([IsAuthenticated, IsPaymentDone])
 def stats_finance(request, school_id):
     try:
-        cards = Card.undeleted_objects.filter(school=school_id).filter(~Q(status = 99)).all()
+        user_role = get_user_role(request.user.role)
+        if user_role == 'Student':
+            user_phone = request.user.phone
+            cards = Card.undeleted_objects.filter(school=school_id, student__phone=user_phone).filter(~Q(status = 99)).all()
+        else:
+            cards = Card.undeleted_objects.filter(school=school_id).filter(~Q(status = 99)).all()
+
         # 2) Types Decimal pour Coalesce/Value
         ZERO_DEC = Value(0, output_field=DecimalField(max_digits=10, decimal_places=2))
         agg = (
