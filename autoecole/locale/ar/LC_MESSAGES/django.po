@@ -1,0 +1,301 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-29 13:09+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0?0 : n==1?1 : n==2?2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+
+#: autoecole_api/models.py:62
+msgid "Guest"
+msgstr "ضيف"
+
+#: autoecole_api/models.py:63
+msgid "Admin"
+msgstr "مسؤول"
+
+#: autoecole_api/models.py:64
+msgid "Owner"
+msgstr "مالك"
+
+#: autoecole_api/models.py:65
+msgid "Trainer"
+msgstr "مدرّب"
+
+#: autoecole_api/models.py:66
+msgid "Student"
+msgstr "طالب"
+
+#: autoecole_api/models.py:70
+msgid "Male"
+msgstr "ذكر"
+
+#: autoecole_api/models.py:71
+msgid "Female"
+msgstr "أنثى"
+
+#: autoecole_api/models.py:75
+msgid "role"
+msgstr "الدور"
+
+#: autoecole_api/models.py:80
+msgid "profile photo"
+msgstr "صورة الملف الشخصي"
+
+#: autoecole_api/models.py:91 autoecole_api/models.py:169
+#: autoecole_api/models.py:270 autoecole_api/models.py:482
+#: autoecole_api/models.py:528
+msgid "school"
+msgstr "المدرسة"
+
+#: autoecole_api/models.py:93 autoecole_api/models.py:163
+msgid "phone"
+msgstr "الهاتف"
+
+#: autoecole_api/models.py:94
+msgid "full name"
+msgstr "الاسم الكامل"
+
+#: autoecole_api/models.py:95
+msgid "birth date"
+msgstr "تاريخ الميلاد"
+
+#: autoecole_api/models.py:97
+msgid "CIN"
+msgstr "رقم التعريف (CIN)"
+
+#: autoecole_api/models.py:102
+msgid "A user with this CIN already exists."
+msgstr "يوجد مستخدم آخر بهذا رقم التعريف (CIN)."
+
+#: autoecole_api/models.py:105
+msgid "gender"
+msgstr "الجنس"
+
+#: autoecole_api/models.py:116 autoecole_api/models.py:159
+msgid "governorate"
+msgstr "المحافظة"
+
+#: autoecole_api/models.py:126
+msgid "user"
+msgstr "مستخدم"
+
+#: autoecole_api/models.py:127
+msgid "users"
+msgstr "مستخدمون"
+
+#: autoecole_api/models.py:138
+msgid "This phone number is already used in this school."
+msgstr "رقم الهاتف هذا مستخدم بالفعل في هذه المدرسة."
+
+#: autoecole_api/models.py:150
+msgid "name"
+msgstr "الاسم"
+
+#: autoecole_api/models.py:152
+msgid "code"
+msgstr "الرمز"
+
+#: autoecole_api/models.py:155
+msgid "A school with this code already exists."
+msgstr "هناك مدرسة بهذا الرمز بالفعل."
+
+#: autoecole_api/models.py:157
+msgid "address"
+msgstr "العنوان"
+
+#: autoecole_api/models.py:158
+msgid "city"
+msgstr "المدينة"
+
+#: autoecole_api/models.py:160
+msgid "country"
+msgstr "البلد"
+
+#: autoecole_api/models.py:161
+msgid "specialty"
+msgstr "التخصص"
+
+#: autoecole_api/models.py:162
+msgid "email"
+msgstr "البريد الإلكتروني"
+
+#: autoecole_api/models.py:164
+msgid "logo"
+msgstr "الشعار"
+
+#: autoecole_api/models.py:165 autoecole_api/models.py:483
+msgid "active"
+msgstr "نشط"
+
+#: autoecole_api/models.py:170
+msgid "schools"
+msgstr "مدارس"
+
+#: autoecole_api/models.py:276
+msgid "licence type"
+msgstr "نوع الرخصة"
+
+#: autoecole_api/models.py:278
+msgid "start date"
+msgstr "تاريخ البدء"
+
+#: autoecole_api/models.py:279
+msgid "end date"
+msgstr "تاريخ الانتهاء"
+
+#: autoecole_api/models.py:284
+msgid "student"
+msgstr "طالب"
+
+#: autoecole_api/models.py:291
+msgid "status"
+msgstr "الحالة"
+
+#: autoecole_api/models.py:294 autoecole_api/models.py:554
+msgid "price"
+msgstr "السعر"
+
+#: autoecole_api/models.py:301
+msgid "hour price"
+msgstr "سعر الساعة"
+
+#: autoecole_api/models.py:307
+msgid "number of hours"
+msgstr "عدد الساعات"
+
+#: autoecole_api/models.py:309
+msgid "discount"
+msgstr "الخصم"
+
+#: autoecole_api/models.py:318 autoecole_api/models.py:345
+#: autoecole_api/models.py:516
+msgid "card"
+msgstr "بطاقة"
+
+#: autoecole_api/models.py:319
+msgid "cards"
+msgstr "بطاقات"
+
+#: autoecole_api/models.py:337
+msgid "amount"
+msgstr "المبلغ"
+
+#: autoecole_api/models.py:338
+msgid "date"
+msgstr "التاريخ"
+
+#: autoecole_api/models.py:339
+msgid "reason"
+msgstr "السبب"
+
+#: autoecole_api/models.py:340
+msgid "method"
+msgstr "الطريقة"
+
+#: autoecole_api/models.py:350
+msgid "payment"
+msgstr "دفعة"
+
+#: autoecole_api/models.py:351
+msgid "payments"
+msgstr "دفعات"
+
+#: autoecole_api/models.py:475
+msgid "serial number"
+msgstr "الرقم التسلسلي"
+
+#: autoecole_api/models.py:476
+msgid "A car with this serial number already exists."
+msgstr "هناك سيارة بهذا الرقم التسلسلي بالفعل."
+
+#: autoecole_api/models.py:478
+msgid "brand"
+msgstr "العلامة التجارية"
+
+#: autoecole_api/models.py:479
+msgid "model"
+msgstr "الطراز"
+
+#: autoecole_api/models.py:480
+msgid "purchase date"
+msgstr "تاريخ الشراء"
+
+#: autoecole_api/models.py:481
+msgid "fuel type"
+msgstr "نوع الوقود"
+
+#: autoecole_api/models.py:487 autoecole_api/models.py:536
+msgid "car"
+msgstr "سيارة"
+
+#: autoecole_api/models.py:488
+msgid "cars"
+msgstr "سيارات"
+
+#: autoecole_api/models.py:507
+msgid "day"
+msgstr "اليوم"
+
+#: autoecole_api/models.py:508
+msgid "start time"
+msgstr "وقت البدء"
+
+#: autoecole_api/models.py:509
+msgid "end time"
+msgstr "وقت الانتهاء"
+
+#: autoecole_api/models.py:522
+msgid "employee"
+msgstr "الموظف"
+
+#: autoecole_api/models.py:538
+msgid "note"
+msgstr "ملاحظة"
+
+#: autoecole_api/models.py:544
+msgid "session type"
+msgstr "نوع الجلسة"
+
+#: autoecole_api/models.py:547
+msgid "event type"
+msgstr "نوع الحدث"
+
+#: autoecole_api/models.py:549
+msgid "Session"
+msgstr "جلسة"
+
+#: autoecole_api/models.py:549
+msgid "other"
+msgstr "أخرى"
+
+#: autoecole_api/models.py:552
+msgid "cancelled"
+msgstr "ملغاة"
+
+#: autoecole_api/models.py:562
+msgid "Card is required for event type 'session'."
+msgstr "البطاقة مطلوبة لنوع الحدث 'جلسة'."
+
+#: autoecole_api/models.py:566
+msgid "Session type is required for event type 'session'."
+msgstr "نوع الجلسة مطلوب لنوع الحدث 'جلسة'."
+
+#: autoecole_api/models.py:571
+msgid "session"
+msgstr "جلسة"
+
+#: autoecole_api/models.py:572
+msgid "sessions"
+msgstr "جلسات"

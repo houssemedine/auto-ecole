@@ -1032,6 +1032,7 @@ def car(request,school_id):
         data['school']=school_id
         serializer = Car_serializer(data=data)
         if not serializer.is_valid():
+            print('error post car: ', serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -1493,6 +1494,7 @@ def profile(request):
         profile_data['school']=profile.school.id
         profile_data['is_active']=profile.is_active
         profile_data['phone']=profile.phone
+        profile_data['password']=profile.password
         dt = datetime.strptime(profile_data['birthday'], "%Y-%m-%dT%H:%M:%S.%fZ")
         profile_data['birthday'] = dt.strftime("%Y-%m-%d")
         print('data', profile_data)

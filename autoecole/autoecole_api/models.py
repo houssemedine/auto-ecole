@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from uuid import uuid4
 from django.conf import settings
 from dateutil.relativedelta import relativedelta
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 def avatar_upload_to(instance, filename):
@@ -58,54 +59,84 @@ class SoftDeleteModel(models.Model):
 
 class User(AbstractUser, SoftDeleteModel):
     USER_TYPE_CHOICES = (
-    (1, 'Guest'),
-    (2, 'Admin'),
-    (3, 'Owner'),
-    (4, 'Trainer'),
-    (5, 'Student'),
+        (1, _("Guest")),
+        (2, _("Admin")),
+        (3, _("Owner")),
+        (4, _("Trainer")),
+        (5, _("Student")),
     )
 
     GENDER = (
-    (1, 'Male'),
-    (2, 'Female'),
+        (1, _("Male")),
+        (2, _("Female")),
     )
 
     role = models.PositiveSmallIntegerField(
+        _("role"),
         choices=USER_TYPE_CHOICES,
-        default=1
-        )
+        default=1,
+    )
     avatar = models.ImageField(
-        verbose_name='photo de profile',
+        _("profile photo"),
         upload_to=avatar_upload_to,
         null=True,
-        blank=True
-        )
-
-    school = models.ForeignKey(
-        'School',
-        on_delete=models.SET_NULL,  # évite d'effacer l'utilisateur si l'école est supprimée
-        null=True,
         blank=True,
-        related_name='users'
     )
-    phone = models.IntegerField(unique=False, null=True, blank=True)
-    full_name = models.CharField(max_length=100, blank=True, null=True)
-    birthday = models.DateField(null=True, blank=True)
-    cin = models.CharField(max_length=50, unique=True, null=True, blank=True)
-    gender = models.PositiveSmallIntegerField(null=True, blank=True, choices=GENDER)
-    governorate = models.ForeignKey(
-        'Governorate',
-        on_delete=models.SET_NULL,  # évite d'effacer l'utilisateur si la ville est supprimée
+    school = models.ForeignKey(
+        "School",
+        on_delete=models.SET_NULL,  # keep original behavior
         null=True,
         blank=True,
-        related_name='users',
+        related_name="users",
+        verbose_name=_("school"),
+    )
+    phone = models.IntegerField(_("phone"), unique=False, null=True, blank=True)
+    full_name = models.CharField(_("full name"), max_length=100, blank=True, null=True)
+    birthday = models.DateField(_("birth date"), null=True, blank=True)
+    cin = models.CharField(
+        _("CIN"),
+        max_length=50,
+        unique=True,
+        null=True,
+        blank=True,
+        error_messages={"unique": _("A user with this CIN already exists.")},
+    )
+    gender = models.PositiveSmallIntegerField(
+        _("gender"),
+        null=True,
+        blank=True,
+        choices=GENDER,
+    )
+    governorate = models.ForeignKey(
+        "Governorate",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="users",
+        verbose_name=_("governorate"),
     )
 
     class Meta:
         constraints = [
-            # 3) Unicité par (école, téléphone) = “clé composée” logique
-            models.UniqueConstraint(fields=['school', 'phone'], name='uniq_user_school_phone'),
+            models.UniqueConstraint(
+                fields=["school", "phone"],
+                name="uniq_user_school_phone",
+            ),
         ]
+        verbose_name = _("user")
+        verbose_name_plural = _("users")
+
+    def validate_unique(self, exclude=None):
+        super().validate_unique(exclude=exclude)
+        # Friendly message for (school, phone) uniqueness
+        if self.school_id and self.phone is not None:
+            qs = type(self).objects.filter(school_id=self.school_id, phone=self.phone)
+            if self.pk:
+                qs = qs.exclude(pk=self.pk)
+            if qs.exists():
+                raise ValidationError(
+                    {"phone": _("This phone number is already used in this school.")}
+                )
 
     def __str__(self):
         role = "Admin"
@@ -116,20 +147,27 @@ class User(AbstractUser, SoftDeleteModel):
         return "School: {} - Phone: {} - Role: {}".format(self.school, self.phone, role)
 
 class School(BaseModel, SoftDeleteModel):
-    name = models.CharField(max_length=100)
-    code=models.CharField(max_length=50,unique=True)
-    adress = models.TextField(max_length=150,blank=True, null=True)
-    city = models.CharField(max_length=50,blank=True, null=True)
-    governorate = models.CharField(max_length=50,blank=True, null=True)
-    country = models.CharField(max_length=50,blank=True, null=True)
-    speciality = models.CharField(max_length=50,blank=True, null=True)
-    email = models.EmailField(blank=True, null=True)
-    tel = models.IntegerField(blank=True, null=True)
-    logo = models.ImageField(blank=True, null=True)
-    is_active = models.BooleanField(default=True)
+    name = models.CharField(_("name"), max_length=100)
+    code = models.CharField(
+        _("code"),
+        max_length=50,
+        unique=True,
+        error_messages={"unique": _("A school with this code already exists.")},
+    )
+    adress = models.TextField(_("address"), max_length=150, blank=True, null=True)
+    city = models.CharField(_("city"), max_length=50, blank=True, null=True)
+    governorate = models.CharField(_("governorate"), max_length=50, blank=True, null=True)
+    country = models.CharField(_("country"), max_length=50, blank=True, null=True)
+    speciality = models.CharField(_("specialty"), max_length=50, blank=True, null=True)
+    email = models.EmailField(_("email"), blank=True, null=True)
+    tel = models.IntegerField(_("phone"), blank=True, null=True)
+    logo = models.ImageField(_("logo"), blank=True, null=True)
+    is_active = models.BooleanField(_("active"), default=True)
 
     class Meta:
         ordering = ['name']
+        verbose_name = _("school")
+        verbose_name_plural = _("schools")
 
     def __str__(self):
         return f'{self.name} - {self.code}- {self.is_active}'
@@ -225,34 +263,64 @@ class Status(BaseModel, SoftDeleteModel):
         return f'{self.name}'
 
 class Card(BaseModel, SoftDeleteModel):
-    school = models.ForeignKey(School,related_name='school_card' ,on_delete=models.CASCADE)
-    licence_type = models.ForeignKey(LicenceType,related_name='licence_type' ,on_delete=models.DO_NOTHING)
-    start_at = models.DateField()
-    end_at = models.DateField(null=True, blank=True)
-    student = models.ForeignKey(User,related_name='student' ,on_delete=models.CASCADE)
-    status = models.ForeignKey(Status,related_name='status',default=1, on_delete=models.DO_NOTHING)
-    # if True price will be an input, if false price will be calucle in proprety
-    # manual_price = models.BooleanField(null=True, blank=True)
+    school = models.ForeignKey(
+        School,
+        related_name='school_card',
+        on_delete=models.CASCADE,
+        verbose_name=_("school"),
+    )
+    licence_type = models.ForeignKey(
+        LicenceType,
+        related_name='licence_type',
+        on_delete=models.DO_NOTHING,
+        verbose_name=_("licence type"),
+    )
+    start_at = models.DateField(_("start date"))
+    end_at = models.DateField(_("end date"), null=True, blank=True)
+    student = models.ForeignKey(
+        User,
+        related_name='student',
+        on_delete=models.CASCADE,
+        verbose_name=_("student"),
+    )
+    status = models.ForeignKey(
+        Status,
+        related_name='status',
+        default=1,
+        on_delete=models.DO_NOTHING,
+        verbose_name=_("status"),
+    )
     price = models.DecimalField(
-        max_digits=99999999, decimal_places=2, null=True, blank=True)
+        _("price"),
+        max_digits=99999999,
+        decimal_places=2,
+        null=True,
+        blank=True,
+    )
     hour_price = models.DecimalField(
-        max_digits=99999999, decimal_places=2, null=True, blank=True)
-    hours_number = models.IntegerField(null=True, blank=True)
+        _("hour price"),
+        max_digits=99999999,
+        decimal_places=2,
+        null=True,
+        blank=True,
+    )
+    hours_number = models.IntegerField(_("number of hours"), null=True, blank=True)
     discount = models.DecimalField(
-        max_digits=99999999, decimal_places=2, null=True, blank=True)
-    # progress = models.ForeignKey(Progress,related_name='progress' ,on_delete=models.CASCADE, default=1)
-
+        _("discount"),
+        max_digits=99999999,
+        decimal_places=2,
+        null=True,
+        blank=True,
+    )
 
     class Meta:
         ordering = ['licence_type']
+        verbose_name = _("card")
+        verbose_name_plural = _("cards")
 
     def __str__(self):
         return f'ID: {self.id} _ Type: {self.licence_type}'
 
-    # @property
-    # def total_price(self):
-    #     total_price=((self.hours_number*self.hour_price)*self.discount)/100
-    #     return total_price
 
 class CardStatusHistory(BaseModel, SoftDeleteModel):
     card = models.ForeignKey(Card,related_name='card_history' ,on_delete=models.CASCADE)
@@ -266,14 +334,21 @@ class CardStatusHistory(BaseModel, SoftDeleteModel):
         return f'Card: {self.card}, Status: {self.status}'
 
 class Payment(BaseModel, SoftDeleteModel):
-    amount=models.DecimalField(max_digits=99999999, decimal_places=2)
-    date=models.DateField()
-    motive=models.CharField(max_length=50, null=True, blank=True)
-    method=models.CharField(max_length=50, default='espéces')
-    card=models.ForeignKey(Card, related_name='cardP' ,on_delete=models.CASCADE)
+    amount = models.DecimalField(_("amount"), max_digits=99999999, decimal_places=2)
+    date = models.DateField(_("date"))
+    motive = models.CharField(_("reason"), max_length=50, null=True, blank=True)
+    method = models.CharField(_("method"), max_length=50, default='espéces')  # default conservé tel quel
+    card = models.ForeignKey(
+        Card,
+        related_name='cardP',
+        on_delete=models.CASCADE,
+        verbose_name=_("card"),
+    )
 
     class Meta:
         ordering = ['-date']
+        verbose_name = _("payment")
+        verbose_name_plural = _("payments")
 
     def __str__(self):
         return f'Date: {self.date}'
@@ -393,19 +468,25 @@ class Car(BaseModel, SoftDeleteModel):
     fuel = [
         ('Petrol', 'Petrol'),
         ('Diesel', 'Diesel'),
-        ('Gaz', 'Gaz'),
+        ('Gaz', 'Gaz'),          # laissé tel quel pour ne rien casser
         ('Electric', 'Electric'),
     ]
-    serial_number = models.CharField(max_length=50, unique=True)
-    marque = models.CharField(max_length=50, null=True, blank=True)
-    model = models.CharField(max_length=50, null=True, blank=True)
-    purchase_date = models.DateField(null=True, blank=True)
-    fuel_type = models.CharField(max_length=50, choices=fuel, blank=True)
-    school = models.ForeignKey(School, on_delete=models.CASCADE)
-    is_active = models.BooleanField(default=True)
+
+    serial_number = models.CharField(_("serial number"), max_length=50, unique=True,
+                                     error_messages={"unique": _("A car with this serial number already exists.")},
+    )
+    marque = models.CharField(_("brand"), max_length=50, null=True, blank=True)  # label en anglais
+    model = models.CharField(_("model"), max_length=50, null=True, blank=True)
+    purchase_date = models.DateField(_("purchase date"), null=True, blank=True)
+    fuel_type = models.CharField(_("fuel type"), max_length=50, choices=fuel, blank=True)
+    school = models.ForeignKey(School, verbose_name=_("school"), on_delete=models.CASCADE)
+    is_active = models.BooleanField(_("active"), default=True)
 
     class Meta:
         ordering = ['marque']
+        verbose_name = _("car")
+        verbose_name_plural = _("cars")
+
 
     def __str__(self):
         return f'{self.serial_number} | {self.marque} | {self.model}'
@@ -423,31 +504,72 @@ class SessionType(BaseModel, SoftDeleteModel):
 
 
 class Session(BaseModel, SoftDeleteModel):
-    day = models.DateField()
-    start_at = models.TimeField()
-    end_at = models.TimeField()
-    card = models.ForeignKey(Card,related_name='card' ,on_delete=models.CASCADE, null=True, blank=True)
-    employee = models.ForeignKey(User,related_name='employee' ,on_delete=models.CASCADE)
-    school = models.ForeignKey(School,related_name='school' ,on_delete=models.CASCADE)
-    car = models.ForeignKey(Car,related_name='car' ,on_delete=models.DO_NOTHING,null=True, blank=True)
-    note=models.CharField(max_length=100,null=True, blank=True)
-    session_type = models.ForeignKey(SessionType,related_name='session_type' ,on_delete=models.DO_NOTHING, default='4')
+    day = models.DateField(_("day"))
+    start_at = models.TimeField(_("start time"))
+    end_at = models.TimeField(_("end time"))
+    card = models.ForeignKey(
+        Card,
+        related_name="card",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        verbose_name=_("card"),
+    )
+    employee = models.ForeignKey(
+        User,
+        related_name="employee",
+        on_delete=models.CASCADE,
+        verbose_name=_("employee"),
+    )
+    school = models.ForeignKey(
+        School,
+        related_name="school",
+        on_delete=models.CASCADE,
+        verbose_name=_("school"),
+    )
+    car = models.ForeignKey(
+        Car,
+        related_name="car",
+        on_delete=models.DO_NOTHING,
+        null=True,
+        blank=True,
+        verbose_name=_("car"),
+    )
+    note = models.CharField(_("note"), max_length=100, null=True, blank=True)
+    session_type = models.ForeignKey(
+        SessionType,
+        related_name="session_type",
+        on_delete=models.DO_NOTHING,
+        default="4",
+        verbose_name=_("session type"),
+    )
     event_type = models.CharField(
-        max_length=50, choices=[('session', 'Session'), ('other', 'other')], default='session')
-    is_cancelled = models.BooleanField(default=False)
+        _("event type"),
+        max_length=50,
+        choices=[("session", _("Session")), ("other", _("other"))],
+        default="session",
+    )
+    is_cancelled = models.BooleanField(_("cancelled"), default=False)
     price = models.DecimalField(
-        max_digits=5, decimal_places=2, null=True, blank=True)
+        _("price"), max_digits=5, decimal_places=2, null=True, blank=True
+    )
 
     def clean(self):
-            super().clean()
+        super().clean()
+        if self.event_type == "session":
+            if not self.card:
+                raise ValidationError(
+                    {"card": _("Card is required for event type 'session'.")}
+                )
+            if not self.session_type:
+                raise ValidationError(
+                    {"session_type": _("Session type is required for event type 'session'.")}
+                )
 
-            if self.event_type == 'session':
-                if not self.card:
-                    raise ValidationError({'card': "Card is required for session type 'session'"})
-                if not self.session_type:
-                    raise ValidationError({'session_type': "Session type is required for event type 'session'"})
     class Meta:
-        ordering = ['day']
+        ordering = ["day"]
+        verbose_name = _("session")
+        verbose_name_plural = _("sessions")
 
     def __str__(self):
         return self.day.strftime("%d %b, %Y")
