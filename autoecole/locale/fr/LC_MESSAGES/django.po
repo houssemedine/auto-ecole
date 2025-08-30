@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-29 13:09+0000\n"
+"POT-Creation-Date: 2025-08-30 15:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -78,7 +78,7 @@ msgstr ""
 
 #: autoecole_api/models.py:102
 msgid "A user with this CIN already exists."
-msgstr ""
+msgstr "Un utilisateur avec ce CIN existe déjà."
 
 #: autoecole_api/models.py:105
 msgid "gender"
@@ -300,3 +300,9 @@ msgstr ""
 #: autoecole_api/models.py:572
 msgid "sessions"
 msgstr ""
+
+#: autoecole_api/views.py:696
+msgid ""
+"event conflict: at least one resource (employee, car, or student) is already "
+"booked at this time"
+msgstr "Conflit d'événement : au moins une ressource (employé, voiture ou étudiant) est déjà réservée à ce moment-là"

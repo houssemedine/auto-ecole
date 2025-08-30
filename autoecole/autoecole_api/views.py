@@ -26,6 +26,8 @@ from django.db.models import (
 )
 from django.db.models.functions import Coalesce
 import time
+from django.utils.translation import gettext_lazy as _
+
 
 # Custom JWT to obtain more information
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -190,14 +192,12 @@ def school_edit(request, id):
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated, IsPaymentDone])
 def student(request,school_id):
-    user = request.user
     if request.method == 'GET':
         if not (students := User.undeleted_objects.filter(school=school_id, role=5)).all():
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = User_serializer_read(students, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'POST':
-        username_list=User.objects.values_list('username',flat=True)
         new_data=dict(request.data['student'])
 
         if 'avatar' in request.FILES:
@@ -207,14 +207,10 @@ def student(request,school_id):
         new_data['is_active']=student.is_active
 
         first_name=student.first_name
-        last_name=student.last_name
         if 'first_name' in new_data:
             first_name=new_data['first_name'][0]
 
-        if 'last_name' in new_data:
-            last_name=new_data['last_name'][0]
-
-        new_data['username']=generete_username(first_name, last_name, username_list)
+        new_data['username']=generete_username(first_name)
         new_data['password']=student.password
         
         for key in new_data:
@@ -238,12 +234,10 @@ def student_edit(request, id):
     except Exception:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-
     if request.method == 'GET':
         serializer = User_serializer_read(student, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
     if request.method == 'PUT':
-        username_list=User.objects.values_list('username',flat=True)
         new_data=dict(request.data)
 
         if 'avatar' in request.FILES:
@@ -253,14 +247,10 @@ def student_edit(request, id):
         new_data['is_active']=student.is_active
 
         first_name=student.first_name
-        last_name=student.last_name
         if 'first_name' in new_data:
             first_name=new_data['first_name'][0]
 
-        if 'last_name' in new_data:
-            last_name=new_data['last_name'][0]
-
-        new_data['username']=generete_username(first_name, last_name, username_list)
+        new_data['username']=generete_username(first_name)
         new_data['password']=student.password
         for key in new_data:
             if isinstance(new_data[key], list) and len(new_data[key]) == 1:
@@ -296,11 +286,6 @@ def student_edit(request, id):
         for card in cards:
             card.is_deleted= True
             card.save()
-        #Save Notif
-        save_notif=notification_db(notification_users,
-                                'student','delete student',
-                                f'Student {student.first_name} {student.last_name} deleted',
-                                1)
 
         return Response(status=status.HTTP_201_CREATED)
 
@@ -710,7 +695,8 @@ def session(request, school_id):
                 )
                 if conflicting_sessions.exists():
                     return Response(
-                        {'error': 'event conflict: at least one resource (employee, car, or student) is already booked at this time'},
+                        {'detail': _("event conflict: at least one resource (employee, car, or student) is already booked at this time"
+                        )},
                         status=status.HTTP_400_BAD_REQUEST
                     )
         
@@ -718,7 +704,6 @@ def session(request, school_id):
         data['school'] = school_id
         serializer = Session_serializer_edit(data=data)
         if not serializer.is_valid():
-            print('error', serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         save_session = serializer.save()
@@ -827,7 +812,8 @@ def session_edit(request, id):
 
                 if conflicting_sessions.exists():
                     return Response(
-                        {'error': 'event conflict: at least one resource (employee, car, or student) is already booked at this time'},
+                        {'detail': _("event conflict: at least one resource (employee, car, or student) is already booked at this time"
+                        )},
                         status=status.HTTP_400_BAD_REQUEST
                     )
 

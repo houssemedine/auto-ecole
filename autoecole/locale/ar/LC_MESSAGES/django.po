@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-29 13:09+0000\n"
+"POT-Creation-Date: 2025-08-30 15:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,7 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0?0 : n==1?1 : n==2?2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0?0 : n==1?1 : n==2?2 : n%100>=3 && "
+"n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
 
 #: autoecole_api/models.py:62
 msgid "Guest"
@@ -299,3 +300,9 @@ msgstr "جلسة"
 #: autoecole_api/models.py:572
 msgid "sessions"
 msgstr "جلسات"
+
+#: autoecole_api/views.py:696
+msgid ""
+"event conflict: at least one resource (employee, car, or student) is already "
+"booked at this time"
+msgstr ""
