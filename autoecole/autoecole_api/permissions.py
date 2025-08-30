@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from autoecole_api.models import User, SchoolPayment
+from autoecole_api.models import User
 from .tools import get_user_role, user_has_valid_payment
 from datetime import datetime
 
@@ -30,7 +30,7 @@ class IsManager(permissions.BasePermission):
         return False
     
 
-class IsPaymentDone(permissions.BasePermission):
+class IsValidSubscription(permissions.BasePermission):
     """
     Autorise uniquement si l'utilisateur a un paiement valide.
     """

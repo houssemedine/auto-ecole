@@ -1,5 +1,4 @@
 from datetime import datetime, date, timedelta
-from multiprocessing.dummy import Manager
 from autoecole_api.models import *
 from autoecole_api.serializers import *
 from rest_framework.decorators import api_view, permission_classes, parser_classes
@@ -9,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from autoecole_api.permissions import IsManager, IsPaymentDone
+from autoecole_api.permissions import IsManager, IsValidSubscription
 from .tools import generete_username, generete_password, get_user_role, generete_username
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate
@@ -87,7 +86,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def user(request, school_id):
     if request.method == 'GET':
         users = User.undeleted_objects.filter(school = school_id).all()
@@ -99,7 +98,7 @@ def user(request, school_id):
 
 
 @api_view(['GET', 'PUT'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def user_preference(request):
     try:
         preferences = UserPreference.undeleted_objects.filter(user=request.user.id).first()
@@ -124,10 +123,8 @@ def user_preference(request):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-
-
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def school_preference(request):
     # schools = User.undeleted_objects.filter(phone=request.user.phone).all()
     schools = (
@@ -142,16 +139,9 @@ def school_preference(request):
 
 # School CRUD
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated, IsManager, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsManager, IsValidSubscription])
 def school(request):
-    # Get connected user
-
     if request.method == 'GET':
-        # Get connected User
-        user = request.user
-        # Get list of school for connected user
-        # school_id = User.undeleted_objects.filter(id=user.id).values('school_id')
-        # if not (schools := User.undeleted_objects.filter(id=user.id).values('school_id')):
         if not (schools := School.undeleted_objects.all()):
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = School_serializer(schools, many=True)
@@ -163,9 +153,8 @@ def school(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-
 @api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes([IsAuthenticated, IsManager, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsManager, IsValidSubscription])
 def school_edit(request, id):
     try:
         school = School.undeleted_objects.get(id=id)
@@ -188,9 +177,22 @@ def school_edit(request, id):
         serializer = School_serializer(school)
         return Response(status=status.HTTP_201_CREATED)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def school_subscription(request, id):
+    if request.method == 'GET':
+        print('id', id)
+        schoolSub =SchoolSubscription.undeleted_objects.filter(school=id).order_by("-date").all()
+
+        if not schoolSub:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        serializer = SchoolSubscription_serializer(schoolSub, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 # Student CRUD
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def student(request,school_id):
     if request.method == 'GET':
         if not (students := User.undeleted_objects.filter(school=school_id, role=5)).all():
@@ -227,7 +229,7 @@ def student(request,school_id):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @parser_classes([MultiPartParser, FormParser])  # ✅ Pour gérer multipart/form-data
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def student_edit(request, id):
     try:
         student = User.undeleted_objects.get(id=id)
@@ -290,7 +292,7 @@ def student_edit(request, id):
         return Response(status=status.HTTP_201_CREATED)
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def student_reset_password(request, id):
     try:
         student = Student.undeleted_objects.get(id=id)
@@ -302,7 +304,7 @@ def student_reset_password(request, id):
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def enable_disable_account(request, id):
     try:
         user = User.undeleted_objects.get(id=id)
@@ -317,7 +319,7 @@ def enable_disable_account(request, id):
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
     
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def enable_disable_car(request, id):
     try:
         car = Car.undeleted_objects.get(id=id)
@@ -333,7 +335,7 @@ def enable_disable_car(request, id):
 
 # Card CRUD
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def card(request,school_id,progress_status):
     if request.method == 'GET':
         cards=None
@@ -395,7 +397,7 @@ def card(request,school_id,progress_status):
 
 @api_view(['POST'])
 @parser_classes([MultiPartParser, FormParser])  # ✅ Pour gérer multipart/form-data
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def save_card_and_student(request, school_id):
     if request.method == 'POST':
         data = request.data
@@ -505,7 +507,7 @@ def save_card_and_student(request, school_id):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def card_edit(request, id):
     try:
         card = Card.undeleted_objects.get(id=id)
@@ -602,7 +604,7 @@ def card_edit(request, id):
         return Response(status=status.HTTP_201_CREATED)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def card_history(request, card_id):
         history=CardStatusHistory.undeleted_objects.filter(card=card_id).all()
         if not history:
@@ -613,7 +615,7 @@ def card_history(request, card_id):
 
 # Acitivity CRUD
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def activity(request):
     if request.method == 'GET':
         if not (activities := Activity.undeleted_objects.all()):
@@ -629,7 +631,7 @@ def activity(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def activity_edit(request, id):
     try:
         activity = Activity.undeleted_objects.get(id=id)
@@ -655,7 +657,7 @@ def activity_edit(request, id):
 
 # Session CRUD
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def session(request, school_id):
     if request.method == 'GET':
         sessions = Session.undeleted_objects.filter(school=school_id).all()
@@ -740,7 +742,7 @@ def session(request, school_id):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def week_sessions(request, school_id):
 
     #Get Week start and end days
@@ -761,7 +763,7 @@ def week_sessions(request, school_id):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def card_session(request, card_id):
     if request.method == 'GET':
         if not (sessions := Session.undeleted_objects.filter(card=card_id).all()):
@@ -771,7 +773,7 @@ def card_session(request, card_id):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def session_edit(request, id):
     try:
         session = Session.undeleted_objects.get(id=id)
@@ -891,7 +893,7 @@ def session_edit(request, id):
 
 # Employee CRUD
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def employee(request,school_id):
     user=request.user
     if request.method == 'GET':
@@ -960,7 +962,7 @@ def employee(request,school_id):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def employee_edit(request, id):
     user=request.user
     try:
@@ -1003,7 +1005,7 @@ def employee_edit(request, id):
 
 # Car CRUD
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def car(request,school_id):
     user=request.user
     print('school id', school_id)
@@ -1025,7 +1027,7 @@ def car(request,school_id):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def car_edit(request, id):
     try:
         car = Car.undeleted_objects.get(id=id)
@@ -1054,7 +1056,7 @@ def car_edit(request, id):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def licence(request):
     if request.method == 'GET':
         if not (licences := LicenceType.undeleted_objects.all()):
@@ -1063,7 +1065,7 @@ def licence(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def status_status(request):
     if request.method == 'GET':
         if not (status_status_data := Status.undeleted_objects.all()):
@@ -1183,7 +1185,7 @@ def push_notification_to_users(audiance, notification_type,module, title, messag
         return False
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def update_notification(request, id):
     if request.method == 'PUT':
         try:
@@ -1197,7 +1199,7 @@ def update_notification(request, id):
         return Response (serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def delete_notification(request, id):
     if request.method == 'DELETE':
         try:
@@ -1212,7 +1214,7 @@ def delete_notification(request, id):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def notification(request):
     if request.method == 'GET':
         # notifications = Notification.undeleted_objects.filter(user=request.user).all()
@@ -1228,7 +1230,7 @@ def notification(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def stats_finance(request, school_id):
     try:
         user_role = get_user_role(request.user.role)
@@ -1266,7 +1268,7 @@ def stats_finance(request, school_id):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def stats_sessions(request, school_id, dateRange:str):
     # dateRange Format 20258 years month
     # format attendu:{
@@ -1301,7 +1303,7 @@ def stats_sessions(request, school_id, dateRange:str):
 
 # Payment CRUD
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def payment(request,school_id):
     user=request.user
 
@@ -1336,7 +1338,7 @@ def payment(request,school_id):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(['GET','PUT','DELETE'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def payment_edit(request,id):
     try:
         payment = Payment.undeleted_objects.get(id=id)
@@ -1398,7 +1400,7 @@ def payment_edit(request,id):
 
 # Payment CRUD
 @api_view(['GET'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def payment_dossier(request,card_id):
     if request.method == 'GET':
         if not (payments := Payment.undeleted_objects.filter(card=card_id).all()):
@@ -1408,7 +1410,7 @@ def payment_dossier(request,card_id):
 
 
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated, IsPaymentDone])
+# @permission_classes([IsAuthenticated, IsValidSubscription])
 def countries(request):
     if request.method == 'GET':
         if not (countries := Country.undeleted_objects.all()):
@@ -1419,7 +1421,7 @@ def countries(request):
 
 
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated, IsPaymentDone])
+# @permission_classes([IsAuthenticated, IsValidSubscription])
 def governorates(request, id):
     if request.method == 'GET':
         if not (governorates := Governorate.undeleted_objects.filter(country=id).all()):
@@ -1429,7 +1431,7 @@ def governorates(request, id):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated, IsPaymentDone])
+# @permission_classes([IsAuthenticated, IsValidSubscription])
 def cities(request, id):
     if request.method == 'GET':
         #if not (cities := City.undeleted_objects.filter(governorate=id).all()):
@@ -1445,7 +1447,7 @@ def cities(request, id):
 
 
 @api_view(['GET','PUT'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def profile(request):
     user_id=request.user.id
 
@@ -1497,7 +1499,7 @@ def profile(request):
 
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def change_password(request):
     if request.method == 'PUT':
         data = request.data.copy()
@@ -1515,7 +1517,7 @@ def change_password(request):
 
 #Notification PUSH
 @api_view(["POST"])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def device_register(request):
     ser = DeviceRegisterSerializer(data=request.data)
     ser.is_valid(raise_exception=True)
@@ -1534,7 +1536,7 @@ def device_register(request):
     return Response({"created": created}, status=status.HTTP_200_OK)
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def device_unregister(request):
     ser = DeviceUnregisterSerializer(data=request.data)
     ser.is_valid(raise_exception=True)
@@ -1548,7 +1550,7 @@ def device_unregister(request):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(["PATCH"])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def device_ping(request):
     ser = DevicePingSerializer(data=request.data)
     ser.is_valid(raise_exception=True)
@@ -1572,7 +1574,7 @@ def device_ping(request):
 
 User = get_user_model()
 @api_view(["POST"])
-@permission_classes([IsAuthenticated, IsPaymentDone])  # adapte si besoin
+@permission_classes([IsAuthenticated, IsValidSubscription])  # adapte si besoin
 def notification_create(request):
     ser = NotificationCreateSerializer(data=request.data)
     ser.is_valid(raise_exception=True)
@@ -1595,7 +1597,7 @@ def notification_create(request):
 
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated, IsPaymentDone])
+@permission_classes([IsAuthenticated, IsValidSubscription])
 def notification_send(request):
     ser = NotificationSendSerializer(data=request.data)
     ser.is_valid(raise_exception=True)

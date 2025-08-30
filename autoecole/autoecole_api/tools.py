@@ -1,7 +1,7 @@
 import random
 import string
 from django.utils import timezone
-from .models import User, SchoolPayment
+from .models import User, SchoolSubscription
 
 
 def get_user_role(number):
@@ -59,7 +59,7 @@ def user_has_valid_payment(user) -> bool:
         return False
 
     payment = (
-        SchoolPayment.undeleted_objects
+        SchoolSubscription.undeleted_objects
         .filter(school=school)
         .order_by("-date")
         .first()

@@ -24,6 +24,10 @@ urlpatterns = [
                 # edit and delete
         path('school/<int:id>/edit',views.school_edit,name='school_edit'),
 
+        #School subscription
+        path('school/<int:id>/subscription/',views.school_subscription,name='school_subscription'),
+
+
         # Student URL
                 # index and save
         path('school/<int:school_id>/student/',views.student,name='student'),

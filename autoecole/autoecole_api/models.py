@@ -219,7 +219,7 @@ class City(BaseModel, SoftDeleteModel):
         return self.name
 
 
-class SchoolPayment(BaseModel, SoftDeleteModel):
+class SchoolSubscription(BaseModel, SoftDeleteModel):
     school = models.ForeignKey(School, on_delete=models.DO_NOTHING)
     amount = models.DecimalField(max_digits=99999999, decimal_places=2)
     date = models.DateField()

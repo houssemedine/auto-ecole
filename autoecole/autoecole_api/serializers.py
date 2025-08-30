@@ -33,6 +33,11 @@ class School_serializer(serializers.ModelSerializer):
         model=School
         fields = '__all__'
 
+class SchoolSubscription_serializer(serializers.ModelSerializer):
+    class Meta:
+        model=SchoolSubscription
+        fields = '__all__'
+
 class Student_serializer_read(serializers.ModelSerializer):
     governorate = Governorate_serializer()
 
