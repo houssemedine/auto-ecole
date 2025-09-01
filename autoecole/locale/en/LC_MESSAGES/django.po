@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-29 13:09+0000\n"
+"POT-Creation-Date: 2025-09-01 20:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: autoecole_api/models.py:62
 msgid "Guest"
 msgstr ""
@@ -33,7 +34,7 @@ msgstr ""
 msgid "Trainer"
 msgstr ""
 
-#: autoecole_api/models.py:66
+#: autoecole_api/models.py:66 autoecole_api/views.py:272
 msgid "Student"
 msgstr ""
 
@@ -53,13 +54,13 @@ msgstr ""
 msgid "profile photo"
 msgstr ""
 
-#: autoecole_api/models.py:91 autoecole_api/models.py:169
-#: autoecole_api/models.py:270 autoecole_api/models.py:482
-#: autoecole_api/models.py:528
+#: autoecole_api/models.py:91 autoecole_api/models.py:183
+#: autoecole_api/models.py:284 autoecole_api/models.py:496
+#: autoecole_api/models.py:542
 msgid "school"
 msgstr ""
 
-#: autoecole_api/models.py:93 autoecole_api/models.py:163
+#: autoecole_api/models.py:93 autoecole_api/models.py:177
 msgid "phone"
 msgstr ""
 
@@ -75,227 +76,391 @@ msgstr ""
 msgid "CIN"
 msgstr ""
 
-#: autoecole_api/models.py:102
+#: autoecole_api/models.py:103
 msgid "A user with this CIN already exists."
 msgstr ""
 
-#: autoecole_api/models.py:105
+#: autoecole_api/models.py:106
 msgid "gender"
 msgstr ""
 
-#: autoecole_api/models.py:116 autoecole_api/models.py:159
+#: autoecole_api/models.py:117 autoecole_api/models.py:173
 msgid "governorate"
 msgstr ""
 
-#: autoecole_api/models.py:126
+#: autoecole_api/models.py:131
 msgid "user"
 msgstr ""
 
-#: autoecole_api/models.py:127
+#: autoecole_api/models.py:132
 msgid "users"
 msgstr ""
 
-#: autoecole_api/models.py:138
+#: autoecole_api/models.py:143
 msgid "This phone number is already used in this school."
 msgstr ""
 
-#: autoecole_api/models.py:150
-msgid "name"
-msgstr ""
-
 #: autoecole_api/models.py:152
-msgid "code"
-msgstr ""
-
-#: autoecole_api/models.py:155
-msgid "A school with this code already exists."
-msgstr ""
-
-#: autoecole_api/models.py:157
-msgid "address"
-msgstr ""
-
-#: autoecole_api/models.py:158
-msgid "city"
-msgstr ""
-
-#: autoecole_api/models.py:160
-msgid "country"
-msgstr ""
-
-#: autoecole_api/models.py:161
-msgid "specialty"
-msgstr ""
-
-#: autoecole_api/models.py:162
-msgid "email"
+msgid "This CIN is already used in this school."
 msgstr ""
 
 #: autoecole_api/models.py:164
+msgid "name"
+msgstr ""
+
+#: autoecole_api/models.py:166
+msgid "code"
+msgstr ""
+
+#: autoecole_api/models.py:169
+msgid "A school with this code already exists."
+msgstr ""
+
+#: autoecole_api/models.py:171
+msgid "address"
+msgstr ""
+
+#: autoecole_api/models.py:172
+msgid "city"
+msgstr ""
+
+#: autoecole_api/models.py:174
+msgid "country"
+msgstr ""
+
+#: autoecole_api/models.py:175
+msgid "specialty"
+msgstr ""
+
+#: autoecole_api/models.py:176
+msgid "email"
+msgstr ""
+
+#: autoecole_api/models.py:178
 msgid "logo"
 msgstr ""
 
-#: autoecole_api/models.py:165 autoecole_api/models.py:483
+#: autoecole_api/models.py:179 autoecole_api/models.py:497
 msgid "active"
 msgstr ""
 
-#: autoecole_api/models.py:170
+#: autoecole_api/models.py:184
 msgid "schools"
 msgstr ""
 
-#: autoecole_api/models.py:276
+#: autoecole_api/models.py:290
 msgid "licence type"
 msgstr ""
 
-#: autoecole_api/models.py:278
+#: autoecole_api/models.py:292
 msgid "start date"
 msgstr ""
 
-#: autoecole_api/models.py:279
+#: autoecole_api/models.py:293
 msgid "end date"
 msgstr ""
 
-#: autoecole_api/models.py:284
+#: autoecole_api/models.py:298
 msgid "student"
 msgstr ""
 
-#: autoecole_api/models.py:291
+#: autoecole_api/models.py:305
 msgid "status"
 msgstr ""
 
-#: autoecole_api/models.py:294 autoecole_api/models.py:554
+#: autoecole_api/models.py:308 autoecole_api/models.py:568
 msgid "price"
 msgstr ""
 
-#: autoecole_api/models.py:301
+#: autoecole_api/models.py:315
 msgid "hour price"
 msgstr ""
 
-#: autoecole_api/models.py:307
+#: autoecole_api/models.py:321
 msgid "number of hours"
 msgstr ""
 
-#: autoecole_api/models.py:309
+#: autoecole_api/models.py:323
 msgid "discount"
 msgstr ""
 
-#: autoecole_api/models.py:318 autoecole_api/models.py:345
-#: autoecole_api/models.py:516
+#: autoecole_api/models.py:332 autoecole_api/models.py:359
+#: autoecole_api/models.py:530 autoecole_api/views.py:396
+#: autoecole_api/views.py:504 autoecole_api/views.py:576
+#: autoecole_api/views.py:599
 msgid "card"
 msgstr ""
 
-#: autoecole_api/models.py:319
+#: autoecole_api/models.py:333
 msgid "cards"
 msgstr ""
 
-#: autoecole_api/models.py:337
+#: autoecole_api/models.py:351
 msgid "amount"
 msgstr ""
 
-#: autoecole_api/models.py:338
+#: autoecole_api/models.py:352
 msgid "date"
 msgstr ""
 
-#: autoecole_api/models.py:339
+#: autoecole_api/models.py:353
 msgid "reason"
 msgstr ""
 
-#: autoecole_api/models.py:340
+#: autoecole_api/models.py:354
 msgid "method"
 msgstr ""
 
-#: autoecole_api/models.py:350
+#: autoecole_api/models.py:364
 msgid "payment"
 msgstr ""
 
-#: autoecole_api/models.py:351
+#: autoecole_api/models.py:365
 msgid "payments"
 msgstr ""
 
-#: autoecole_api/models.py:475
+#: autoecole_api/models.py:489
 msgid "serial number"
 msgstr ""
 
-#: autoecole_api/models.py:476
+#: autoecole_api/models.py:490
 msgid "A car with this serial number already exists."
 msgstr ""
 
-#: autoecole_api/models.py:478
+#: autoecole_api/models.py:492
 msgid "brand"
 msgstr ""
 
-#: autoecole_api/models.py:479
+#: autoecole_api/models.py:493
 msgid "model"
 msgstr ""
 
-#: autoecole_api/models.py:480
+#: autoecole_api/models.py:494
 msgid "purchase date"
 msgstr ""
 
-#: autoecole_api/models.py:481
+#: autoecole_api/models.py:495
 msgid "fuel type"
 msgstr ""
 
-#: autoecole_api/models.py:487 autoecole_api/models.py:536
+#: autoecole_api/models.py:501 autoecole_api/models.py:550
 msgid "car"
 msgstr ""
 
-#: autoecole_api/models.py:488
+#: autoecole_api/models.py:502
 msgid "cars"
 msgstr ""
 
-#: autoecole_api/models.py:507
+#: autoecole_api/models.py:521
 msgid "day"
 msgstr ""
 
-#: autoecole_api/models.py:508
+#: autoecole_api/models.py:522
 msgid "start time"
 msgstr ""
 
-#: autoecole_api/models.py:509
+#: autoecole_api/models.py:523
 msgid "end time"
 msgstr ""
 
-#: autoecole_api/models.py:522
+#: autoecole_api/models.py:536
 msgid "employee"
 msgstr ""
 
-#: autoecole_api/models.py:538
+#: autoecole_api/models.py:552
 msgid "note"
 msgstr ""
 
-#: autoecole_api/models.py:544
+#: autoecole_api/models.py:558
 msgid "session type"
 msgstr ""
 
-#: autoecole_api/models.py:547
+#: autoecole_api/models.py:561
 msgid "event type"
 msgstr ""
 
-#: autoecole_api/models.py:549
+#: autoecole_api/models.py:563 autoecole_api/views.py:723
+#: autoecole_api/views.py:830 autoecole_api/views.py:850
 msgid "Session"
 msgstr ""
 
-#: autoecole_api/models.py:549
+#: autoecole_api/models.py:563
 msgid "other"
 msgstr ""
 
-#: autoecole_api/models.py:552
+#: autoecole_api/models.py:566
 msgid "cancelled"
 msgstr ""
 
-#: autoecole_api/models.py:562
+#: autoecole_api/models.py:576
 msgid "Card is required for event type 'session'."
 msgstr ""
 
-#: autoecole_api/models.py:566
+#: autoecole_api/models.py:580
 msgid "Session type is required for event type 'session'."
 msgstr ""
 
-#: autoecole_api/models.py:571
+#: autoecole_api/models.py:585
 msgid "session"
 msgstr ""
 
-#: autoecole_api/models.py:572
+#: autoecole_api/models.py:586
 msgid "sessions"
+msgstr ""
+
+#: autoecole_api/views.py:273
+msgid "Edit student"
+msgstr ""
+
+#: autoecole_api/views.py:274
+msgid "Your profile is updated !"
+msgstr ""
+
+#: autoecole_api/views.py:318 autoecole_api/views.py:926
+#: autoecole_api/views.py:971
+msgid "Employee"
+msgstr ""
+
+#: autoecole_api/views.py:319
+msgid "Status Trainer"
+msgstr ""
+
+#: autoecole_api/views.py:320
+#, python-format
+msgid "The account status of %(first_name)s %(last_name)s was updated !"
+msgstr ""
+
+#: autoecole_api/views.py:340 autoecole_api/views.py:1002
+#: autoecole_api/views.py:1032
+msgid "Car"
+msgstr ""
+
+#: autoecole_api/views.py:341
+msgid "Status car"
+msgstr ""
+
+#: autoecole_api/views.py:342
+#, python-format
+msgid "The status of the car %(marque)s was updated!"
+msgstr ""
+
+#: autoecole_api/views.py:397 autoecole_api/views.py:505
+msgid "New card"
+msgstr ""
+
+#: autoecole_api/views.py:398 autoecole_api/views.py:506
+#, python-format
+msgid "A new card was added for %(first_name)s %(last_name)s !"
+msgstr ""
+
+#: autoecole_api/views.py:577
+msgid "Edit card"
+msgstr ""
+
+#: autoecole_api/views.py:578
+#, python-format
+msgid "The card %(card_id)s of %(first_name)s %(last_name)s was updated!"
+msgstr ""
+
+#: autoecole_api/views.py:600
+msgid "Delete card"
+msgstr ""
+
+#: autoecole_api/views.py:601
+#, python-format
+msgid "The card %(card_id)s of %(first_name)s %(last_name)s was deleted!"
+msgstr ""
+
+#: autoecole_api/views.py:700 autoecole_api/views.py:805
+msgid ""
+"event conflict: at least one resource (employee, car, or student) is already "
+"booked at this time"
+msgstr ""
+
+#: autoecole_api/views.py:724
+msgid "New session"
+msgstr ""
+
+#: autoecole_api/views.py:725
+#, python-format
+msgid "New session was added on %(day)s !"
+msgstr ""
+
+#: autoecole_api/views.py:831 autoecole_api/views.py:851
+msgid "Edit session"
+msgstr ""
+
+#: autoecole_api/views.py:832
+#, python-format
+msgid "One session was updated to %(day)s !"
+msgstr ""
+
+#: autoecole_api/views.py:852
+#, python-format
+msgid "The session from %(day)s was deleted!"
+msgstr ""
+
+#: autoecole_api/views.py:927
+msgid "Add Trainer"
+msgstr ""
+
+#: autoecole_api/views.py:928
+#, python-format
+msgid "%(first_name)s %(last_name)s was added as new trainer !"
+msgstr ""
+
+#: autoecole_api/views.py:972
+msgid "Trainer updated"
+msgstr ""
+
+#: autoecole_api/views.py:973
+msgid "Your profile was updated !"
+msgstr ""
+
+#: autoecole_api/views.py:1003
+msgid "New car"
+msgstr ""
+
+#: autoecole_api/views.py:1004
+msgid "A new car was added !"
+msgstr ""
+
+#: autoecole_api/views.py:1033
+msgid "Edit car"
+msgstr ""
+
+#: autoecole_api/views.py:1034
+#, python-format
+msgid "The car %(marque)s was updated!"
+msgstr ""
+
+#: autoecole_api/views.py:1308 autoecole_api/views.py:1342
+#: autoecole_api/views.py:1359
+msgid "Payment"
+msgstr ""
+
+#: autoecole_api/views.py:1309
+msgid "New Payment"
+msgstr ""
+
+#: autoecole_api/views.py:1310
+#, python-format
+msgid "New payment of %(amount)s was added !"
+msgstr ""
+
+#: autoecole_api/views.py:1343
+msgid "Edit Payment"
+msgstr ""
+
+#: autoecole_api/views.py:1344
+msgid "One payment was updated !"
+msgstr ""
+
+#: autoecole_api/views.py:1360
+msgid "Delete Payment"
+msgstr ""
+
+#: autoecole_api/views.py:1361
+#, python-format
+msgid "The payment of %(amount)s was deleted !"
 msgstr ""

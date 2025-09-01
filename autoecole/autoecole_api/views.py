@@ -265,19 +265,16 @@ def student_edit(request, id):
 
         #Save nofications
         #get users
-        student = obj
-        audiance = []
-        if id != request.user.id:
-            audiance.append(student)
-        print('audiance', audiance)
-        push_notification_to_users(
-            audiance,
-            'Activity',
-            'student',
-            'Profil modifié 📝',
-            f'Des informations ont été modifiées pour votre profil',
-        )
 
+        audiance = [student]
+        audiance.append(student)
+        notification_type = 'Activity'
+        module = _('Student')
+        title = _('Edit student')
+        message = _('Your profile is updated !')
+
+        push_notification_to_users(audiance, notification_type, module, title, message) 
+        
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     if request.method == 'DELETE':
         student.is_deleted = True

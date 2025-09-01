@@ -96,7 +96,8 @@ class User(AbstractUser, SoftDeleteModel):
     cin = models.CharField(
         _("CIN"),
         max_length=50,
-        unique=True,
+        unique=False,
+        db_index=True,
         null=True,
         blank=True,
         error_messages={"unique": _("A user with this CIN already exists.")},
@@ -122,6 +123,10 @@ class User(AbstractUser, SoftDeleteModel):
                 fields=["school", "phone"],
                 name="uniq_user_school_phone",
             ),
+            models.UniqueConstraint(
+                fields=["school", "cin"],
+                name="uniq_user_school_cin",
+            ),
         ]
         verbose_name = _("user")
         verbose_name_plural = _("users")
@@ -136,6 +141,15 @@ class User(AbstractUser, SoftDeleteModel):
             if qs.exists():
                 raise ValidationError(
                     {"phone": _("This phone number is already used in this school.")}
+                )
+            
+        if self.school_id and self.cin:
+            qs = type(self).objects.filter(school_id=self.school_id, cin=self.cin)
+            if self.pk:
+                qs = qs.exclude(pk=self.pk)
+            if qs.exists():
+                raise ValidationError(
+                    {"cin": _("This CIN is already used in this school.")}
                 )
 
     def __str__(self):
