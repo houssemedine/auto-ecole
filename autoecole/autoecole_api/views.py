@@ -391,7 +391,7 @@ def card(request,school_id,progress_status):
         serializer_history.save()
 
         student = obj.student
-        owner = User.undeleted_objects.filter(school=school_id, role=3).exclude(id=request.user.id).first()  # Get the owner of the school
+        owner = User.undeleted_objects.filter(school=school_id, role=3).exclude(phone=request.user.phone).first()  # Get the owner of the school
         audiance = []
         audiance.append(student)
         audiance.append(owner)
@@ -1117,34 +1117,34 @@ def register(request):
         preference_serializer.save()
     return Response(owner_serializer.data, status=status.HTTP_200_OK)
 
-def notification_db(users:list,module:str,title:str,text:str,notifcation_type:str)->bool:
-    """Save notification to DB
+# def notification_db(users:list,module:str,title:str,text:str,notifcation_type:str)->bool:
+#     """Save notification to DB
 
-    Args:
-        users (list): list of users
-        text (str): notification text
-        notifcation_type (str): notification type
+#     Args:
+#         users (list): list of users
+#         text (str): notification text
+#         notifcation_type (str): notification type
 
-    Returns:
-        bool: True if successfully saved to DB
-    """
-    notication_data={
-    'user':'',
-    'notification_type': notifcation_type,
-    'module':module,
-    'title':title.capitalize(),
-    'message':text.capitalize()
-    }
-    for user in users:
-        notication_data['user']=user
-        notification_serializer=Notification_serializer(data=notication_data)
+#     Returns:
+#         bool: True if successfully saved to DB
+#     """
+#     notication_data={
+#     'user':'',
+#     'notification_type': notifcation_type,
+#     'module':module,
+#     'title':title.capitalize(),
+#     'message':text.capitalize()
+#     }
+#     for user in users:
+#         notication_data['user']=user
+#         notification_serializer=Notification_serializer(data=notication_data)
 
-        if not notification_serializer.is_valid():
-            return (notification_serializer.errors)
+#         if not notification_serializer.is_valid():
+#             return (notification_serializer.errors)
 
-        notification_serializer.save()
+#         notification_serializer.save()
 
-    return True
+#     return True
 
 
 def push_notification_to_users(audiance, notification_type,module, title, message):
@@ -1202,11 +1202,7 @@ def delete_notification(request, id):
 def notification(request):
     if request.method == 'GET':
         # notifications = Notification.undeleted_objects.filter(user=request.user).all()
-        notifications = Notification.undeleted_objects.all()
-        if get_user_role(request.user.role) == 'Student':
-            # If user is student, filter notifications by student id
-            notifications = notifications.filter(user=request.user.id)
-
+        notifications = Notification.undeleted_objects.filter(user__phone=request.user.phone).all()
         if not notifications:
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer=Notification_serializer_read(notifications,many=True)
