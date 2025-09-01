@@ -5,6 +5,8 @@ from .models import Notification, Device, NotificationDelivery
 @transaction.atomic
 def create_notification_with_deliveries(*, user, notification_type, module, title, message,
                                         data=None, priority="normal", category=""):
+    
+    
     notif = Notification.undeleted_objects.create(
         user=user,
         notification_type=notification_type,

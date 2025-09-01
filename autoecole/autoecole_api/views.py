@@ -314,8 +314,15 @@ def enable_disable_account(request, id):
         account_status=user.is_active
         user.is_active= not account_status
         user.save()
-
         serializer = User_serializer_read(user)
+
+        audiance = User.undeleted_objects.filter(school=user.school.id).filter(role=3).exclude(id=request.user.id).all()
+        notification_type = 'Activity'
+        module = _('Employee')
+        title = _('Status Trainer')
+        message = _("The account status of %(first_name)s %(last_name)s was updated !") % {"first_name": user.first_name, "last_name": user.last_name}
+        push_notification_to_users(audiance, notification_type, module, title, message)
+
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
     
 @api_view(['PUT'])
@@ -330,6 +337,13 @@ def enable_disable_car(request, id):
         car.is_active= not car_status
         car.save()
         serializer = Car_serializer(car)
+
+        audiance = User.undeleted_objects.filter(school=car.school.id).filter(role__in=[4,3]).exclude(id=request.user.id).all()
+        notification_type = 'Activity'
+        module = _('Car')
+        title = _('Status car')
+        message = _("The status of the car %(marque)s was updated!") % {"marque": car.marque}
+        push_notification_to_users(audiance, notification_type, module, title, message)
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -376,22 +390,17 @@ def card(request,school_id,progress_status):
 
         serializer_history.save()
 
-        #Save nofications
-        #get users
         student = obj.student
-        owner = User.undeleted_objects.filter(school=student.school.id, role=3).first()  # Get the owner of the school
+        owner = User.undeleted_objects.filter(school=school_id, role=3).exclude(id=request.user.id).first()  # Get the owner of the school
         audiance = []
         audiance.append(student)
-        if owner and owner != request.user:
-            audiance.append(owner)
+        audiance.append(owner)
+        notification_type = 'Activity'
+        module = _('card')
+        title = _('New card')
+        message = _('A new card was added for %(first_name)s %(last_name)s !') % {'first_name' :obj.student.first_name, 'last_name':obj.student.last_name}
 
-        push_notification_to_users(
-            audiance,
-            'Activity',
-            'card',
-            'Nouveau dossier créé 🗂️',
-            f'Un nouveau dossier a été créé pour {obj.student.first_name} {obj.student.last_name}',
-        )
+        push_notification_to_users(audiance, notification_type, module, title, message) 
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -488,20 +497,19 @@ def save_card_and_student(request, school_id):
 
         #Save nofications
         #get users
+
         student = save_card.student
-        owner = User.undeleted_objects.filter(school=student.school.id, role=3).first()  # Get the owner of the school
+        owner = User.undeleted_objects.filter(school=school_id, role=3).exclude(id=request.user.id).first()  # Get the owner of the school
         audiance = []
         audiance.append(student)
-        if owner and owner != request.user:
-            audiance.append(owner)
+        audiance.append(owner)
+        notification_type = 'Activity'
+        module = _('card')
+        title = _('New card')
+        message = _('A new card was added for %(first_name)s %(last_name)s !') % {'first_name' :save_card.student.first_name, 'last_name':save_card.student.last_name}
 
-        push_notification_to_users(
-            audiance,
-            'Activity',
-            'card',
-            'Nouveau dossier créé 🗂️',
-            f'Un nouveau dossier a été créé pour {save_card.student.first_name} {save_card.student.last_name}',
-        )
+        push_notification_to_users(audiance, notification_type, module, title, message) 
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -563,19 +571,16 @@ def card_edit(request, id):
         #Save nofications
         #get users
         student = obj.student
-        owner = User.undeleted_objects.filter(school=student.school.id, role=3).first()  # Get the owner of the school
+        owner = User.undeleted_objects.filter(school=card.school.id, role=3).exclude(id=request.user.id).first()  # Get the owner of the school
         audiance = []
         audiance.append(student)
-        if owner and owner != request.user:
-            audiance.append(owner)
+        audiance.append(owner)
+        notification_type = 'Activity'
+        module = _('card')
+        title = _('Edit card')
+        message = _('The card %(card_id)s of %(first_name)s %(last_name)s was updated!') % {'card_id': card.id,'first_name' :obj.student.first_name, 'last_name':obj.student.last_name}
 
-        push_notification_to_users(
-            audiance,
-            'Activity',
-            'card',
-            'Dossier modifié 🗂',
-            f'Le dossier numéro {card.id} de {obj.student.first_name} {obj.student.last_name} a été modifié',
-        )
+        push_notification_to_users(audiance, notification_type, module, title, message) 
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     if request.method == 'DELETE':
@@ -586,21 +591,19 @@ def card_edit(request, id):
 
         #Save nofications
         #get users
+        #Save nofications
+        #get users
         student = card.student
-        owner = User.undeleted_objects.filter(school=student.school.id, role=3).first()  # Get the owner of the school
+        owner = User.undeleted_objects.filter(school=card.school.id, role=3).exclude(id=request.user.id).first()  # Get the owner of the school
         audiance = []
         audiance.append(student)
-        if owner and owner != request.user:
-            audiance.append(owner)
+        audiance.append(owner)
+        notification_type = 'Activity'
+        module = _('card')
+        title = _('Delete card')
+        message = _('The card %(card_id)s of %(first_name)s %(last_name)s was deleted!') % {'card_id': card.id,'first_name' :card.student.first_name, 'last_name':card.student.last_name}
 
-        push_notification_to_users(
-            audiance,
-            'Activity',
-            'card',
-            'Dossier supprimé 🚮',
-            f'Le dossier numéro {card.id} de {card.student.first_name} {card.student.last_name} a été supprimé',
-        )
-
+        push_notification_to_users(audiance, notification_type, module, title, message) 
         return Response(status=status.HTTP_201_CREATED)
 
 @api_view(['GET'])
@@ -709,34 +712,22 @@ def session(request, school_id):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         save_session = serializer.save()
-
         #Save nofications
         #get users
-        audiance = []
+        audiance_user_list = []
+        if event_type != 'other':
+            student = save_session.card.student.id
+            audiance_user_list.append(student)
 
-        try:
-            student = save_session.card.student
-            msg = f'Un nouveau session a été créé pour {student.first_name} {student.last_name}'
-        except AttributeError:
-            student = None
-        
-        if student:
-            audiance.append(student)
-        else:
-            msg = 'Un nouveau session a été créé'
+        trainer = save_session.employee.id
+        audiance_user_list.append(trainer)
+        audiance = User.undeleted_objects.filter(school=school_id).filter(id__in = audiance_user_list).exclude(id=request.user.id).all()
+        notification_type = 'Activity'
+        module = _('Session')
+        title = _('New session')
+        message = _("New session was added on %(day)s !") % {"day": save_session.day}
+        push_notification_to_users(audiance, notification_type, module, title, message)
 
-        trainer = save_session.employee
-
-        if trainer and trainer != request.user:
-            audiance.append(trainer)
-
-        push_notification_to_users(
-            audiance,
-            'Activity',
-            'card',
-            'Nouveau session créé ⏰',
-            msg,
-        )
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -830,65 +821,40 @@ def session_edit(request, id):
         save_session = serializer.save()
         #Save nofications
         #get users
-        audiance = []
+        audiance_user_list = []
+        if event_type != 'other':
+            student = save_session.card.student.id
+            audiance_user_list.append(student)
 
-        try:
-            student = save_session.card.student
-            msg = f'Une session a été modifiée pour {student.first_name} {student.last_name}'
-        except AttributeError:
-            student = None
-        
-        if student:
-            audiance.append(student)
-        else:
-            msg = 'Une session a été modifiée'
+        trainer = save_session.employee.id
+        audiance_user_list.append(trainer)
+        audiance = User.undeleted_objects.filter(school=session.school).filter(id__in = audiance_user_list).exclude(id=request.user.id).all()
+        notification_type = 'Activity'
+        module = _('Session')
+        title = _('Edit session')
+        message = _("One session was updated to %(day)s !") % {"day": save_session.day}
+        push_notification_to_users(audiance, notification_type, module, title, message)
 
-        trainer = save_session.employee
-
-        if trainer and trainer != request.user:
-            audiance.append(trainer)
-
-        push_notification_to_users(
-            audiance,
-            'Activity',
-            'card',
-            'Session modifié ⏰',
-            msg,
-        )
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     if request.method == 'DELETE':
         session.delete()
-        # session.is_deleted = True
-        # session.deleted_at = datetime.now()
-        # session.save()
-        # serializer = Session_serializer_edit(session)
         #Save nofications
         #get users
-        audiance = []
-        try:
-            student = session.card.student
-        except AttributeError:
-            student = None
+        audiance_user_list = []
+        if session.event_type != 'other':
+            student = session.card.student.id
+            audiance_user_list.append(student)
 
-        if student:
-            audiance
-            msg = f'Une session a été supprimée pour {student.first_name} {student.last_name}'
-        else:
-            msg = 'Une session a été supprimée'
+        trainer = session.employee.id
+        audiance_user_list.append(trainer)
+        audiance = User.undeleted_objects.filter(school=session.school).filter(id__in = audiance_user_list).exclude(id=request.user.id).all()
+        notification_type = 'Activity'
+        module = _('Session')
+        title = _('Edit session')
+        message = _("The session from %(day)s was deleted!") % {"day": session.day}
+        push_notification_to_users(audiance, notification_type, module, title, message)
 
-        trainer = session.employee
-        audiance.append(student)
-        if trainer and trainer != request.user:
-            audiance.append(trainer)
-
-        push_notification_to_users(
-            audiance,
-            'Activity',
-            'card',
-            'Session supprimé 🚮',
-            msg,
-        )
         return Response(status=status.HTTP_201_CREATED)
 
 # Employee CRUD
@@ -957,11 +923,18 @@ def employee(request,school_id):
                 return Response(serializer_preference.errors, status=status.HTTP_400_BAD_REQUEST)
 
             serializer_preference.save()
+        
+        audiance = User.undeleted_objects.filter(school=school_id).filter(role=3).exclude(id=request.user.id).all()
+        notification_type = 'Activity'
+        module = _('Employee')
+        title = _('Add Trainer')
+        message = _("%(first_name)s %(last_name)s was added as new trainer !") % {"first_name": obj.first_name, "last_name": obj.last_name}
+        push_notification_to_users(audiance, notification_type, module, title, message)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated, IsValidSubscription])
 def employee_edit(request, id):
     user=request.user
@@ -994,13 +967,16 @@ def employee_edit(request, id):
         serializer = User_serializer(employee, data=employee_data)
         if not (serializer.is_valid()):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
+        obj = serializer.save()
+
+        audiance = User.undeleted_objects.filter(school=employee.school.id).filter(id=employee.id).all()
+        notification_type = 'Activity'
+        module = _('Employee')
+        title = _('Trainer updated')
+        message = _("Your profile was updated !")
+        push_notification_to_users(audiance, notification_type, module, title, message)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    if request.method == 'DELETE':
-        employee.is_active = False
-        employee.save()
-        serializer = User_serializer(employee)
-        return Response(status=status.HTTP_201_CREATED)
 
 
 # Car CRUD
@@ -1023,10 +999,18 @@ def car(request,school_id):
             print('error post car: ', serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
+
+        audiance = User.undeleted_objects.filter(school=school_id).filter(role__in=[4,3]).exclude(id=user.id).all()
+        notification_type = 'Activity'
+        module = _('Car')
+        title = _('New car')
+        message = _('A new car was added !')
+        push_notification_to_users(audiance, notification_type, module, title, message)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated, IsValidSubscription])
 def car_edit(request, id):
     try:
@@ -1045,15 +1029,15 @@ def car_edit(request, id):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
 
+        audiance = User.undeleted_objects.filter(school=car.school.id).filter(role__in=[4,3]).exclude(id=request.user.id).all()
+
+        notification_type = 'Activity'
+        module = _('Car')
+        title = _('Edit car')
+        message = _("The car %(marque)s was updated!") % {"marque": car.marque}
+        push_notification_to_users(audiance, notification_type, module, title, message)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    if request.method == 'DELETE':
-        car.is_deleted = True
-        car.deleted_at = datetime.now()
-        car.save()
-        serializer = Car_serializer(car)
-
-        return Response(status=status.HTTP_201_CREATED)
-
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsValidSubscription])
@@ -1322,19 +1306,17 @@ def payment(request,school_id):
 
         #Save nofications
         student = save_payement.card.student
-        owner = User.undeleted_objects.filter(school=student.school.id, role=3).first()  # Get the owner of the school
+        owner = User.undeleted_objects.filter(school=school_id).filter(role=3).exclude(id=request.user.id).first()
         audiance = []
         audiance.append(student)
-        if owner and owner != request.user:
-            audiance.append(owner)
+        audiance.append(owner)
 
-        push_notification_to_users(
-            audiance,
-            'Activity',
-            'payment',
-            'Nouveau Payment 💰',
-            f'Un payement de {save_payement.amount} a été effectué pour la carte {save_payement.card.id}.'
-        )
+        notification_type = 'Activity'
+        module = _('Payment')
+        title = _('New Payment')
+        message = _("New payment of %(amount)s was added !") % {"amount": save_payement.amount}
+        push_notification_to_users(audiance, notification_type, module, title, message)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(['GET','PUT','DELETE'])
@@ -1356,45 +1338,35 @@ def payment_edit(request,id):
 
         #Save nofications
         # Prepare notification data
+        #Save nofications
         student = save_payement.card.student
-        owner = User.undeleted_objects.filter(school=student.school.id, role=3).first()  # Get the owner of the school
+        owner = User.undeleted_objects.filter(school=payment.card.school.id).filter(role=3).exclude(id=request.user.id).first()
         audiance = []
         audiance.append(student)
-        if owner and owner != request.user:
-            audiance.append(owner)
+        audiance.append(owner)
 
-        push_notification_to_users(
-            audiance,
-            'Activity',
-            'payment',
-            'Payment modifié 💰',
-            f'le payement de {save_payement.amount} a été modifié pour la carte {save_payement.card.id}.'
-        )
+        notification_type = 'Activity'
+        module = _('Payment')
+        title = _('Edit Payment')
+        message = _("One payment was updated !")
+        push_notification_to_users(audiance, notification_type, module, title, message)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     if request.method == 'DELETE':
         payment.delete()
         #Save nofications
-        # Prepare notification data
-        # save_payement = (Payment.undeleted_objects
-        #                 .select_related(
-        #                     "card__student__user",
-        #                 )
-        #                 .get(pk=id))
+
         student = payment.card.student
-        owner = User.undeleted_objects.filter(school=payment.card.school.id, role=3).first()
+        owner = User.undeleted_objects.filter(school=payment.card.school.id).filter(role=3).exclude(id=request.user.id).first()
         audiance = []
         audiance.append(student)
-        if owner and owner != request.user:
-            audiance.append(owner)
+        audiance.append(owner)
 
-        push_notification_to_users(
-            audiance,
-            'Activity',
-            'payment',
-            'Payment supprimé 🚮',
-            f'le payement de {payment.amount} a été supprimé pour la carte {payment.card.id}.'
-        )
+        notification_type = 'Activity'
+        module = _('Payment')
+        title = _('Delete Payment')
+        message = _("The payment of %(amount)s was deleted !") % {'amount': payment.amount}
+        push_notification_to_users(audiance, notification_type, module, title, message)
         return Response(status=status.HTTP_201_CREATED)
 
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-30 15:07+0000\n"
+"POT-Creation-Date: 2025-09-01 13:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -181,7 +181,9 @@ msgid "discount"
 msgstr "الخصم"
 
 #: autoecole_api/models.py:318 autoecole_api/models.py:345
-#: autoecole_api/models.py:516
+#: autoecole_api/models.py:516 autoecole_api/views.py:399
+#: autoecole_api/views.py:507 autoecole_api/views.py:579
+#: autoecole_api/views.py:602
 msgid "card"
 msgstr "بطاقة"
 
@@ -273,7 +275,8 @@ msgstr "نوع الجلسة"
 msgid "event type"
 msgstr "نوع الحدث"
 
-#: autoecole_api/models.py:549
+#: autoecole_api/models.py:549 autoecole_api/views.py:726
+#: autoecole_api/views.py:833 autoecole_api/views.py:853
 msgid "Session"
 msgstr "جلسة"
 
@@ -301,8 +304,177 @@ msgstr "جلسة"
 msgid "sessions"
 msgstr "جلسات"
 
-#: autoecole_api/views.py:696
+#: autoecole_api/views.py:321 autoecole_api/views.py:929
+#: autoecole_api/views.py:974
+#, fuzzy
+#| msgid "employee"
+msgid "Employee"
+msgstr "الموظف"
+
+#: autoecole_api/views.py:322
+#, fuzzy
+#| msgid "Trainer"
+msgid "Status Trainer"
+msgstr "مدرّب"
+
+#: autoecole_api/views.py:323
+#, python-format
+msgid "The account status of %(first_name)s %(last_name)s was updated !"
+msgstr ""
+
+#: autoecole_api/views.py:343 autoecole_api/views.py:1005
+#: autoecole_api/views.py:1035
+#, fuzzy
+#| msgid "car"
+msgid "Car"
+msgstr "سيارة"
+
+#: autoecole_api/views.py:344
+#, fuzzy
+#| msgid "status"
+msgid "Status car"
+msgstr "الحالة"
+
+#: autoecole_api/views.py:345
+#, python-format
+msgid "The status of the car %(marque)s was updated!"
+msgstr ""
+
+#: autoecole_api/views.py:400 autoecole_api/views.py:508
+#, fuzzy
+#| msgid "card"
+msgid "New card"
+msgstr "بطاقة"
+
+#: autoecole_api/views.py:401 autoecole_api/views.py:509
+#, python-format
+msgid "A new card was added for %(first_name)s %(last_name)s !"
+msgstr ""
+
+#: autoecole_api/views.py:580
+#, fuzzy
+#| msgid "card"
+msgid "Edit card"
+msgstr "بطاقة"
+
+#: autoecole_api/views.py:581
+#, python-format
+msgid "The card %(card_id)s of %(first_name)s %(last_name)s was updated!"
+msgstr ""
+
+#: autoecole_api/views.py:603
+msgid "Delete card"
+msgstr ""
+
+#: autoecole_api/views.py:604
+#, python-format
+msgid "The card %(card_id)s of %(first_name)s %(last_name)s was deleted!"
+msgstr ""
+
+#: autoecole_api/views.py:703 autoecole_api/views.py:808
 msgid ""
 "event conflict: at least one resource (employee, car, or student) is already "
 "booked at this time"
+msgstr ""
+
+#: autoecole_api/views.py:727
+#, fuzzy
+#| msgid "session"
+msgid "New session"
+msgstr "جلسة"
+
+#: autoecole_api/views.py:728
+#, python-format
+msgid "New session was added on %(day)s !"
+msgstr ""
+
+#: autoecole_api/views.py:834 autoecole_api/views.py:854
+#, fuzzy
+#| msgid "session"
+msgid "Edit session"
+msgstr "جلسة"
+
+#: autoecole_api/views.py:835
+#, python-format
+msgid "One session was updated to %(day)s !"
+msgstr ""
+
+#: autoecole_api/views.py:855
+#, python-format
+msgid "The session from %(day)s was deleted!"
+msgstr ""
+
+#: autoecole_api/views.py:930
+#, fuzzy
+#| msgid "Trainer"
+msgid "Add Trainer"
+msgstr "مدرّب"
+
+#: autoecole_api/views.py:931
+#, python-format
+msgid "%(first_name)s %(last_name)s was added as new trainer !"
+msgstr ""
+
+#: autoecole_api/views.py:975
+#, fuzzy
+#| msgid "Trainer"
+msgid "Trainer updated"
+msgstr "مدرّب"
+
+#: autoecole_api/views.py:976
+msgid "Your profile was updated !"
+msgstr ""
+
+#: autoecole_api/views.py:1006
+msgid "New car"
+msgstr ""
+
+#: autoecole_api/views.py:1007
+msgid "A new car was added !"
+msgstr ""
+
+#: autoecole_api/views.py:1036
+msgid "Edit car"
+msgstr ""
+
+#: autoecole_api/views.py:1037
+#, python-format
+msgid "The car %(marque)s was updated!"
+msgstr ""
+
+#: autoecole_api/views.py:1315 autoecole_api/views.py:1349
+#: autoecole_api/views.py:1366
+#, fuzzy
+#| msgid "payment"
+msgid "Payment"
+msgstr "دفعة"
+
+#: autoecole_api/views.py:1316
+#, fuzzy
+#| msgid "payment"
+msgid "New Payment"
+msgstr "دفعة"
+
+#: autoecole_api/views.py:1317
+#, python-format
+msgid "New payment of %(amount)s was added !"
+msgstr ""
+
+#: autoecole_api/views.py:1350
+#, fuzzy
+#| msgid "payment"
+msgid "Edit Payment"
+msgstr "دفعة"
+
+#: autoecole_api/views.py:1351
+msgid "One payment was updated !"
+msgstr ""
+
+#: autoecole_api/views.py:1367
+msgid "Delete Payment"
+msgstr ""
+
+#: autoecole_api/views.py:1368
+#, python-format
+msgid "The payment of %(amount)s was deleted !"
 msgstr ""
