@@ -144,7 +144,7 @@ class User(AbstractUser, SoftDeleteModel):
             if loop[0] == self.role:
                 role = loop[1]
                 break
-        return "School: {} - Phone: {} - Role: {}".format(self.school, self.phone, role)
+        return "ID: {} -School: {} - Phone: {} - Role: {}".format(self.id, self.school, self.phone, role)
 
 class School(BaseModel, SoftDeleteModel):
     name = models.CharField(_("name"), max_length=100)
@@ -416,7 +416,7 @@ class Device(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name="devices")
     provider = models.CharField(max_length=10, choices=PROVIDER_CHOICES, default="expo", db_index=True)  # 👈 NEW (par défaut Expo)
-    token = models.CharField(max_length=255, unique=True)
+    token = models.CharField(max_length=255, db_index=True)
     platform = models.CharField(max_length=10, choices=PLATFORM_CHOICES, db_index=True)
     app_version = models.CharField(max_length=50, blank=True)
     locale = models.CharField(max_length=10, blank=True)

@@ -391,7 +391,7 @@ def card(request,school_id,progress_status):
         serializer_history.save()
 
         student = obj.student
-        owner = User.undeleted_objects.filter(school=school_id, role=3).exclude(phone=request.user.phone).first()  # Get the owner of the school
+        owner = User.undeleted_objects.filter(school=school_id, role=3).exclude(id=request.user.id).first()  # Get the owner of the school
         audiance = []
         audiance.append(student)
         audiance.append(owner)
@@ -1487,20 +1487,28 @@ def change_password(request):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated, IsValidSubscription])
 def device_register(request):
+    print('register device user phone',request.user.phone)
     ser = DeviceRegisterSerializer(data=request.data)
     ser.is_valid(raise_exception=True)
     d = ser.validated_data
-    _, created = Device.objects.update_or_create(
-        token=d["token"],
-        defaults={
-            "user": request.user,
-            "provider": d.get("provider", "expo"),  # ← NEW (par défaut Expo)
-            "platform": d["platform"],
-            "app_version": d.get("app_version", ""),
-            "locale": d.get("locale", ""),
-            "is_active": True,
-        },
-    )
+
+    siblings = User.objects.filter(phone=request.user.phone).values_list("id", flat=True)
+    created_any = False
+
+    for uid in siblings:
+        _, created = Device.objects.update_or_create(
+            token=d["token"],
+            user_id=uid,  # 👈 clé d’upsert = (token, user) parce que token n'est plus unique
+            defaults={
+                "provider": d.get("provider", "expo"),
+                "platform": d["platform"],
+                "app_version": d.get("app_version", ""),
+                "locale": d.get("locale", ""),
+                "is_active": True,
+            },
+        )
+        created_any = created_any or created
+
     return Response({"created": created}, status=status.HTTP_200_OK)
 
 @api_view(["POST"])
