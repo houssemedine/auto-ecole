@@ -160,6 +160,34 @@ class User(AbstractUser, SoftDeleteModel):
                 break
         return "ID: {} -School: {} - Phone: {} - Role: {}".format(self.id, self.school, self.phone, role)
 
+
+
+class OTPPurpose(models.TextChoices):
+    REGISTRATION = "registration", "Registration"
+
+class OTPCode(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="otp_codes")
+    purpose = models.CharField(max_length=32, choices=OTPPurpose.choices)
+    code_hash = models.CharField(max_length=128)  # hash via make_password
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    attempts = models.PositiveSmallIntegerField(default=0)
+    max_attempts = models.PositiveSmallIntegerField(default=5)
+    is_used = models.BooleanField(default=False)
+
+    channel = models.CharField(max_length=16, choices=[("email", "Email"), ("sms", "SMS")])
+    destination = models.CharField(max_length=255)  # email ou n° de téléphone
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["user", "purpose", "is_used", "expires_at"]),
+        ]
+
+    def __str__(self):
+        return f"OTP {self.purpose} for {self.user} (used={self.is_used})"
+
+
+
 class School(BaseModel, SoftDeleteModel):
     name = models.CharField(_("name"), max_length=100)
     code = models.CharField(
@@ -245,7 +273,7 @@ class SchoolSubscription(BaseModel, SoftDeleteModel):
         ('other', 'Other')
     ], default='cash')
     comment = models.TextField(blank=True, null=True)
-
+    trial = models.BooleanField(default=False)
     class Meta:
         ordering = ['school', '-date']
 

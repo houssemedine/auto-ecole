@@ -80,7 +80,12 @@ urlpatterns = [
 
         # Register URL
                 # index
-        path('register/',views.register,name='register'),
+        path('register_phone/',views.register_phone,name='register_phone'),
+        path('register_user_info/<int:user_id>/',views.register_user_info,name='register_user_info'),
+        path('verify_registration/',views.verify_registration,name='verify_registration'),
+        path("resend/", views.resend_registration_code, name="resend_code"),
+        path('register_school/<int:user_id>/',views.register_school,name='register_school'),
+
 
         # status URL
                 # index

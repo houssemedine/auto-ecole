@@ -26,6 +26,8 @@ from django.db.models import (
 from django.db.models.functions import Coalesce
 import time
 from django.utils.translation import gettext_lazy as _
+from .services import create_and_send_otp
+from django.contrib.auth.hashers import check_password
 
 
 # Custom JWT to obtain more information
@@ -981,7 +983,6 @@ def employee_edit(request, id):
 @permission_classes([IsAuthenticated, IsValidSubscription])
 def car(request,school_id):
     user=request.user
-    print('school id', school_id)
     if request.method == 'GET':
         if not (cars := Car.undeleted_objects.filter(school=school_id).all()):
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -1064,54 +1065,32 @@ def session_types(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
-def register(request):
+def register_phone(request):
     if request.method == 'POST':
-        owner_data = dict()
-        school_data = dict()
-        data = request.data.copy()
-        print('data', data)
-        # #Format owner data
-        owner_data['role'] = 3  # For owner
-        owner_data['first_name'] = data['first_name']
-        owner_data['last_name'] = data['last_name']
-        owner_data['phone'] = data['phone']
-        owner_data['governorate'] = data['governorate']
-        owner_data['school'] = None
-        owner_data['password'] =  make_password(data['password'])
-        owner_data['username'] =  ''.join([data['first_name'], data['last_name']]).lower().replace(' ', '')
-        owner_serializer = User_serializer_register(data=owner_data)
+        
+        #check if the user is owner of other school
+        phone = request.data.get('phone')
+        user = User.undeleted_objects.filter(phone=phone, role=3).first()
+        if user:
+            return Response({"detail": "Vous avez déjà un compte à votre numéro"}, status=status.HTTP_404_NOT_FOUND)
 
-        # #Save Owner Model
+        data = request.data.copy()
+        data['role'] = 3  # For owner
+        data['school'] = None
+        data['is_active'] = False
+        data['password'] =  make_password(data['password'])
+        data['username'] =  generete_username(data['phone'])
+        data['cin'] =  generete_username(data['phone'])
+        owner_serializer = User_serializer_register(data=data)
+
         if not owner_serializer.is_valid():
             return Response(owner_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        owner_serializer.save()
+        #Save Model
+        owner  = owner_serializer.save()
+        #Send OTP code
+        create_and_send_otp(owner, purpose=OTPPurpose.REGISTRATION, channel="sms", destination='xxxxxx')
 
-        #Format school data
-        school_data['name']=data['school_name']
-        school_data['code']=data['school_code']
-        school_serializer = School_serializer(data=school_data)
-        #Save School Model
-        if not school_serializer.is_valid():
-            User.undeleted_objects.filter(id=owner_serializer.data['id']).delete()
-            return Response(school_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        school_serializer.save()
-
-        #Save Owner School Relation
-        User.undeleted_objects.filter(id=owner_serializer.data['id']).update(school=school_serializer.data['id'])
-        owner_serializer = User_serializer_read(User.undeleted_objects.get(id=owner_serializer.data['id']))
-    
-        #Save User preferences school relation
-        preference = {}
-        preference['user'] = owner_serializer.data['id']
-        preference['school'] = school_serializer.data['id']
-        preference_serializer = User_Preference_serializer(data=preference)
-
-        if not preference_serializer.is_valid():
-            User.undeleted_objects.filter(id=owner_serializer.data['id']).delete()
-            School.undeleted_objects.filter(id=school_serializer.data['id']).delete()
-            return Response(preference_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        preference_serializer.save()
     return Response(owner_serializer.data, status=status.HTTP_200_OK)
 
 # def notification_db(users:list,module:str,title:str,text:str,notifcation_type:str)->bool:
@@ -1142,6 +1121,136 @@ def register(request):
 #         notification_serializer.save()
 
 #     return True
+@api_view(['POST'])
+def verify_registration(request):
+    phone = request.data.get('phone')
+    code = request.data.get('otp')
+
+    try:
+        user = User.undeleted_objects.filter(phone=phone).first()
+    except Exception:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    now = timezone.now()
+
+    otp = OTPCode.objects.filter(user__phone=phone, 
+                                purpose="registration", 
+                                is_used=False, 
+                                expires_at__gt=now).order_by("-created_at").first()
+    if not otp:
+        return Response({"detail": "Code invalide ou expiré. Demandez un nouveau code."}, status=status.HTTP_404_NOT_FOUND)
+
+    if otp.attempts >= otp.max_attempts:
+        return Response({"detail": "Trop d'essais. Demandez un nouveau code."}, status=status.HTTP_404_NOT_FOUND)
+    
+    # Incrémente le compteur d'essais avant la vérification (mitige timing attacks)
+    otp.attempts += 1
+    otp.save(update_fields=["attempts"])
+
+    if check_password(code, otp.code_hash):
+            otp.is_used = True
+            otp.save(update_fields=["is_used"])
+            user.is_active = True
+            user.save(update_fields=["is_active"])
+
+    else:
+        remaining = max(0, otp.max_attempts - otp.attempts)
+        return Response({"detail": f"Code incorrect. Il vous reste {remaining} essai(s)."}, status=status.HTTP_404_NOT_FOUND)
+
+    user_serializer = User_serializer_read(user)
+    return Response(user_serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def resend_registration_code(request):
+    if request.method == "POST":
+        phone = request.POST.get("phone")
+        user = User.undeleted_objects.filter(phone=phone).first()
+
+        create_and_send_otp(user, purpose=OTPPurpose.REGISTRATION, channel="sms", destination='phone number')
+        
+        return Response({"detail": "Nouveau code envoyé."}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def register_user_info(request, user_id):
+    if request.method == 'POST':
+        try:
+            user = User.undeleted_objects.get(id=user_id)
+        except Exception:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        data = request.data
+        data['password'] = user.password
+        data['username'] = user.username
+        data['phone'] = user.phone
+        data['school'] = user.school
+        data['cin'] = user.cin
+
+        user_serializer = User_serializer(user, data=request.data)
+        if not user_serializer.is_valid():
+            return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        user_serializer.save()
+    
+    return Response(user_serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def register_school(request, user_id):
+    """
+    Save School Model 
+    Update user as Owner of this school
+    Save user preference
+    Save trial subscription
+    """
+    if request.method == 'POST':
+        school_serializer = School_serializer(data=request.data)
+        if not school_serializer.is_valid():
+            print('school_serializer.errors', school_serializer.errors)
+            return Response(school_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        school = school_serializer.save()
+
+        #Save Owner School Relation
+        try:
+            user = User.undeleted_objects.get(id=user_id)
+        except Exception:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        print('user.school', school)
+        user.school = school
+        user.save()
+        # owner_serializer = User_serializer_read(User.undeleted_objects.get(id=owner_serializer.data['id']))
+
+        #Save User preferences school relation
+        preference = {}
+        preference['user'] = user.id
+        preference['school'] = school.id
+        preference_serializer = User_Preference_serializer(data=preference)
+
+        if not preference_serializer.is_valid():
+            print('preference_serializer.errors', preference_serializer.errors,)
+            School.undeleted_objects.filter(id=school.id).delete()
+            return Response(preference_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        preference_serializer.save()
+        print('Save preference done')
+        subscription_data = {}
+        subscription_data["school"] = school.id
+        subscription_data["amount"] = 0
+        subscription_data["date"] = date.today().isoformat()
+        subscription_data["duration"] = 1
+        subscription_data["comment"] = "Trial version subscription"
+        subscription_data["trial"] = True
+
+        schoolSubscription_serializer = SchoolSubscription_serializer(data=subscription_data)
+
+        if not schoolSubscription_serializer.is_valid():
+            print('subscription_data error', schoolSubscription_serializer.errors)
+            School.undeleted_objects.filter(id=school.id).delete()
+            return Response(schoolSubscription_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        print('Save schoolSubscription_serializer done')
+
+        schoolSubscription_serializer.save()
+
+        return Response(preference_serializer.data, status=status.HTTP_200_OK)
 
 
 def push_notification_to_users(audiance, notification_type,module, title, message):
