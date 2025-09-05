@@ -881,6 +881,7 @@ def employee(request,school_id):
         employee_data['created_by']=user.id
         employee_data['school']=school_id
         employee_data['is_active']=True
+        employee_data['cin']=generete_username(employee_data['phone'])
         # Conversion en objet datetime
         dt = datetime.strptime(employee_data['birthday'], "%Y-%m-%dT%H:%M:%S.%fZ")
         employee_data['birthday'] = dt.strftime("%Y-%m-%d")
