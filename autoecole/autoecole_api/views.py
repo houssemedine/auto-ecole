@@ -1089,7 +1089,7 @@ def register_phone(request):
         #Save Model
         owner  = owner_serializer.save()
         #Send OTP code
-        create_and_send_otp(owner, purpose=OTPPurpose.REGISTRATION, channel="sms", destination='xxxxxx')
+        create_and_send_otp(owner, purpose=OTPPurpose.REGISTRATION, channel="sms", destination=owner.phone)
 
     return Response(owner_serializer.data, status=status.HTTP_200_OK)
 
@@ -1124,8 +1124,8 @@ def register_phone(request):
 @api_view(['POST'])
 def verify_registration(request):
     phone = request.data.get('phone')
-    code = request.data.get('otp')
-
+    code = request.data.get('code')
+    print('request', request.data)
     try:
         user = User.undeleted_objects.filter(phone=phone).first()
     except Exception:
@@ -1163,10 +1163,13 @@ def verify_registration(request):
 @api_view(['POST'])
 def resend_registration_code(request):
     if request.method == "POST":
-        phone = request.POST.get("phone")
-        user = User.undeleted_objects.filter(phone=phone).first()
+        phone = request.data.get("phone")
+        try:
+            user = User.undeleted_objects.get(phone=phone)
+        except Exception:
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
-        create_and_send_otp(user, purpose=OTPPurpose.REGISTRATION, channel="sms", destination='phone number')
+        create_and_send_otp(user, purpose=OTPPurpose.REGISTRATION, channel="sms", destination=user.phone)
         
         return Response({"detail": "Nouveau code envoyé."}, status=status.HTTP_200_OK)
 
