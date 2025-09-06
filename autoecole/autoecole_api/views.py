@@ -26,7 +26,7 @@ from django.db.models import (
 from django.db.models.functions import Coalesce
 import time
 from django.utils.translation import gettext_lazy as _
-from .services import create_and_send_otp
+from .services import create_and_send_otp, send_sms
 from django.contrib.auth.hashers import check_password
 
 
@@ -508,7 +508,11 @@ def save_card_and_student(request, school_id):
         message = _('A new card was added for %(first_name)s %(last_name)s !') % {'first_name' :save_card.student.first_name, 'last_name':save_card.student.last_name}
 
         push_notification_to_users(audiance, notification_type, module, title, message) 
-
+        
+        #send password
+        msg = f"Kreno: votre mot de passe temporaire est: {password}, ne le partagez avec personne."
+        phone = '216'+str(student.phone)
+        send_sms(phone_number=phone, message=msg)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -889,19 +893,23 @@ def employee(request,school_id):
         #Check if already a employee is in the base
         exist_employee = User.undeleted_objects.filter(phone = employee_data['phone']).first()
         employee_data['username']=generete_username(employee_data['first_name'][0])
+        
+        password = ''
         if exist_employee:
             print('User already exist')
             employee_data['password'] = exist_employee.password
         else:
             password = generete_password()
             employee_data['password']=make_password(password)
-
+        
         employee_data['role'] = 4 #trainer
         serializer = User_serializer(data=employee_data)
         if not serializer.is_valid():
             print('serializer error', serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         obj = serializer.save()
+
+
 
         # #Save user preference
         #Update User School Preference is usera already exist
@@ -930,6 +938,13 @@ def employee(request,school_id):
         title = _('Add Trainer')
         message = _("%(first_name)s %(last_name)s was added as new trainer !") % {"first_name": obj.first_name, "last_name": obj.last_name}
         push_notification_to_users(audiance, notification_type, module, title, message)
+        
+        
+        #send password
+        if not exist_employee:
+            msg = f"Kreno: votre mot de passe temporaire est: {password}, ne le partagez avec personne."
+            phone = '216'+str(obj.phone)
+            send_sms(phone_number=phone, message=msg)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -1090,7 +1105,8 @@ def register_phone(request):
         #Save Model
         owner  = owner_serializer.save()
         #Send OTP code
-        create_and_send_otp(owner, purpose=OTPPurpose.REGISTRATION, channel="sms", destination=owner.phone)
+        phone = '216'+str(owner.phone)
+        create_and_send_otp(owner, purpose=OTPPurpose.REGISTRATION, channel="sms",message_type='otp', destination=phone)
 
     return Response(owner_serializer.data, status=status.HTTP_200_OK)
 
@@ -1169,8 +1185,9 @@ def resend_registration_code(request):
             user = User.undeleted_objects.get(phone=phone)
         except Exception:
             return Response(status=status.HTTP_204_NO_CONTENT)
+        print('user phone', user.phone)
+        create_and_send_otp(user, purpose=OTPPurpose.REGISTRATION, channel="sms",message_type='otp', destination=user.phone)
 
-        create_and_send_otp(user, purpose=OTPPurpose.REGISTRATION, channel="sms", destination=user.phone)
         
         return Response({"detail": "Nouveau code envoyé."}, status=status.HTTP_200_OK)
 

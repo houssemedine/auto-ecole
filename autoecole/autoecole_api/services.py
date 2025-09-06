@@ -7,7 +7,8 @@ from django.utils import timezone
 from django.conf import settings
 from django.core.mail import send_mail
 from django.contrib.auth.hashers import make_password
-
+import os
+import requests
 
 
 
@@ -47,18 +48,36 @@ def create_notification_with_deliveries(*, user, notification_type, module, titl
 
 # --- Helper pour SMS (optionnel) ---
 def send_sms(phone_number: str, message: str):
-    # Branchez ici Twilio, OVH, etc.
-    # from twilio.rest import Client
-    # client = Client(settings.TWILIO_SID, settings.TWILIO_TOKEN)
-    # client.messages.create(to=phone_number, from_=settings.TWILIO_FROM, body=message)
-    pass
+    url = os.getenv("SMS_API_URL")
+    api_key = os.getenv("SMS_KEY")
+    sender = os.getenv("SMS_SENDER")
+    if not api_key:
+        return False
+
+    params = {
+        "fct": "sms",
+        "key": api_key,
+        "mobile": phone_number,
+        "sms": message,
+    }
+    if sender:
+        params["sender"] = sender
+
+    try:
+        resp = requests.get(url, params=params, timeout=10)
+        resp.raise_for_status()
+        print(resp)
+        return True
+    except requests.exceptions.RequestException as e:
+        print("Échec d'envoi SMS: %s", e)
+        return False
 
 def _generate_numeric_code(length: int = 6) -> str:
     # 6 chiffres, zéro-pad si besoin (ex: 000123)
     return f"{secrets.randbelow(10**length):0{length}d}"
 
 def create_and_send_otp(user, purpose=OTPPurpose.REGISTRATION, *,
-                        channel="email", destination=None,
+                        channel="email", message_type="otp", destination=None,
                         ttl_minutes=10) -> OTPCode:
     """
     Crée un OTP (hashé), invalide les OTP précédents non utilisés pour ce purpose,
@@ -91,7 +110,12 @@ def create_and_send_otp(user, purpose=OTPPurpose.REGISTRATION, *,
     )
 
     # Envoi
-    msg = f"Votre code de vérification est : {code}\nIl expire dans {ttl_minutes} minutes."
+    # msg = "Kreno"
+    if message_type == 'otp':
+        msg = f"Kreno: votre code de vérification est : {code}\nIl expire dans {ttl_minutes} minutes."
+    elif message_type == 'password':
+        msg = f"Kreno: votre mot de passe temporaire est: {code}, ne le partagez avec personne."
+
     if channel == "email":
         send_mail(
             subject="Votre code de vérification",
