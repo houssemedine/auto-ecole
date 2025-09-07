@@ -1,0 +1,9 @@
+1) docker build -t autoecole .
+
+2) docker run --name autoecole \
+  -p 8000:8000 \
+  -v "$PWD:/app" \
+  --env-file .env \
+  -e DJANGO_SETTINGS_MODULE=config.settings.development \
+  autoecole \
+  bash -c "python manage.py migrate && python manage.py loaddata status.json session_types.json session_activities.json notification_types.json licences_types.json countries.json governorates.json cities.json && python manage.py runserver 0.0.0.0:8000"

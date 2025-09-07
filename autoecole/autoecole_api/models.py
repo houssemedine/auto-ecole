@@ -263,7 +263,7 @@ class City(BaseModel, SoftDeleteModel):
 
 class SchoolSubscription(BaseModel, SoftDeleteModel):
     school = models.ForeignKey(School, on_delete=models.DO_NOTHING)
-    amount = models.DecimalField(max_digits=99999999, decimal_places=2)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateField()
     duration = models.IntegerField()  # in months
     method = models.CharField(max_length=50, choices=[
@@ -334,14 +334,14 @@ class Card(BaseModel, SoftDeleteModel):
     )
     price = models.DecimalField(
         _("price"),
-        max_digits=99999999,
+        max_digits=10,
         decimal_places=2,
         null=True,
         blank=True,
     )
     hour_price = models.DecimalField(
         _("hour price"),
-        max_digits=99999999,
+        max_digits=10,
         decimal_places=2,
         null=True,
         blank=True,
@@ -349,7 +349,7 @@ class Card(BaseModel, SoftDeleteModel):
     hours_number = models.IntegerField(_("number of hours"), null=True, blank=True)
     discount = models.DecimalField(
         _("discount"),
-        max_digits=99999999,
+        max_digits=10,
         decimal_places=2,
         null=True,
         blank=True,
@@ -376,7 +376,7 @@ class CardStatusHistory(BaseModel, SoftDeleteModel):
         return f'Card: {self.card}, Status: {self.status}'
 
 class Payment(BaseModel, SoftDeleteModel):
-    amount = models.DecimalField(_("amount"), max_digits=99999999, decimal_places=2)
+    amount = models.DecimalField(_("amount"), max_digits=10, decimal_places=2)
     date = models.DateField(_("date"))
     motive = models.CharField(_("reason"), max_length=50, null=True, blank=True)
     method = models.CharField(_("method"), max_length=50, default='espéces')  # default conservé tel quel

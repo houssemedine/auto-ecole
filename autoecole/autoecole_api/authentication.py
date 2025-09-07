@@ -12,7 +12,7 @@ class TelBackend(ModelBackend):
         print(user)
         # except User.DoesNotExist:
         #     return None
-
-        if user.check_password(password) and self.user_can_authenticate(user):
-            return user
+        if user:
+            if user.check_password(password) and self.user_can_authenticate(user):
+                return user
         return None
